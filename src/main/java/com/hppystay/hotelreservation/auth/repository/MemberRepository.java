@@ -1,4 +1,4 @@
 package com.hppystay.hotelreservation.auth.repository;
 
-public interface UserRepository {
+public interface MemberRepository {
 }
