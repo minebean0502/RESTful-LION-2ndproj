@@ -5,4 +5,4 @@ juo
 
 Minae
 
-ncw
+ncw -ncw
