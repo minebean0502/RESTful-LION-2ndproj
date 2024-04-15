@@ -30,7 +30,7 @@ public class MemberService implements UserDetailsService {
 
     public MemberDto signUp(CreateMemberDto createMemberDto) {
         // 이메일 중복 체크
-        if (memberRepository.existsByEmail(createMemberDto.getEmail()))
+        if (userExists(createMemberDto.getEmail()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
         Member member = Member.builder()
@@ -40,6 +40,33 @@ public class MemberService implements UserDetailsService {
                 .role(MemberRole.valueOf(createMemberDto.getRole()))
                 .build();
         return MemberDto.fromEntity(memberRepository.save(member));
+    }
+
+    // 해당 이메일로 가입한 아이디 확인
+    public boolean userExists(String email) {
+        return memberRepository.existsByEmail(email);
+    }
+
+    //로그인 (jwt 발급)
+    public JwtResponseDto issueToken(JwtRequestDto dto) {
+        //아이디 확인
+        if (!userExists(dto.getEmail()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
+        Optional<Member> optionalMember = memberRepository.findMemberByEmail(dto.getEmail());
+        if (optionalMember.isEmpty())
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        Member member = optionalMember.get();
+
+        //비밀번호 같은지 확인
+        if (!passwordEncoder.matches(dto.getPassword(), member.getPassword()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
+        String jwt = jwtTokenUtils.generateToken(member);
+        JwtResponseDto response =  new JwtResponseDto();
+        response.setToken(jwt);
+
+        return response;
     }
 
     @Override
@@ -53,30 +80,5 @@ public class MemberService implements UserDetailsService {
         return CustomUserDetails.builder()
                 .member(member)
                 .build();
-    }
-
-    // 해당 이메일로 가입한 아이디 확인
-    public boolean userExists(String email) {
-        return memberRepository.existsByEmail(email);
-
-    }
-
-    //로그인 (jwt 발급)
-    public JwtResponseDto issueToken(JwtRequestDto dto) {
-        //아이디 확인
-        if (!userExists(dto.getEmail()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
-        UserDetails userDetails = loadUserByUsername(dto.getEmail());
-
-        //비밀번호 같은지 확인
-        if (!passwordEncoder.matches(dto.getPassword(), userDetails.getPassword()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
-        String jwt = jwtTokenUtils.generateToken((Member) userDetails);
-        JwtResponseDto response =  new JwtResponseDto();
-        response.setToken(jwt);
-
-        return response;
     }
 }
