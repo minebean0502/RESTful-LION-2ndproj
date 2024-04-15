@@ -1,9 +1,6 @@
 package com.hppystay.hotelreservation.auth.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,5 +19,7 @@ public class Member {
     private String nickname;
     private String email;
     private String password;
+
+    @Enumerated(EnumType.STRING)
     private MemberRole role;
 }

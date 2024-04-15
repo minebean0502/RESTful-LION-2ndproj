@@ -1,11 +1,14 @@
 package com.hppystay.hotelreservation.auth.service;
 
+import com.hppystay.hotelreservation.auth.dto.CreateMemberDto;
+import com.hppystay.hotelreservation.auth.dto.MemberDto;
 import com.hppystay.hotelreservation.auth.entity.CustomUserDetails;
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.jwt.JwtRequestDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtResponseDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenFilter;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
+import com.hppystay.hotelreservation.auth.entity.MemberRole;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,19 @@ public class MemberService implements UserDetailsService {
     private final JwtTokenUtils jwtTokenUtils;
     private final PasswordEncoder passwordEncoder;
 
+    public MemberDto signUp(CreateMemberDto createMemberDto) {
+        // 이메일 중복 체크
+        if (memberRepository.existsByEmail(createMemberDto.getEmail()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+        Member member = Member.builder()
+                .nickname(createMemberDto.getNickname())
+                .email(createMemberDto.getEmail())
+                .password(passwordEncoder.encode(createMemberDto.getPassword()))
+                .role(MemberRole.valueOf(createMemberDto.getRole()))
+                .build();
+        return MemberDto.fromEntity(memberRepository.save(member));
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
