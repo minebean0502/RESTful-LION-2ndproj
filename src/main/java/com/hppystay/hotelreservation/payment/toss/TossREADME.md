@@ -35,8 +35,7 @@ Reservation_ID(PK)와 Payment객체들의 reservation_ID(FK)는 연결되어 있
 
 ## 3. 수신은 (Response)
 Payment 객체가 들어옴
-```java
-{
+```
   "mId": "tosspayments",
   "lastTransactionKey": "9C62B18EEF0DE3EB7F4422EB6D14BC6E",
   "paymentKey": "5EnNZRJGvaBX7zk2yd8ydw26XvwXkLrx9POLqKQjmAw4b0e1",
