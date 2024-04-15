@@ -2,6 +2,7 @@ package com.hppystay.hotelreservation.auth.jwt;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
+import com.hppystay.hotelreservation.auth.service.MemberService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,11 +26,11 @@ import java.util.Optional;
 @Slf4j
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
-    private final MemberRepository memberRepository;
+    private final MemberService memberService;
 
-    public JwtTokenFilter(JwtTokenUtils jwtTokenUtils, MemberRepository memberRepository) {
+    public JwtTokenFilter(JwtTokenUtils jwtTokenUtils, MemberService memberService) {
         this.jwtTokenUtils = jwtTokenUtils;
-        this.memberRepository = memberRepository;
+        this.memberService = memberService;
     }
 
     @Override
@@ -46,13 +48,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 SecurityContext context
                         = SecurityContextHolder.createEmptyContext();
 
-                Optional<Member> optionalMember = memberRepository.findMemberByEmail(userEmail);
-                if (optionalMember.isEmpty())
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-                Member member = optionalMember.get();
+                UserDetails userDetails = memberService.loadUserByUsername(userEmail);
 
                 AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        member,
+                        userDetails,
                         token, new ArrayList<>());
                 context.setAuthentication(authentication);
                 SecurityContextHolder.setContext(context);
