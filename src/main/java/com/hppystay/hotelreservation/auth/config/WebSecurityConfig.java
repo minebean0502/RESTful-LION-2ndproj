@@ -2,7 +2,6 @@ package com.hppystay.hotelreservation.auth.config;
 
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenFilter;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
-import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import com.hppystay.hotelreservation.auth.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

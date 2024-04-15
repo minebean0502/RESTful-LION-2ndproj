@@ -32,6 +32,6 @@ public class MemberController {
             @RequestBody
             JwtRequestDto dto
     ) {
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
+        return memberService.issueToken(dto);
     }
 }
