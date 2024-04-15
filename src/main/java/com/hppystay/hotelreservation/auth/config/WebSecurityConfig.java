@@ -26,8 +26,13 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
+                                .requestMatchers(
+                                        "/api/hotel/inquiries/**"
+                                )
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
+
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

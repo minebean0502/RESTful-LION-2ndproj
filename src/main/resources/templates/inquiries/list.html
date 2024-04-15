@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel Inquiries</title>
+    <style>
+        /* Add CSS styles for the table, th, and td elements */
+        table {
+            border-collapse: collapse; /* Collapse the border between cells */
+            width: 100%; /* Optional: Makes the table take up the full width */
+        }
+        th, td {
+            border: 1px solid black; /* Add a solid black border */
+            padding: 8px; /* Add some padding inside cells */
+        }
+        th {
+            background-color: #f2f2f2; /* Optional: Add a background color to headers */
+        }
+    </style>
+    <script>
+        function deleteInquiry(inquiryId) {
+            const url = `/api/hotel/inquiries/delete/${inquiryId}`;
+            fetch(url, { method: 'DELETE' })
+                .then(() => window.location.reload());
+        }
+    </script>
+</head>
+<body>
+<h1>Hotel Inquiries</h1>
+<div>
+    <a href="/api/hotel/inquiries/new">Submit New Inquiry</a>
+</div>
+<div>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Writer</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="inquiry : ${inquiries}">
+            <td th:text="${inquiry.title}">Inquiry Title</td>
+            <td th:text="${inquiry.content}">Inquiry content</td>
+            <td th:text="${inquiry.writerId}">Inquiry writerId</td>
+            <td>
+                <a th:href="@{/api/hotel/inquiries/edit/{id}(id=${inquiry.id})}" class="btn btn-edit">Edit</a>
+                <button th:onclick="'deleteInquiry(' + ${inquiry.id} + ')'">Delete</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
