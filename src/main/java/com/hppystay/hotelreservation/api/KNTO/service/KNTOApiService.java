@@ -1,8 +1,9 @@
 package com.hppystay.hotelreservation.api.KNTO.service;
 
-import com.hppystay.hotelreservation.api.KNTO.dto.HotelFindDto;
+import com.hppystay.hotelreservation.api.KNTO.dto.hotel.HotelFindDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -11,8 +12,10 @@ import java.util.Map;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class HotelApiService {
-    private final HotelComponent hotelComponent;
+public class KNTOApiService {
+    private final KNTORepositoryService hotelComponent;
+    @Value("${KNTO_KEY}")
+    String serviceKey;
 
     public HotelFindDto findHotelList() {
         Map<String, Object> params = new HashMap<>();
@@ -26,7 +29,7 @@ public class HotelApiService {
         params.put("areaCode", "");
         params.put("sigunguCode", "");
         params.put("modifiedtime", "");
-        params.put("serviceKey", "S/TpfnoGESi+4PILoTQdr7lSM6JpVeOrrFwqBT4ObUmSH85RY6FgqtNXfHbWkD1R5ynQ5JgXUHJM7YiCYNgcKA==");
+        params.put("serviceKey", serviceKey);
 
         return hotelComponent.SearchHotel(params);
     }
