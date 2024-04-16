@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -15,7 +16,7 @@ public class HotelInquiryDto {
     private Integer id;
     private String title;
     private String content;
-    private List<CommentDto> comments;
+    private CommentDto comment;
     private Integer writerId;
     private Integer hotelId;
 }

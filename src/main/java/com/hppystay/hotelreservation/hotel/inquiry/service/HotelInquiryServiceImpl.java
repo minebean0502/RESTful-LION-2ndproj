@@ -1,6 +1,8 @@
 package com.hppystay.hotelreservation.hotel.inquiry.service;
 
+import com.hppystay.hotelreservation.hotel.inquiry.dto.CommentDto;
 import com.hppystay.hotelreservation.hotel.inquiry.dto.HotelInquiryDto;
+import com.hppystay.hotelreservation.hotel.inquiry.entity.Comment;
 import com.hppystay.hotelreservation.hotel.inquiry.entity.HotelInquiry;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.HotelInquiryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +69,24 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
     }
 
     private HotelInquiryDto convertEntityToDto(HotelInquiry hotelInquiry) {
+        CommentDto commentDto = null;
+        if (hotelInquiry.getComment() != null) {
+            Comment comment = hotelInquiry.getComment();
+            commentDto = CommentDto.builder()
+                    .id(comment.getId())
+                    .comment(comment.getComment())
+                    .writerId(comment.getWriterId())
+                    .inquiryId(hotelInquiry.getId())
+                    .build();
+        }
+
         return HotelInquiryDto.builder()
                 .id(hotelInquiry.getId())
                 .title(hotelInquiry.getTitle())
                 .content(hotelInquiry.getContent())
                 .writerId(hotelInquiry.getWriterId())
                 .hotelId(hotelInquiry.getHotelId())
+                .comment(commentDto) // 단일 댓글 객체를 설정
                 .build();
     }
 

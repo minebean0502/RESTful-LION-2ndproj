@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class CommentDto {
     private Integer id;
-    private String content;
+    private String comment;
     private Integer writerId;
     private Integer inquiryId;
 

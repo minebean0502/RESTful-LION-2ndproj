@@ -37,7 +37,9 @@
             <th>Title</th>
             <th>Content</th>
             <th>Writer</th>
-            <th>Action</th>
+            <th>Comment</th>
+            <th>Author's action</th>
+            <th>Manager's action</th>
         </tr>
         </thead>
         <tbody>
@@ -45,9 +47,13 @@
             <td th:text="${inquiry.title}">Inquiry Title</td>
             <td th:text="${inquiry.content}">Inquiry content</td>
             <td th:text="${inquiry.writerId}">Inquiry writerId</td>
+            <td th:text="${inquiry.comment != null ? inquiry.comment.comment : 'No comment'}"></td>
             <td>
                 <a th:href="@{/api/hotel/inquiries/edit/{id}(id=${inquiry.id})}" class="btn btn-edit">Edit</a>
                 <button th:onclick="'deleteInquiry(' + ${inquiry.id} + ')'">Delete</button>
+            </td>
+            <td>
+                <a th:href="@{/api/hotel/inquiries/comments/add/{id}(id=${inquiry.id})}" class="btn">Add Comment</a>
             </td>
         </tr>
         </tbody>

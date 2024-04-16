@@ -15,9 +15,9 @@ public class Comment {
     private Integer id;
 
     @Setter
-    private String content;
+    private String comment;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "inquiry_id")
     private HotelInquiry hotelInquiry;
 

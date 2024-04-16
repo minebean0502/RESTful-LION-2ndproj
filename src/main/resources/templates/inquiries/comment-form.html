@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Comment</title>
+</head>
+<body>
+<h1>Add Comment</h1>
+<form th:action="@{/api/hotel/inquiries/comments/submit}" th:method="post">
+    <input type="hidden" name="inquiryId" th:value="${inquiryId}" />
+    <div>
+        <label for="comment">Comment:</label>
+        <textarea id="comment" name="comment"></textarea>
+    </div>
+    <button type="submit">Submit Comment</button>
+</form>
+</body>
+</html>

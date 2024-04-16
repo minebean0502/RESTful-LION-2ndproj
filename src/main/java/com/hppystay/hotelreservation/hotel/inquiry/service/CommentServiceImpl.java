@@ -3,7 +3,10 @@ package com.hppystay.hotelreservation.hotel.inquiry.service;
 
 import com.hppystay.hotelreservation.hotel.inquiry.dto.CommentDto;
 import com.hppystay.hotelreservation.hotel.inquiry.entity.Comment;
+import com.hppystay.hotelreservation.hotel.inquiry.entity.HotelInquiry;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.CommentRepository;
+import com.hppystay.hotelreservation.hotel.inquiry.repository.HotelInquiryRepository;
+import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
@@ -14,19 +17,32 @@ import java.util.stream.Collectors;
 @Transactional
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
+    private final HotelInquiryRepository hotelInquiryRepository;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository) {
+    public CommentServiceImpl(
+            CommentRepository commentRepository,
+            HotelInquiryRepository hotelInquiryRepository
+    ) {
         this.commentRepository = commentRepository;
+        this.hotelInquiryRepository = hotelInquiryRepository;
     }
 
     @Override
-    public CommentDto createComment(CommentDto commentDto) {
+    public CommentDto createComment(CommentDto commentDto, Integer writerId) {
+        HotelInquiry hotelInquiry = hotelInquiryRepository.findById(commentDto.getInquiryId())
+                .orElseThrow(() -> new IllegalStateException("Inquiry with id " + commentDto.getInquiryId() + " not found."));
+
+        if (hotelInquiry.getComment() != null) {
+            throw new IllegalStateException("A comment for this inquiry already exists.");
+        }
+
         Comment comment = Comment.builder()
-                .content(commentDto.getContent())
-                .id(commentDto.getId()) // 이 부분은 주로 null이 될 것입니다, 자동 생성을 위해
+                .comment(commentDto.getComment())
+                .hotelInquiry(hotelInquiry)
+                .writerId(writerId)
                 .build();
-        // 여기서 writerId와 inquiryId는 엔티티로의 변환 처리가 필요할 수 있습니다.
+
         Comment savedComment = commentRepository.save(comment);
         return convertEntityToDto(savedComment);
     }
@@ -43,7 +59,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto updateComment(Integer commentId, CommentDto commentDto) {
         Comment existingComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalStateException("Comment with id " + commentId + " does not exist."));
-        existingComment.setContent(commentDto.getContent());
+        existingComment.setComment(commentDto.getComment());
         Comment updatedComment = commentRepository.save(existingComment);
         return convertEntityToDto(updatedComment);
     }
@@ -56,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
     private CommentDto convertEntityToDto(Comment comment) {
         return CommentDto.builder()
                 .id(comment.getId())
-                .content(comment.getContent())
+                .comment(comment.getComment())
                 .writerId(comment.getWriterId())
                 .inquiryId(comment.getHotelInquiry().getId())
                 .build();
