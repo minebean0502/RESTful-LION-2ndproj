@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Builder
 @Entity
@@ -21,6 +24,8 @@ public class TempMemberEntity {
     private String role;
     private String businessNumber;
 
+    @OneToMany(mappedBy = "member")
+    private List<TempReservationEntity> reservations = new ArrayList<>();
 
     // Member 정보에는
     // Pk, 정보들과

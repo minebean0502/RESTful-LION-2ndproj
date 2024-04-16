@@ -22,6 +22,11 @@ public class TempReservationEntity {
     private String price;
     private String status;
     private String imageUrl;
+
+    @ManyToOne
+    private TempMemberEntity member;
+
+
     // 예약서에는
     // PK와, 정보들과
     // Member의 Member ID와

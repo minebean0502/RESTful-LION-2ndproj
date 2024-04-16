@@ -4,6 +4,7 @@ import com.hppystay.hotelreservation.payment.toss.temp.dto.TempReservationDto;
 
 import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import com.hppystay.hotelreservation.payment.toss.temp.repository.TempReservationRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,12 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TempReservationService {
     private final TempReservationRepository reservationRepository;
 
     // 테스트 데이터이므로 임시로 전부 생성
+    /*
     public TempReservationService(TempReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
         if (this.reservationRepository.count() == 0 ) {
@@ -60,6 +63,7 @@ public class TempReservationService {
             ));
         }
     }
+     */
 
     // 전부 조회
     public List<TempReservationDto> readAll() {

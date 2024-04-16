@@ -18,7 +18,7 @@ public class PermitAllPath {
 
             // static/templates 에 이미지 표시 경로
             "/static/**",
-            "/templates/**"
+            "/templates/**",
 
             "/api/auth/sign-in",
             // 숙소
