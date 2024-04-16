@@ -6,7 +6,6 @@ public class PermitAllPath {
             "/api/auth/sign-up",
 
 
-
             // toss 인증 관련 api (채운 작성)
             "/toss/**",
             "/payments/**",
@@ -20,5 +19,12 @@ public class PermitAllPath {
             // static/templates 에 이미지 표시 경로
             "/static/**",
             "/templates/**"
+
+            "/api/auth/sign-in",
+            // 숙소
+            "test",
+            "/test/**",
+            "/login"
+
     };
 }
