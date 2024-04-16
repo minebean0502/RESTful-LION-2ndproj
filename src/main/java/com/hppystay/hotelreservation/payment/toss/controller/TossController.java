@@ -1,7 +1,7 @@
 package com.hppystay.hotelreservation.payment.toss.controller;
 
 import com.hppystay.hotelreservation.payment.toss.dto.PaymentConfirmDto;
-import com.hppystay.hotelreservation.payment.toss.temp.service.TossOrderService;
+import com.hppystay.hotelreservation.payment.toss.service.TossOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

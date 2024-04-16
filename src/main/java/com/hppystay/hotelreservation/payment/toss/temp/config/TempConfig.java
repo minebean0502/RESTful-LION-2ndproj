@@ -23,11 +23,17 @@ public class TempConfig {
     @Bean
     public CommandLineRunner createMember() {
         return args -> {
-            if (!(memberRepository.count() == 0)) {
+            if (memberRepository.count() == 0) {
                 memberRepository.saveAll(List.of(
                         TempMemberEntity.builder()
                                 .nickname("chaewoon")
                                 .email("no4323@naver.com")
+                                .password(passwordEncoder.encode("1234"))
+                                .role("USER")
+                                .build(),
+                        TempMemberEntity.builder()
+                                .nickname("Notchaewoon")
+                                .email("no4323@gmail.com")
                                 .password(passwordEncoder.encode("1234"))
                                 .role("USER")
                                 .build()
@@ -41,7 +47,7 @@ public class TempConfig {
     @Bean
     public CommandLineRunner createReservation() {
         return args -> {
-            if (!(reservationRepository.count() == 0)) {
+            if (reservationRepository.count() == 0) {
                 reservationRepository.saveAll(List.of(
                         TempReservationEntity.builder()
                                 .memberEmail("user1@gmail.com")
@@ -51,6 +57,7 @@ public class TempConfig {
                                 .status("IN_PROGRESS")
                                 // 나중에 지울곳
                                 .imageUrl("/static/tossImage/hotel1.png")
+                                .member(1L)
                                 .build(),
                         TempReservationEntity.builder()
                                 .memberEmail("user2@gmail.com")
@@ -60,6 +67,7 @@ public class TempConfig {
                                 .status("IN_PROGRESS")
                                 // 나중에 지울곳
                                 .imageUrl("/static/tossImage/hotel2.png")
+                                .member(2L)
                                 .build(),
                         TempReservationEntity.builder()
                                 .memberEmail("user3@gmail.com")
@@ -69,6 +77,7 @@ public class TempConfig {
                                 .status("IN_PROGRESS")
                                 // 나중에 지울곳
                                 .imageUrl("/static/tossImage/hotel3.png")
+                                .member(1L)
                                 .build(),
                         TempReservationEntity.builder()
                                 .memberEmail("user4@gmail.com")
@@ -78,6 +87,7 @@ public class TempConfig {
                                 .status("IN_PROGRESS")
                                 // 나중에 지울곳
                                 .imageUrl("/static/tossImage/hotel4.png")
+                                .member(2L)
                                 .build()
                 ));
             }
