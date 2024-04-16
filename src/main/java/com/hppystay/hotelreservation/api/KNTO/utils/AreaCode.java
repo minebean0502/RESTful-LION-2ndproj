@@ -9,7 +9,6 @@ public class AreaCode {
 
 
     public AreaCode() {
-
         areaCodeMap.put(1, "서울");
         areaCodeMap.put(2, "인천");
         areaCodeMap.put(3, "대전");

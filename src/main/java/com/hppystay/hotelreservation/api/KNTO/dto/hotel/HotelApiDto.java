@@ -16,6 +16,7 @@ public class HotelApiDto {
     private int areaCode;
     private int contentTypeId;
     private String firstImage;
+    private String tel;
     private double mapX;
     private double mapY;
 
@@ -26,6 +27,7 @@ public class HotelApiDto {
                 .areaName(AreaCode.getAreaName(areaCode))
                 .contentName(ContentCode.getContentName(contentTypeId))
                 .firstImage(firstImage)
+                .tel(tel)
                 .mapX(mapX)
                 .mapY(mapY)
                 .build();

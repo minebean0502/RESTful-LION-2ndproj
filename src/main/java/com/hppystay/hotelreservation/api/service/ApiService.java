@@ -5,6 +5,7 @@ import com.hppystay.hotelreservation.api.KNTO.dto.hotel.HotelApiDto;
 import com.hppystay.hotelreservation.api.exception.OpenApiException;
 import lombok.extern.slf4j.Slf4j;
 
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -36,44 +37,48 @@ public class ApiService {
 
         log.info(url);
 
-        List<HotelApiDto> result = new ArrayList<>();
+        List<HotelApiDto> HotelApiDtos = new ArrayList<>();
 
         try {
 
-            URL url2 = new URL(url);
-            BufferedReader br = new BufferedReader(new InputStreamReader(url2.openStream(), "UTF-8"));
-            String result2 = br.readLine();
+            JSONArray jsonItemList = getJsonArray(url);
 
-            JSONParser jsonParser = new JSONParser();
-            JSONObject jsonObject = (JSONObject)jsonParser.parse(result2);
-            log.info(jsonObject.toJSONString());
-            JSONObject jsonResponse = (JSONObject)jsonObject.get("response");
-            log.info("response 파싱 완료 = {}", jsonResponse);
-
-            JSONObject jsonBody = (JSONObject) jsonResponse.get("body");
-            log.info("response->body 파싱 완료 = {}", jsonBody);
-
-            JSONObject jsonItems = (JSONObject) jsonBody.get("items");
-            log.info("response->body->items 파싱 완료 = {}", jsonItems);
-
-            JSONArray jsonItemList = (JSONArray) jsonItems.get("item");
             log.info("response->body->items->item 파싱 완료 = {}", jsonItemList);
 
             for (Object o : jsonItemList) {
                 JSONObject item = (JSONObject) o;
                 HotelApiDto dto = makeLocationDto(item);
                 if (dto == null) continue;
-                result.add(dto);
+                HotelApiDtos.add(dto);
                 log.info("{}", makeLocationDto(item));
             }
+
             log.info("fetch 완료");
-            return result;
+            return HotelApiDtos;
         } catch (Exception e) {
             throw new OpenApiException("오픈 API 예외 = fetch 로 가져온 데이터가 비어있음 (데이터 요청 방식 오류)");
         } finally {
-            return result;
+            return HotelApiDtos;
         }
 
+    }
+
+    private static JSONArray getJsonArray(String url) throws IOException, ParseException {
+        URL url2 = new URL(url);
+        BufferedReader br = new BufferedReader(new InputStreamReader(url2.openStream(), "UTF-8"));
+        String result = br.readLine();
+
+        JSONParser jsonParser = new JSONParser();
+        JSONObject jsonObject = (JSONObject)jsonParser.parse(result);
+
+        JSONObject jsonResponse = (JSONObject)jsonObject.get("response");
+
+        JSONObject jsonBody = (JSONObject) jsonResponse.get("body");
+
+        JSONObject jsonItems = (JSONObject) jsonBody.get("items");
+
+        JSONArray jsonItemList = (JSONArray) jsonItems.get("item");
+        return jsonItemList;
     }
 
     private HotelApiDto makeLocationDto(JSONObject item) {
@@ -90,6 +95,7 @@ public class ApiService {
                 areaCode((Integer) item.get("areacode")).
                 contentTypeId((Integer) item.get("contenttypeid")).
                 firstImage((String) item.get("firstimage")).
+                tel((String)item.get("tel")).
                 mapX((double) item.get("mapx")).
                 mapY((double) item.get("mapy")).
                 build();
