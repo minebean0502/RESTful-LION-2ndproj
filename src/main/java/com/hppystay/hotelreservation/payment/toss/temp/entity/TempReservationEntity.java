@@ -1,6 +1,5 @@
 package com.hppystay.hotelreservation.payment.toss.temp.entity;
 
-import com.hppystay.hotelreservation.auth.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +21,14 @@ public class TempReservationEntity {
     private String price;
     private String status;
     private String imageUrl;
+
+    // @ManyToOne
+    // 본래라면 Reservation <-> Member은
+    // Reservation -> Member (@ManyToOne)
+    // Member -> Reservation (@OneToMany) 양방향 관계가 성립해야 하나, 테스트 목적이라 Long로 빼둠
+    private Long member;
+
+
     // 예약서에는
     // PK와, 정보들과
     // Member의 Member ID와
