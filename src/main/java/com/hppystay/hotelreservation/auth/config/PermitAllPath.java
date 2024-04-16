@@ -4,7 +4,8 @@ public class PermitAllPath {
     public static String[] paths = {
             // 회원 인증 관련 api
             "/api/auth/sign-up",
-
+            "/api/auth/sign-in",
+            "/api/auth/email/verify",
 
             // toss 인증 관련 api (채운 작성)
             "/toss/**",
@@ -18,9 +19,8 @@ public class PermitAllPath {
 
             // static/templates 에 이미지 표시 경로
             "/static/**",
-            "/templates/**"
+            "/templates/**",
 
-            "/api/auth/sign-in",
             // 숙소
             "test",
             "/test/**",
