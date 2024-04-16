@@ -6,6 +6,8 @@ public class PermitAllPath {
             "/api/auth/sign-up",
             "/api/auth/sign-in",
             // 숙소
-            "test"
+            "test",
+            "/test/**",
+            "/login"
     };
 }
