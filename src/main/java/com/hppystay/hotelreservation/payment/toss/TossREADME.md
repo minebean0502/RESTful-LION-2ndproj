@@ -98,4 +98,3 @@ Payment 객체가 들어옴
   "version": "2022-11-16"
 }
 ```
-[Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/c69962b0-3951-485b-b10a-5bb29576bba8/99a5b850-546d-4660-a98d-4e64958550d2/Untitled.png)
