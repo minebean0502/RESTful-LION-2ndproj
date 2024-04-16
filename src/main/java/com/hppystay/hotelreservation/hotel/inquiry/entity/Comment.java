@@ -24,4 +24,5 @@ public class Comment {
     @Setter
     private Integer writerId;
 
+
 }

@@ -2,11 +2,13 @@ package com.hppystay.hotelreservation.hotel.inquiry.controller;
 
 import com.hppystay.hotelreservation.hotel.inquiry.dto.CommentDto;
 import com.hppystay.hotelreservation.hotel.inquiry.service.CommentService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @Controller
 @RequestMapping("/api/hotel/inquiries/comments")
 public class CommentController {
@@ -37,6 +39,29 @@ public class CommentController {
 
         commentService.createComment(commentDto, writerId);
 
+        return "redirect:/api/hotel/inquiries";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showCommentEditForm(@PathVariable("id") Integer id, Model model) {
+        CommentDto comment = commentService.getCommentById(id);
+        model.addAttribute("comment", comment);
+        return "inquiries/comment-edit";
+    }
+
+    //TODO CORS -> PUT
+    @PostMapping("/update")
+    public String updateComment(CommentDto commentDto) {
+        commentService.updateComment(commentDto.getId(), commentDto);
+        return "redirect:/api/hotel/inquiries";
+    }
+
+
+    //TODO CORS -> DELETE -> list.html의 javascript에서도 POST->DELETE
+    @PostMapping("/delete/{commentId}")
+    public String deleteComment(@PathVariable("commentId") Integer commentId) {
+        log.info("Deleting comment with ID: {}", commentId);
+        commentService.deleteComment(commentId);
         return "redirect:/api/hotel/inquiries";
     }
 }

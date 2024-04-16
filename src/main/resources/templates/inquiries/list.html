@@ -20,8 +20,21 @@
     <script>
         function deleteInquiry(inquiryId) {
             const url = `/api/hotel/inquiries/delete/${inquiryId}`;
-            fetch(url, { method: 'DELETE' })
+            fetch(url, { method: 'POST' })
                 .then(() => window.location.reload());
+        }
+
+        function deleteComment(commentId) {
+            const url = `/api/hotel/inquiries/comments/delete/${commentId}`;
+            fetch(url, { method: 'POST' })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload(); // 성공 시 페이지 새로고침
+                    } else {
+                        alert('Failed to delete comment.');
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
     </script>
 </head>
@@ -40,6 +53,7 @@
             <th>Comment</th>
             <th>Author's action</th>
             <th>Manager's action</th>
+            <th>Manager's action</th>
         </tr>
         </thead>
         <tbody>
@@ -54,6 +68,13 @@
             </td>
             <td>
                 <a th:href="@{/api/hotel/inquiries/comments/add/{id}(id=${inquiry.id})}" class="btn">Add Comment</a>
+            </td>
+            <td th:if="${inquiry.comment != null}">
+                <a th:href="@{/api/hotel/inquiries/comments/edit/{id}(id=${inquiry.comment.id})}">Edit</a>
+                <!--<button th:if="${inquiry.comment != null}" th:onclick="'deleteComment(' + ${inquiry.comment.id} + ')'">Delete</button>-->
+                <form th:action="@{/api/hotel/inquiries/comments/delete/{commentId}(commentId=${inquiry.comment.id})}" method="post">
+                    <input type="submit" value="Delete"/>
+                </form>
             </td>
         </tr>
         </tbody>

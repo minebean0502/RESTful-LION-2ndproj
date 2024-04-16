@@ -67,14 +67,15 @@ public class HotelInquiryController {
         return "inquiries/edit";
     }
 
+    //TODO CORS -> PUT
     @PostMapping("/update")
     public String updateInquiry(HotelInquiryDto hotelInquiryDto) {
         hotelInquiryService.updateInquiry(hotelInquiryDto.getId(), hotelInquiryDto);
         return "redirect:/api/hotel/inquiries";
     }
 
-    // 문의사항 삭제 처리
-    @DeleteMapping("/delete/{id}")
+    //TODO CORS -> DELETE -> list.html의 javascript에서도 POST->DELETE
+    @PostMapping("/delete/{id}")
     public String deleteInquiry(@PathVariable("id") Integer id) {
         hotelInquiryService.deleteInquiry(id);
         return "redirect:/api/hotel/inquiries";

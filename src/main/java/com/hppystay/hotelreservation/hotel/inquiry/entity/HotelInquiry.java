@@ -22,8 +22,7 @@ public class HotelInquiry {
     @Setter
     private String content;
 
-    //@OneToMany(mappedBy = "hotelInquiry", cascade = CascadeType.ALL, orphanRemoval = true)
-    //private List<Comment> comments = new ArrayList<>();
+    @Setter
     @OneToOne(mappedBy = "hotelInquiry", cascade = CascadeType.ALL, orphanRemoval = true)
     private Comment comment;
 

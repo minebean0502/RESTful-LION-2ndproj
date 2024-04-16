@@ -7,12 +7,15 @@ import com.hppystay.hotelreservation.hotel.inquiry.entity.HotelInquiry;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.CommentRepository;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.HotelInquiryRepository;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+@Slf4j
 @Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
@@ -56,6 +59,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public CommentDto getCommentById(Integer id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Comment with id " + id + "does not exist."));
+        return convertEntityToDto(comment);
+    }
+
+    @Override
     public CommentDto updateComment(Integer commentId, CommentDto commentDto) {
         Comment existingComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalStateException("Comment with id " + commentId + " does not exist."));
@@ -64,9 +74,20 @@ public class CommentServiceImpl implements CommentService {
         return convertEntityToDto(updatedComment);
     }
 
+    @Transactional
     @Override
     public void deleteComment(Integer commentId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with id: " + commentId));
+
+        HotelInquiry inquiry = comment.getHotelInquiry();
+        if (inquiry != null) {
+            inquiry.setComment(null); // HotelInquiry에서 Comment 연결 해제
+            hotelInquiryRepository.save(inquiry); // 변경사항 저장
+        }
+
         commentRepository.deleteById(commentId);
+
     }
 
     private CommentDto convertEntityToDto(Comment comment) {
