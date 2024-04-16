@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class NaverOAuth2UserService extends DefaultOAuth2UserService {
+public class OAuth2UserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -24,8 +24,8 @@ public class NaverOAuth2UserService extends DefaultOAuth2UserService {
                 .getRegistrationId();
 
         Map<String, Object> attributes = new HashMap<>();
-        String nameAttribute = "";
 
+        // 네이버 아이디로 로그인
         if (registrationId.equals("naver")) {
             attributes.put("provider", "naver");
 
@@ -34,12 +34,11 @@ public class NaverOAuth2UserService extends DefaultOAuth2UserService {
             attributes.put("id", responseMap.get("id"));
             attributes.put("email", responseMap.get("email"));
             attributes.put("nickname", responseMap.get("nickname"));
-
-            nameAttribute = "email";
         }
 
         // kakao 아이디로 로그인
-        if (registrationId.equals("kakao")) {
+        else if (registrationId.equals("kakao")) {
+            attributes.put("provider", "kakao");
 
             Map<String, Object> kakaoAccount = oAuth2User.getAttribute("kakao_account");
             Map<String, Object> kakaoProfile = (Map<String, Object>) kakaoAccount.get("profile");
@@ -48,8 +47,16 @@ public class NaverOAuth2UserService extends DefaultOAuth2UserService {
             attributes.put("id", oAuth2User.getAttribute("id"));
             attributes.put("email", kakaoAccount.get("email"));
             attributes.put("nickname", kakaoProfile.get("nickname"));
-            nameAttribute = "email";
         }
+        // google 아이디로 로그인
+        else if (registrationId.equals("google")) {
+            attributes.put("provider", "google");
+            attributes.put("id", oAuth2User.getAttribute("id"));
+            attributes.put("email", oAuth2User.getAttribute("email"));
+            attributes.put("nickname", oAuth2User.getAttribute("name"));
+        }
+
+        String nameAttribute = "email";
 
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("USER")),

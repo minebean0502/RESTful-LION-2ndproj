@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,6 +40,9 @@ public class OAuth2SuccessHandler
     ) throws IOException, ServletException {
         OAuth2User oAuth2User
                 = (OAuth2User) authentication.getPrincipal();
+
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+        System.out.println(attributes);
 
         String email = oAuth2User.getName();
         String nickname = oAuth2User.getAttribute("nickname");
