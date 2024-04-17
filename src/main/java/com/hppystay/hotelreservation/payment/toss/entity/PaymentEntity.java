@@ -21,9 +21,6 @@ public class PaymentEntity {
     private String status;
     // 여기 위에는 필수 요소
 
-    // Reservation의 price 가져올 것?
-    private String price;
-
     @OneToOne
     @JoinColumn(name = "reservation_id")
     private TempReservationEntity reservation;
