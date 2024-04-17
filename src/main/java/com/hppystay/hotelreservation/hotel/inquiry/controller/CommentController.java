@@ -24,37 +24,35 @@ public class CommentController {
     }
 
     @PostMapping("/submit/{inquiryId}")
-    public ResponseEntity<CommentDto> submitComment(
-            //TODO 로그인한 사용자 ID 가져오기
+    public ResponseEntity<?> submitComment(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Integer inquiryId,
             @RequestBody CommentDto commentDto
     ) {
         String writerId = userDetails.getUsername();
-        CommentDto createdComment = commentService.createComment(commentDto, writerId, inquiryId);
-
-        return ResponseEntity.ok(createdComment);
+        commentService.createComment(commentDto, writerId, inquiryId);
+        return ResponseEntity.ok().body("comment created successfully");
     }
 
     //TODO CORS -> PUT
     @PostMapping("/update/{commentId}")
-    public ResponseEntity<CommentDto> updateComment(
+    public ResponseEntity<?> updateComment(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("commentId") Integer commentId,
             @RequestBody CommentDto commentDto
     ) {
         String currentUsername = userDetails.getUsername();
-        CommentDto updatedComment = commentService.updateComment(commentId, commentDto, currentUsername);
-        return ResponseEntity.ok(updatedComment);
+        commentService.updateComment(commentId, commentDto, currentUsername);
+        return ResponseEntity.ok().body("comment updated successfully");
     }
 
     //TODO CORS -> DELETE -> list.html의 javascript에서도 POST->DELETE
     @PostMapping("/delete/{commentId}")
-    public ResponseEntity<Void> deleteComment(
+    public ResponseEntity<?> deleteComment(
             @PathVariable("commentId") Integer commentId,
             @AuthenticationPrincipal UserDetails currentUser
     ) {
         commentService.deleteComment(commentId, currentUser.getUsername());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("comment deleted successfully");
     }
 }

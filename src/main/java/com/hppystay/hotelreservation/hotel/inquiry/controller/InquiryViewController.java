@@ -15,16 +15,12 @@ public class InquiryViewController {
     private final HotelInquiryService hotelInquiryService;
 
     @Autowired
-    public InquiryViewController(
-            HotelInquiryService hotelInquiryService
-    ) {
-        this.hotelInquiryService = hotelInquiryService;
-    }
+    public InquiryViewController(HotelInquiryService hotelInquiryService) {this.hotelInquiryService = hotelInquiryService;}
 
     @GetMapping
     public String listInquiries(Model model, @PageableDefault(size = 10) Pageable pageable) {
         model.addAttribute("inquiries", hotelInquiryService.getAllInquiries(pageable));
-        return "inquiries/list"; // templates/inquiries/list.html
+        return "inquiries/list";
     }
 
 }

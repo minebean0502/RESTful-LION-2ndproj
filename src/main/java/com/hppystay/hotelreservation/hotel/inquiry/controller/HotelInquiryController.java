@@ -24,39 +24,38 @@ public class HotelInquiryController {
     }
 
     @PostMapping("/submit")
-    public ResponseEntity<HotelInquiryDto> submitInquiry(
+    public ResponseEntity<?> submitInquiry(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody
             HotelInquiryDto hotelInquiryDto
     ) {
-
         String writerId = userDetails.getUsername();
+        //TODO hotelId 받아오기
         Integer hotelId = 107;  // 임시로 정적 설정.
-
-        HotelInquiryDto createdInquiry = hotelInquiryService.createInquiry(hotelInquiryDto, writerId, hotelId);
-        return ResponseEntity.ok(createdInquiry);
+        hotelInquiryService.createInquiry(hotelInquiryDto, writerId, hotelId);
+        return ResponseEntity.ok().body("Inquiry created successfully");
     }
 
     //TODO CORS -> PUT
     @PostMapping("/update/{id}")
-    public ResponseEntity<HotelInquiryDto> updateInquiry(
+    public ResponseEntity<?> updateInquiry(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("id") Integer id,
             @RequestBody  HotelInquiryDto hotelInquiryDto
     ) {
         String currentUsername = userDetails.getUsername();
-        HotelInquiryDto updatedInquiry = hotelInquiryService.updateInquiry(id, hotelInquiryDto, currentUsername);
-        return ResponseEntity.ok(updatedInquiry);
+        hotelInquiryService.updateInquiry(id, hotelInquiryDto, currentUsername);
+        return ResponseEntity.ok().body("Inquiry updated successfully");
     }
 
     //TODO CORS -> DELETE -> list.html의 javascript에서도 POST->DELETE
     @PostMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteInquiry(
+    public ResponseEntity<?> deleteInquiry(
             @PathVariable("id") Integer id,
             @AuthenticationPrincipal UserDetails currentUser
     ) {
         hotelInquiryService.deleteInquiry(id, currentUser.getUsername());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("Inquiry deleted successfully");
     }
 
 

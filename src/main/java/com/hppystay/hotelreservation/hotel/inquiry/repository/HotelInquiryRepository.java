@@ -1,6 +1,5 @@
 package com.hppystay.hotelreservation.hotel.inquiry.repository;
 
-import com.hppystay.hotelreservation.hotel.inquiry.dto.HotelInquiryDto;
 import com.hppystay.hotelreservation.hotel.inquiry.entity.HotelInquiry;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

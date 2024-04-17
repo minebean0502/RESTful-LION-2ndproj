@@ -1,20 +1,17 @@
 package com.hppystay.hotelreservation.hotel.inquiry.service;
 
-import com.hppystay.hotelreservation.hotel.inquiry.dto.CommentDto;
 import com.hppystay.hotelreservation.hotel.inquiry.dto.HotelInquiryDto;
-import com.hppystay.hotelreservation.hotel.inquiry.entity.Comment;
 import com.hppystay.hotelreservation.hotel.inquiry.entity.HotelInquiry;
+import com.hppystay.hotelreservation.hotel.inquiry.mapper.HotelInquiryMapper;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.HotelInquiryRepository;
+import com.hppystay.hotelreservation.hotel.inquiry.service.exception.PermissionDeniedException;
+import com.hppystay.hotelreservation.hotel.inquiry.service.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
-
-import java.nio.file.AccessDeniedException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -29,98 +26,51 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
     @Override
     public Page<HotelInquiryDto> getAllInquiries(Pageable pageable) {
         Page<HotelInquiry> inquiryPage = hotelInquiryRepository.findAllByOrderByCreatedAtDesc(pageable);
-        return inquiryPage.map(this::convertEntityToDto);
+        return inquiryPage.map(HotelInquiryMapper::toDto);
     }
 
     @Override
     public HotelInquiryDto getInquiryById(Integer id) {
         HotelInquiry hotelInquiry = hotelInquiryRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Inquiry with id " + id + " does not exist."));
-        return convertEntityToDto(hotelInquiry);
+                .orElseThrow(() -> new ResourceNotFoundException("Inquiry with id " + id + " does not exist."));
+        return HotelInquiryMapper.toDto(hotelInquiry);
     }
 
     @Override
-    public HotelInquiryDto createInquiry(HotelInquiryDto hotelInquiryDto, String writerId, Integer hotelId) {
+    public void createInquiry(HotelInquiryDto hotelInquiryDto, String writerId, Integer hotelId) {
         hotelInquiryDto.setWriterId(writerId);
         hotelInquiryDto.setHotelId(hotelId);
 
-        HotelInquiry hotelInquiry = convertDtoToEntity(hotelInquiryDto);
-        hotelInquiry = hotelInquiryRepository.save(hotelInquiry);
+        HotelInquiry hotelInquiry = HotelInquiryMapper.toEntity(hotelInquiryDto);
+        hotelInquiryRepository.save(hotelInquiry);
 
-        return convertEntityToDto(hotelInquiry);
     }
 
     @Override
-    public HotelInquiryDto updateInquiry(Integer id, HotelInquiryDto hotelInquiryDto, String currentUsername) {
+    public void updateInquiry(Integer id, HotelInquiryDto hotelInquiryDto, String currentUsername) {
         HotelInquiry hotelInquiry = hotelInquiryRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Inquiry with id " + id + " does not exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Inquiry with id " + id + " does not exist."));
 
         if (!hotelInquiry.getWriterId().equals(currentUsername)) {
-            //TODO 적절한 예외 처리
-            throw new IllegalStateException("You do not have permission to update this inquiry.");
+            throw new PermissionDeniedException("You do not have permission to update this inquiry.");
         }
 
-        if (hotelInquiryDto.getTitle() != null) {
-            hotelInquiry.setTitle(hotelInquiryDto.getTitle());
-        }
+        if (hotelInquiryDto.getTitle() != null) {hotelInquiry.setTitle(hotelInquiryDto.getTitle());}
+        if (hotelInquiryDto.getContent() != null) {hotelInquiry.setContent(hotelInquiryDto.getContent());}
+        if (hotelInquiryDto.getWriterId() != null) {hotelInquiry.setWriterId(hotelInquiryDto.getWriterId());}
+        if (hotelInquiryDto.getHotelId() != null) {hotelInquiry.setHotelId(hotelInquiryDto.getHotelId());}
 
-        if (hotelInquiryDto.getContent() != null) {
-            hotelInquiry.setContent(hotelInquiryDto.getContent());
-        }
-
-        if (hotelInquiryDto.getWriterId() != null) {
-            hotelInquiry.setWriterId(hotelInquiryDto.getWriterId());
-        }
-
-        if (hotelInquiryDto.getHotelId() != null) {
-            hotelInquiry.setHotelId(hotelInquiryDto.getHotelId());
-        }
-
-        return convertEntityToDto(hotelInquiryRepository.save(hotelInquiry));
     }
 
     @Override
     public void deleteInquiry(Integer id, String currentUsername) {
         HotelInquiry inquiry = hotelInquiryRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Inquiry not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Inquiry not found with id: " + id));
 
-        //TODO 적절한 예외처리
         if (!inquiry.getWriterId().equals(currentUsername)) {
-            throw new IllegalStateException("You do not have permission to delete this inquiry.");
+            throw new PermissionDeniedException("You do not have permission to delete this inquiry.");
         }
         hotelInquiryRepository.deleteById(id);
     }
 
-    private HotelInquiryDto convertEntityToDto(HotelInquiry hotelInquiry) {
-        CommentDto commentDto = null;
-        if (hotelInquiry.getComment() != null) {
-            Comment comment = hotelInquiry.getComment();
-            commentDto = CommentDto.builder()
-                    .id(comment.getId())
-                    .comment(comment.getComment())
-                    .writerId(comment.getWriterId())
-                    .inquiryId(hotelInquiry.getId())
-                    .build();
-        }
-
-        return HotelInquiryDto.builder()
-                .id(hotelInquiry.getId())
-                .title(hotelInquiry.getTitle())
-                .content(hotelInquiry.getContent())
-                .writerId(hotelInquiry.getWriterId())
-                .hotelId(hotelInquiry.getHotelId())
-                .comment(commentDto) // 단일 댓글 객체를 설정
-                .build();
-    }
-
-    private HotelInquiry convertDtoToEntity(HotelInquiryDto hotelInquiryDto) {
-        return HotelInquiry.builder()
-                .id(hotelInquiryDto.getId())
-                .title(hotelInquiryDto.getTitle())
-                .content(hotelInquiryDto.getContent())
-                .writerId(hotelInquiryDto.getWriterId())
-                .hotelId(hotelInquiryDto.getHotelId())
-                .createdAt(hotelInquiryDto.getCreatedAt())
-                .build();
-    }
 }

@@ -20,5 +20,5 @@ public class HotelInquiryDto {
     private CommentDto comment;
     private String writerId;
     private Integer hotelId;
-    private LocalDateTime createdAt; // 추가된 속성
+    private LocalDateTime createdAt;
 }

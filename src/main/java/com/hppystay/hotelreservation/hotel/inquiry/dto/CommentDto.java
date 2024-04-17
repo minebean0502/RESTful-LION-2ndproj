@@ -16,6 +16,6 @@ public class CommentDto {
     private String comment;
     private String writerId;
     private Integer inquiryId;
-    private LocalDateTime createdAt; // 추가된 속성
+    private LocalDateTime createdAt;
 
 }

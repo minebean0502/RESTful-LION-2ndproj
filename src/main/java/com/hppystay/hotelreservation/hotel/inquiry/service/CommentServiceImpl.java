@@ -4,8 +4,12 @@ package com.hppystay.hotelreservation.hotel.inquiry.service;
 import com.hppystay.hotelreservation.hotel.inquiry.dto.CommentDto;
 import com.hppystay.hotelreservation.hotel.inquiry.entity.Comment;
 import com.hppystay.hotelreservation.hotel.inquiry.entity.HotelInquiry;
+import com.hppystay.hotelreservation.hotel.inquiry.mapper.CommentMapper;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.CommentRepository;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.HotelInquiryRepository;
+import com.hppystay.hotelreservation.hotel.inquiry.service.exception.OperationNotAllowedException;
+import com.hppystay.hotelreservation.hotel.inquiry.service.exception.PermissionDeniedException;
+import com.hppystay.hotelreservation.hotel.inquiry.service.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Slf4j
 @Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
@@ -31,59 +34,50 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto createComment(CommentDto commentDto, String writerId, Integer inquiryId) {
+    public void createComment(CommentDto commentDto, String writerId, Integer inquiryId) {
         HotelInquiry hotelInquiry = hotelInquiryRepository.findById(inquiryId)
-                .orElseThrow(() -> new IllegalStateException("Inquiry with id " + inquiryId + " not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Inquiry with id " + inquiryId + " not found."));
 
         if (hotelInquiry.getComment() != null) {
-            throw new IllegalStateException("A comment for this inquiry already exists.");
+            throw new OperationNotAllowedException("A comment for this inquiry already exists.");
         }
 
-        Comment comment = Comment.builder()
-                .comment(commentDto.getComment())
-                .hotelInquiry(hotelInquiry)
-                .writerId(writerId)
-                .build();
+        Comment comment = CommentMapper.toEntity(commentDto);
+        comment.setHotelInquiry(hotelInquiry);
+        comment.setWriterId(writerId);
 
-        Comment savedComment = commentRepository.save(comment);
-        return convertEntityToDto(savedComment);
+        commentRepository.save(comment);
     }
 
     @Override
     public List<CommentDto> getAllCommentsByInquiryId(Long inquiryId) {
         return commentRepository.findByHotelInquiryId(inquiryId)
                 .stream()
-                .map(this::convertEntityToDto)
+                .map(CommentMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public CommentDto getCommentById(Integer id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new IllegalStateException("Comment with id " + id + "does not exist."));
-        return convertEntityToDto(comment);
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + "does not exist."));
+        return CommentMapper.toDto(comment);
     }
 
     @Override
-    public CommentDto updateComment(Integer commentId, CommentDto commentDto, String currentUsername) {
+    public void updateComment(Integer commentId, CommentDto commentDto, String currentUsername) {
         Comment existingComment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalStateException("Comment with id " + commentId + " does not exist."));
-
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + commentId + " does not exist."));
         if (!existingComment.getWriterId().equals(currentUsername)) {
-            //TODO 적절한 예외 처리
-            throw new IllegalStateException("You do not have permission to update this inquiry.");
+            throw new PermissionDeniedException("You do not have permission to update this inquiry.");
         }
-
         existingComment.setComment(commentDto.getComment());
-        Comment updatedComment = commentRepository.save(existingComment);
-        return convertEntityToDto(updatedComment);
     }
 
-    @Transactional
     @Override
     public void deleteComment(Integer commentId, String currentUsername) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Comment not found with id: " + commentId));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
 
         HotelInquiry inquiry = comment.getHotelInquiry();
         if (inquiry != null) {
@@ -91,22 +85,10 @@ public class CommentServiceImpl implements CommentService {
             hotelInquiryRepository.save(inquiry); // 변경사항 저장
         }
 
-        //TODO 적절한 예외처리
         if (!comment.getWriterId().equals(currentUsername)) {
-            throw new IllegalStateException("You do not have permission to delete this inquiry.");
+            throw new PermissionDeniedException("You do not have permission to delete this inquiry.");
         }
 
         commentRepository.deleteById(commentId);
-
-    }
-
-    private CommentDto convertEntityToDto(Comment comment) {
-        return CommentDto.builder()
-                .id(comment.getId())
-                .comment(comment.getComment())
-                .writerId(comment.getWriterId())
-                .inquiryId(comment.getHotelInquiry().getId())
-                .createdAt(comment.getCreatedAt())
-                .build();
     }
 }
