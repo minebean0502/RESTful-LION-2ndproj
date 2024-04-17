@@ -1,7 +1,9 @@
 package com.hppystay.hotelreservation.hotel.entity;
 
+import com.hppystay.hotelreservation.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,10 +11,10 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Hotel extends BaseEntity{
+public class Hotel extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // id

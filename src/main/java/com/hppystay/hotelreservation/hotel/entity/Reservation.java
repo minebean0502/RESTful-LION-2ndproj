@@ -1,6 +1,7 @@
 package com.hppystay.hotelreservation.hotel.entity;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
+import com.hppystay.hotelreservation.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class Reservation  extends BaseEntity{
+public class Reservation  extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

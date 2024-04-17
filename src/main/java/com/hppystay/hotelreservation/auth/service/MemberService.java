@@ -12,14 +12,12 @@ import com.hppystay.hotelreservation.auth.entity.MemberRole;
 import com.hppystay.hotelreservation.auth.repository.VerificationRepository;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -102,8 +100,8 @@ public class MemberService implements UserDetailsService {
                     .append("   <p><strong>인증 코드:</strong> <span style=\"font-size: 18px; font-weight: bold;\">")
                     .append(verifyCode)
                     .append("</span></p>")
-                    .append("<p>이 코드는 5분간 유효합니다.</p>")
-                    .append("<p>감사합니다.</p>")
+                    .append("   <p>이 코드는 5분간 유효합니다.</p>")
+                    .append("   <p>감사합니다.</p>")
                     .append("</div>");
             message.setText(textBody.toString(), "UTF-8", "HTML");
 

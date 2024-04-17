@@ -31,8 +31,7 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
 
     @Override
     public HotelInquiryDto getInquiryById(Integer id) {
-        HotelInquiry hotelInquiry = hotelInquiryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Inquiry with id " + id + " does not exist."));
+        HotelInquiry hotelInquiry = findInquiryById(id);
         return HotelInquiryMapper.toDto(hotelInquiry);
     }
 
@@ -48,29 +47,31 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
 
     @Override
     public void updateInquiry(Integer id, HotelInquiryDto hotelInquiryDto, String currentUsername) {
-        HotelInquiry hotelInquiry = hotelInquiryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Inquiry with id " + id + " does not exist."));
-
-        if (!hotelInquiry.getWriterId().equals(currentUsername)) {
-            throw new PermissionDeniedException("You do not have permission to update this inquiry.");
-        }
+        HotelInquiry hotelInquiry = findInquiryById(id);
+        checkPermission(hotelInquiry.getWriterId(), currentUsername);
 
         if (hotelInquiryDto.getTitle() != null) {hotelInquiry.setTitle(hotelInquiryDto.getTitle());}
         if (hotelInquiryDto.getContent() != null) {hotelInquiry.setContent(hotelInquiryDto.getContent());}
         if (hotelInquiryDto.getWriterId() != null) {hotelInquiry.setWriterId(hotelInquiryDto.getWriterId());}
         if (hotelInquiryDto.getHotelId() != null) {hotelInquiry.setHotelId(hotelInquiryDto.getHotelId());}
-
     }
 
     @Override
     public void deleteInquiry(Integer id, String currentUsername) {
-        HotelInquiry inquiry = hotelInquiryRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Inquiry not found with id: " + id));
-
-        if (!inquiry.getWriterId().equals(currentUsername)) {
-            throw new PermissionDeniedException("You do not have permission to delete this inquiry.");
-        }
+        HotelInquiry inquiry = findInquiryById(id);
+        checkPermission(inquiry.getWriterId(), currentUsername);
         hotelInquiryRepository.deleteById(id);
+    }
+
+    private HotelInquiry findInquiryById(Integer id) {
+        return hotelInquiryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Inquiry with id " + id + " does not exist."));
+    }
+
+    private void checkPermission(String writerId, String currentUsername) {
+        if (!writerId.equals(currentUsername)) {
+            throw new PermissionDeniedException("You do not have permission to perform this action.");
+        }
     }
 
 }

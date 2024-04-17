@@ -35,8 +35,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void createComment(CommentDto commentDto, String writerId, Integer inquiryId) {
-        HotelInquiry hotelInquiry = hotelInquiryRepository.findById(inquiryId)
-                .orElseThrow(() -> new ResourceNotFoundException("Inquiry with id " + inquiryId + " not found."));
+        HotelInquiry hotelInquiry = findHotelInquiryById(inquiryId);
 
         if (hotelInquiry.getComment() != null) {
             throw new OperationNotAllowedException("A comment for this inquiry already exists.");
@@ -59,25 +58,21 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDto getCommentById(Integer id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + "does not exist."));
+        Comment comment = findCommentById(id);
         return CommentMapper.toDto(comment);
     }
 
     @Override
     public void updateComment(Integer commentId, CommentDto commentDto, String currentUsername) {
-        Comment existingComment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + commentId + " does not exist."));
-        if (!existingComment.getWriterId().equals(currentUsername)) {
-            throw new PermissionDeniedException("You do not have permission to update this inquiry.");
-        }
+        Comment existingComment = findCommentById(commentId);
+        checkPermission(existingComment.getWriterId(), currentUsername);
         existingComment.setComment(commentDto.getComment());
     }
 
     @Override
     public void deleteComment(Integer commentId, String currentUsername) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment not found with id: " + commentId));
+        Comment comment = findCommentById(commentId);
+        checkPermission(comment.getWriterId(), currentUsername);
 
         HotelInquiry inquiry = comment.getHotelInquiry();
         if (inquiry != null) {
@@ -85,10 +80,23 @@ public class CommentServiceImpl implements CommentService {
             hotelInquiryRepository.save(inquiry); // 변경사항 저장
         }
 
-        if (!comment.getWriterId().equals(currentUsername)) {
-            throw new PermissionDeniedException("You do not have permission to delete this inquiry.");
-        }
-
         commentRepository.deleteById(commentId);
     }
+
+    private Comment findCommentById(Integer id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " does not exist."));
+    }
+
+    private HotelInquiry findHotelInquiryById(Integer id) {
+        return hotelInquiryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Inquiry with id " + id + " not found."));
+    }
+
+    private void checkPermission(String writerId, String currentUsername) {
+        if (!writerId.equals(currentUsername)) {
+            throw new PermissionDeniedException("You do not have permission to perform this action.");
+        }
+    }
+
 }

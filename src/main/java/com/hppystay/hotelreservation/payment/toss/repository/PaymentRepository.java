@@ -1,7 +1,7 @@
 package com.hppystay.hotelreservation.payment.toss.repository;
 
-import com.hppystay.hotelreservation.payment.toss.entity.PaymentEntity;
+import com.hppystay.hotelreservation.payment.toss.entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
+public interface PaymentRepository extends JpaRepository<Payment, Long> {
 }

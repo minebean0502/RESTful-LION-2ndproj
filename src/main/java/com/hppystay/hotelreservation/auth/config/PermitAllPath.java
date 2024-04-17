@@ -11,6 +11,7 @@ public class PermitAllPath {
             "/toss/**",
             "/payments/**",
             "/reservations/**",
+            "/reservation/**",
 
             // toss API 관련 (이하 삭제 금지)
             // reservations.html에 요청하는 자바스크립트 부분 (없으면 리스트 표시안됨)
@@ -23,12 +24,13 @@ public class PermitAllPath {
 
             // 숙소
             "/test/**",
+            "test/keyword/**",
+            "test/areaCode/**",
+            "/login"
 
-            "/login",
-            // 문의사항
+            ,// 문의사항
             "/hotel/inquiries/**",
             "/api/hotel/inquiries/**"
-
 
     };
 }
