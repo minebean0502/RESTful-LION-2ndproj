@@ -24,7 +24,7 @@ public class TempMemberEntity {
     private String role;
     private String businessNumber;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<TempReservationEntity> reservations = new ArrayList<>();
 
     // Member 정보에는
