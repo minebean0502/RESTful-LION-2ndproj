@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.payment.toss.temp.entity;
 
+import com.hppystay.hotelreservation.payment.toss.entity.Payment;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +29,12 @@ public class TempReservationEntity {
     // Member -> Reservation (@OneToMany) 양방향 관계가 성립해야 하나, 테스트 목적이라 Long로 빼둠
     private Long member;
 
+    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Payment payment;
 
+
+//    @Column(name = "payment_id")
+//    private Long paymentId;
     // 예약서에는
     // PK와, 정보들과
     // Member의 Member ID와
