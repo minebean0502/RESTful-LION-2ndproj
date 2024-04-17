@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.payment.toss.entity;
 
+import com.hppystay.hotelreservation.hotel.entity.Reservation;
 import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +10,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentEntity {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,6 +25,7 @@ public class PaymentEntity {
     @OneToOne
     @JoinColumn(name = "reservation_id")
     private TempReservationEntity reservation;
+    // private Reservation reservation;
     // reservation에서 가져올건
     // reservation의 id와, reservation에 연결된 member의 id
 }
