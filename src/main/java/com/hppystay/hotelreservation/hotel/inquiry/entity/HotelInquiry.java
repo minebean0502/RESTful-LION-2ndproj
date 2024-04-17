@@ -1,18 +1,20 @@
 package com.hppystay.hotelreservation.hotel.inquiry.entity;
 
+import com.hppystay.hotelreservation.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Builder
+@SuperBuilder
 @Table(name = "hotel_inquiry")
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelInquiry {
+public class HotelInquiry extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -27,7 +29,7 @@ public class HotelInquiry {
     private Comment comment;
 
     @Setter
-    private Integer writerId;
+    private String writerId;
     @Setter
     private Integer hotelId;
 }

@@ -24,18 +24,24 @@
     <table>
         <thead>
         <tr>
+            <th>Status</th>
             <th>Title</th>
             <th>Content</th>
             <th>Writer</th>
+            <th>Created At</th>
             <th>Comment</th>
+            <th>Created At</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="inquiry : ${inquiries}">
+            <td th:text="${inquiry.comment != null ? '답변완료' : '미답변'}"></td>
             <td th:text="${inquiry.title}">Inquiry Title</td>
             <td th:text="${inquiry.content}">Inquiry content</td>
             <td th:text="${inquiry.writerId}">Inquiry writerId</td>
+            <td th:text="${#temporals.format(inquiry.createdAt, 'yyyy-MM-dd')}">Created At</td>
             <td th:text="${inquiry.comment != null ? inquiry.comment.comment : 'No comment'}"></td>
+            <td th:text="${inquiry.comment != null ? #temporals.format(inquiry.comment.createdAt, 'yyyy-MM-dd') : 'No comment'}">Created At</td>
         </tr>
         </tbody>
     </table>

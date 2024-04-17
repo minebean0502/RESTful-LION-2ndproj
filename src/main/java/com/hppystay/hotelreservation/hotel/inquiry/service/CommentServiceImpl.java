@@ -31,7 +31,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto createComment(CommentDto commentDto, Integer writerId, Integer inquiryId) {
+    public CommentDto createComment(CommentDto commentDto, String writerId, Integer inquiryId) {
         HotelInquiry hotelInquiry = hotelInquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> new IllegalStateException("Inquiry with id " + inquiryId + " not found."));
 
@@ -65,9 +65,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto updateComment(Integer commentId, CommentDto commentDto) {
+    public CommentDto updateComment(Integer commentId, CommentDto commentDto, String currentUsername) {
         Comment existingComment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalStateException("Comment with id " + commentId + " does not exist."));
+
+        if (!existingComment.getWriterId().equals(currentUsername)) {
+            //TODO 적절한 예외 처리
+            throw new IllegalStateException("You do not have permission to update this inquiry.");
+        }
+
         existingComment.setComment(commentDto.getComment());
         Comment updatedComment = commentRepository.save(existingComment);
         return convertEntityToDto(updatedComment);
@@ -75,7 +81,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public void deleteComment(Integer commentId) {
+    public void deleteComment(Integer commentId, String currentUsername) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment not found with id: " + commentId));
 
@@ -83,6 +89,11 @@ public class CommentServiceImpl implements CommentService {
         if (inquiry != null) {
             inquiry.setComment(null); // HotelInquiry에서 Comment 연결 해제
             hotelInquiryRepository.save(inquiry); // 변경사항 저장
+        }
+
+        //TODO 적절한 예외처리
+        if (!comment.getWriterId().equals(currentUsername)) {
+            throw new IllegalStateException("You do not have permission to delete this inquiry.");
         }
 
         commentRepository.deleteById(commentId);
@@ -95,6 +106,7 @@ public class CommentServiceImpl implements CommentService {
                 .comment(comment.getComment())
                 .writerId(comment.getWriterId())
                 .inquiryId(comment.getHotelInquiry().getId())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 }

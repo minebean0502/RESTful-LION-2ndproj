@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class HotelInquiryDto {
     private String title;
     private String content;
     private CommentDto comment;
-    private Integer writerId;
+    private String writerId;
     private Integer hotelId;
+    private LocalDateTime createdAt; // 추가된 속성
 }

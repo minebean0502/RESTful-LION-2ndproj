@@ -6,8 +6,13 @@ import com.hppystay.hotelreservation.hotel.inquiry.entity.Comment;
 import com.hppystay.hotelreservation.hotel.inquiry.entity.HotelInquiry;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.HotelInquiryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
+
+
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,11 +27,9 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
     }
 
     @Override
-    public List<HotelInquiryDto> getAllInquiries() {
-        return hotelInquiryRepository.findAll()
-                .stream()
-                .map(this::convertEntityToDto)
-                .collect(Collectors.toList());
+    public Page<HotelInquiryDto> getAllInquiries(Pageable pageable) {
+        Page<HotelInquiry> inquiryPage = hotelInquiryRepository.findAllByOrderByCreatedAtDesc(pageable);
+        return inquiryPage.map(this::convertEntityToDto);
     }
 
     @Override
@@ -37,7 +40,7 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
     }
 
     @Override
-    public HotelInquiryDto createInquiry(HotelInquiryDto hotelInquiryDto, Integer writerId, Integer hotelId) {
+    public HotelInquiryDto createInquiry(HotelInquiryDto hotelInquiryDto, String writerId, Integer hotelId) {
         hotelInquiryDto.setWriterId(writerId);
         hotelInquiryDto.setHotelId(hotelId);
 
@@ -48,9 +51,14 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
     }
 
     @Override
-    public HotelInquiryDto updateInquiry(Integer id, HotelInquiryDto hotelInquiryDto) {
+    public HotelInquiryDto updateInquiry(Integer id, HotelInquiryDto hotelInquiryDto, String currentUsername) {
         HotelInquiry hotelInquiry = hotelInquiryRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Inquiry with id " + id + " does not exist."));
+
+        if (!hotelInquiry.getWriterId().equals(currentUsername)) {
+            //TODO 적절한 예외 처리
+            throw new IllegalStateException("You do not have permission to update this inquiry.");
+        }
 
         if (hotelInquiryDto.getTitle() != null) {
             hotelInquiry.setTitle(hotelInquiryDto.getTitle());
@@ -72,9 +80,13 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
     }
 
     @Override
-    public void deleteInquiry(Integer id) {
-        if (!hotelInquiryRepository.existsById(id)) {
-            throw new IllegalStateException("Inquiry with id " + id + " does not exist.");
+    public void deleteInquiry(Integer id, String currentUsername) {
+        HotelInquiry inquiry = hotelInquiryRepository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Inquiry not found with id: " + id));
+
+        //TODO 적절한 예외처리
+        if (!inquiry.getWriterId().equals(currentUsername)) {
+            throw new IllegalStateException("You do not have permission to delete this inquiry.");
         }
         hotelInquiryRepository.deleteById(id);
     }
@@ -108,6 +120,7 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
                 .content(hotelInquiryDto.getContent())
                 .writerId(hotelInquiryDto.getWriterId())
                 .hotelId(hotelInquiryDto.getHotelId())
+                .createdAt(hotelInquiryDto.getCreatedAt())
                 .build();
     }
 }
