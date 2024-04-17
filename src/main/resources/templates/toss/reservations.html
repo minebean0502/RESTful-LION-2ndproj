@@ -61,7 +61,7 @@
                 cardText.innerText = reservation.price
                 cardBody.appendChild(cardText)
                 const buyButton = document.createElement('a')
-                buyButton.href = `/static/toss/reservation.html?id=${reservation.id}`
+                buyButton.href = `/reservation?id=${reservation.id}`
                 buyButton.text = '사러가기'
                 buyButton.classList.add('btn', 'btn-primary')
                 cardBody.appendChild(buyButton)

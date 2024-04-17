@@ -1,4 +1,4 @@
-package com.hppystay.hotelreservation.api.KNTO.dto.hotel;
+package com.hppystay.hotelreservation.api.KNTO.dto.tourinfo;
 
 
 import com.hppystay.hotelreservation.api.KNTO.utils.AreaCode;
@@ -9,7 +9,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @Builder
-public class HotelApiDto {
+public class TourInfoApiDto {
 
     private String title;
     private String address;
@@ -17,11 +17,11 @@ public class HotelApiDto {
     private int contentTypeId;
     private String firstImage;
     private String tel;
-    private double mapX;
-    private double mapY;
+    private String mapX;
+    private String mapY;
 
-    public SimpleHotel toResponse() {
-        return SimpleHotel.builder()
+    public SimpleTourInfo toResponse() {
+        return SimpleTourInfo.builder()
                 .title(title)
                 .address(address)
                 .areaName(AreaCode.getAreaName(areaCode))

@@ -6,6 +6,7 @@ import com.hppystay.hotelreservation.auth.dto.PasswordDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtRequestDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtResponseDto;
 import com.hppystay.hotelreservation.auth.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class MemberController {
 
     @PostMapping("/sign-up")
     public MemberDto signUp(
+            @Valid
             @RequestBody
             CreateMemberDto createMemberDto
     ) {

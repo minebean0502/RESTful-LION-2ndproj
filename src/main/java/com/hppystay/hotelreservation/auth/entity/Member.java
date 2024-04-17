@@ -1,18 +1,21 @@
 package com.hppystay.hotelreservation.auth.entity;
 
+import com.hppystay.hotelreservation.common.entity.BaseEntity;
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Getter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,5 +31,4 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     private List<Reservation> reservationList = new ArrayList<>();
-
 }
