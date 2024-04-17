@@ -51,7 +51,7 @@ public class TempConfig {
                 reservationRepository.saveAll(List.of(
                         TempReservationEntity.builder()
                                 .memberEmail("user1@gmail.com")
-                                .roomId("500")
+                                .roomId("500번방")
                                 .numberOfPeople("5")
                                 .price("50000")
                                 .status("IN_PROGRESS")
@@ -61,7 +61,7 @@ public class TempConfig {
                                 .build(),
                         TempReservationEntity.builder()
                                 .memberEmail("user2@gmail.com")
-                                .roomId("1")
+                                .roomId("1번방")
                                 .numberOfPeople("1")
                                 .price("10000")
                                 .status("IN_PROGRESS")
@@ -71,7 +71,7 @@ public class TempConfig {
                                 .build(),
                         TempReservationEntity.builder()
                                 .memberEmail("user3@gmail.com")
-                                .roomId("2")
+                                .roomId("2번방")
                                 .numberOfPeople("10")
                                 .price("12345")
                                 .status("IN_PROGRESS")
@@ -81,7 +81,7 @@ public class TempConfig {
                                 .build(),
                         TempReservationEntity.builder()
                                 .memberEmail("user4@gmail.com")
-                                .roomId("10")
+                                .roomId("10번방")
                                 .numberOfPeople("1")
                                 .price("20000")
                                 .status("IN_PROGRESS")

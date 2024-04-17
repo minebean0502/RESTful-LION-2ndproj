@@ -2,7 +2,6 @@ package com.hppystay.hotelreservation.payment.toss.temp.service;
 
 import com.hppystay.hotelreservation.payment.toss.temp.dto.TempReservationDto;
 
-import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import com.hppystay.hotelreservation.payment.toss.temp.repository.TempReservationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

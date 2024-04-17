@@ -9,7 +9,7 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentEntity {
+public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,12 +21,10 @@ public class PaymentEntity {
     private String status;
     // 여기 위에는 필수 요소
 
-    // Reservation의 price 가져올 것?
-    private String price;
-
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reservation_id")
     private TempReservationEntity reservation;
+    // private Reservation reservation;
     // reservation에서 가져올건
     // reservation의 id와, reservation에 연결된 member의 id
 }
