@@ -41,4 +41,14 @@ public class MemberController {
         memberService.sendVerifyCode(email);
         return ResponseEntity.ok("{}");
     }
+
+    //비밀번호 찾기 페이지
+    @GetMapping("/find/password")
+    public String findPassword(
+            @RequestParam("email")
+            String email
+    ){
+    }
+
+
 }

@@ -102,6 +102,7 @@ public class MemberService implements UserDetailsService {
         return sb.toString();
     }
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findMemberByEmail(username);
