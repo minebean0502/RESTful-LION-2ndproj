@@ -6,7 +6,6 @@ import com.hppystay.hotelreservation.hotel.inquiry.entity.Comment;
 import com.hppystay.hotelreservation.hotel.inquiry.entity.HotelInquiry;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.CommentRepository;
 import com.hppystay.hotelreservation.hotel.inquiry.repository.HotelInquiryRepository;
-import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,9 +31,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public CommentDto createComment(CommentDto commentDto, Integer writerId) {
-        HotelInquiry hotelInquiry = hotelInquiryRepository.findById(commentDto.getInquiryId())
-                .orElseThrow(() -> new IllegalStateException("Inquiry with id " + commentDto.getInquiryId() + " not found."));
+    public CommentDto createComment(CommentDto commentDto, Integer writerId, Integer inquiryId) {
+        HotelInquiry hotelInquiry = hotelInquiryRepository.findById(inquiryId)
+                .orElseThrow(() -> new IllegalStateException("Inquiry with id " + inquiryId + " not found."));
 
         if (hotelInquiry.getComment() != null) {
             throw new IllegalStateException("A comment for this inquiry already exists.");

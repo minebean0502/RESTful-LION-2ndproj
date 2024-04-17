@@ -26,6 +26,7 @@ public class PermitAllPath {
 
             "/login",
             // 문의사항
+            "/hotel/inquiries/**",
             "/api/hotel/inquiries/**"
 
 

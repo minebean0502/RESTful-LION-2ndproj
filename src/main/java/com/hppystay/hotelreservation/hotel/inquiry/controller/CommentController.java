@@ -4,15 +4,15 @@ import com.hppystay.hotelreservation.hotel.inquiry.dto.CommentDto;
 import com.hppystay.hotelreservation.hotel.inquiry.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
-@Controller
+
+@RestController
 @RequestMapping("/api/hotel/inquiries/comments")
 public class CommentController {
-
     private final CommentService commentService;
 
     @Autowired
@@ -20,48 +20,35 @@ public class CommentController {
         this.commentService = commentService;
     }
 
-    @GetMapping("/add/{inquiryId}")
-    public String showCommentForm(@PathVariable("inquiryId") Integer inquiryId, Model model) {
-        model.addAttribute("inquiryId", inquiryId);
-        return "inquiries/comment-form";
-    }
-
-    @PostMapping("/submit")
-    public String submitComment(
+    @PostMapping("/submit/{inquiryId}")
+    public ResponseEntity<CommentDto> submitComment(
+            //TODO 로그인한 사용자 ID 가져오기
             //@AuthenticationPrincipal CustomUserDetails userDetails,
-            CommentDto commentDto
+            @PathVariable Integer inquiryId,
+            @RequestBody CommentDto commentDto
     ) {
-        //userDetails에서 사용자 ID를 가져옴.
         //Integer writerId = userDetails.getId();
+        Integer writerId = 57;  // 임시로 정적 설정.
 
-        // 임시로 정적 설정.
-        Integer writerId = 57;
+       CommentDto createdComment = commentService.createComment(commentDto, writerId, inquiryId);
 
-        commentService.createComment(commentDto, writerId);
-
-        return "redirect:/api/hotel/inquiries";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String showCommentEditForm(@PathVariable("id") Integer id, Model model) {
-        CommentDto comment = commentService.getCommentById(id);
-        model.addAttribute("comment", comment);
-        return "inquiries/comment-edit";
+        return ResponseEntity.ok(createdComment);
     }
 
     //TODO CORS -> PUT
-    @PostMapping("/update")
-    public String updateComment(CommentDto commentDto) {
-        commentService.updateComment(commentDto.getId(), commentDto);
-        return "redirect:/api/hotel/inquiries";
+    @PostMapping("/update/{commentId}")
+    public ResponseEntity<CommentDto> updateComment(
+            @PathVariable("commentId") Integer commentId,
+            @RequestBody CommentDto commentDto
+    ) {
+        CommentDto updatedComment = commentService.updateComment(commentId, commentDto);
+        return ResponseEntity.ok(updatedComment);
     }
-
 
     //TODO CORS -> DELETE -> list.html의 javascript에서도 POST->DELETE
     @PostMapping("/delete/{commentId}")
-    public String deleteComment(@PathVariable("commentId") Integer commentId) {
-        log.info("Deleting comment with ID: {}", commentId);
+    public ResponseEntity<Void> deleteComment(@PathVariable("commentId") Integer commentId) {
         commentService.deleteComment(commentId);
-        return "redirect:/api/hotel/inquiries";
+        return ResponseEntity.ok().build();
     }
 }

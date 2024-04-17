@@ -52,10 +52,21 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
         HotelInquiry hotelInquiry = hotelInquiryRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Inquiry with id " + id + " does not exist."));
 
-        hotelInquiry.setTitle(hotelInquiryDto.getTitle());
-        hotelInquiry.setContent(hotelInquiryDto.getContent());
-        hotelInquiry.setWriterId(hotelInquiryDto.getWriterId());
-        hotelInquiry.setHotelId(hotelInquiryDto.getHotelId());
+        if (hotelInquiryDto.getTitle() != null) {
+            hotelInquiry.setTitle(hotelInquiryDto.getTitle());
+        }
+
+        if (hotelInquiryDto.getContent() != null) {
+            hotelInquiry.setContent(hotelInquiryDto.getContent());
+        }
+
+        if (hotelInquiryDto.getWriterId() != null) {
+            hotelInquiry.setWriterId(hotelInquiryDto.getWriterId());
+        }
+
+        if (hotelInquiryDto.getHotelId() != null) {
+            hotelInquiry.setHotelId(hotelInquiryDto.getHotelId());
+        }
 
         return convertEntityToDto(hotelInquiryRepository.save(hotelInquiry));
     }

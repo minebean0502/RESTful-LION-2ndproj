@@ -6,43 +6,20 @@
     <style>
         /* Add CSS styles for the table, th, and td elements */
         table {
-            border-collapse: collapse; /* Collapse the border between cells */
-            width: 100%; /* Optional: Makes the table take up the full width */
+            border-collapse: collapse;
+            width: 100%;
         }
         th, td {
-            border: 1px solid black; /* Add a solid black border */
-            padding: 8px; /* Add some padding inside cells */
+            border: 1px solid black;
+            padding: 8px;
         }
         th {
-            background-color: #f2f2f2; /* Optional: Add a background color to headers */
+            background-color: #f2f2f2;
         }
     </style>
-    <script>
-        function deleteInquiry(inquiryId) {
-            const url = `/api/hotel/inquiries/delete/${inquiryId}`;
-            fetch(url, { method: 'POST' })
-                .then(() => window.location.reload());
-        }
-
-        function deleteComment(commentId) {
-            const url = `/api/hotel/inquiries/comments/delete/${commentId}`;
-            fetch(url, { method: 'POST' })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.reload(); // 성공 시 페이지 새로고침
-                    } else {
-                        alert('Failed to delete comment.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    </script>
 </head>
 <body>
 <h1>Hotel Inquiries</h1>
-<div>
-    <a href="/api/hotel/inquiries/new">Submit New Inquiry</a>
-</div>
 <div>
     <table>
         <thead>
@@ -51,9 +28,6 @@
             <th>Content</th>
             <th>Writer</th>
             <th>Comment</th>
-            <th>Author's action</th>
-            <th>Manager's action</th>
-            <th>Manager's action</th>
         </tr>
         </thead>
         <tbody>
@@ -62,20 +36,6 @@
             <td th:text="${inquiry.content}">Inquiry content</td>
             <td th:text="${inquiry.writerId}">Inquiry writerId</td>
             <td th:text="${inquiry.comment != null ? inquiry.comment.comment : 'No comment'}"></td>
-            <td>
-                <a th:href="@{/api/hotel/inquiries/edit/{id}(id=${inquiry.id})}" class="btn btn-edit">Edit</a>
-                <button th:onclick="'deleteInquiry(' + ${inquiry.id} + ')'">Delete</button>
-            </td>
-            <td>
-                <a th:href="@{/api/hotel/inquiries/comments/add/{id}(id=${inquiry.id})}" class="btn">Add Comment</a>
-            </td>
-            <td th:if="${inquiry.comment != null}">
-                <a th:href="@{/api/hotel/inquiries/comments/edit/{id}(id=${inquiry.comment.id})}">Edit</a>
-                <!--<button th:if="${inquiry.comment != null}" th:onclick="'deleteComment(' + ${inquiry.comment.id} + ')'">Delete</button>-->
-                <form th:action="@{/api/hotel/inquiries/comments/delete/{commentId}(commentId=${inquiry.comment.id})}" method="post">
-                    <input type="submit" value="Delete"/>
-                </form>
-            </td>
         </tr>
         </tbody>
     </table>

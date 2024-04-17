@@ -3,12 +3,13 @@ package com.hppystay.hotelreservation.hotel.inquiry.controller;
 import com.hppystay.hotelreservation.hotel.inquiry.dto.HotelInquiryDto;
 import com.hppystay.hotelreservation.hotel.inquiry.service.HotelInquiryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/api/hotel/inquiries")
 public class HotelInquiryController {
 
@@ -19,21 +20,11 @@ public class HotelInquiryController {
         this.hotelInquiryService = hotelInquiryService;
     }
 
-    @GetMapping
-    public String listInquiries(Model model) {
-        model.addAttribute("inquiries", hotelInquiryService.getAllInquiries());
-        return "inquiries/list"; // templates/inquiries/list.html
-    }
-
-    @GetMapping("/new")
-    public String showInquiryForm(Model model) {
-        model.addAttribute("inquiryDto", new HotelInquiryDto());
-        return "inquiries/form"; // templates/inquiries/form.html
-    }
-
-    @PostMapping
-    public String submitInquiry(
+    @PostMapping("/submit")
+    public ResponseEntity<HotelInquiryDto> submitInquiry(
+            //TODO 로그인한 사용자 ID 입력
             //@AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody
             HotelInquiryDto hotelInquiryDto
     ) {
 
@@ -47,38 +38,30 @@ public class HotelInquiryController {
         // 실제로는 사용자 엔티티에서 ID를 가져와야 한다.
         //Integer writerId = userService.findIdByUsername(username);
 
-        // 임시로 정적 설정.
-        Integer writerId = 23;
+
+        Integer writerId = 23;  // 임시로 정적 설정.
+        Integer hotelId = 107;  // 임시로 정적 설정.
 
 
-        // hotelId는 특정 호텔을 가리키는 ID로,
-        // 임시로 정적 설정.
-        Integer hotelId = 107;
-
-
-        hotelInquiryService.createInquiry(hotelInquiryDto, writerId, hotelId);
-        return "redirect:/api/hotel/inquiries";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable("id") Integer id, Model model) {
-        HotelInquiryDto inquiry = hotelInquiryService.getInquiryById(id);
-        model.addAttribute("inquiry", inquiry);
-        return "inquiries/edit";
+        HotelInquiryDto createdInquiry = hotelInquiryService.createInquiry(hotelInquiryDto, writerId, hotelId);
+        return ResponseEntity.ok(createdInquiry);
     }
 
     //TODO CORS -> PUT
-    @PostMapping("/update")
-    public String updateInquiry(HotelInquiryDto hotelInquiryDto) {
-        hotelInquiryService.updateInquiry(hotelInquiryDto.getId(), hotelInquiryDto);
-        return "redirect:/api/hotel/inquiries";
+    @PostMapping("/update/{id}")
+    public ResponseEntity<HotelInquiryDto> updateInquiry(
+            @PathVariable("id") Integer id,
+            @RequestBody  HotelInquiryDto hotelInquiryDto
+    ) {
+        HotelInquiryDto updatedInquiry = hotelInquiryService.updateInquiry(id, hotelInquiryDto);
+        return ResponseEntity.ok(updatedInquiry);
     }
 
     //TODO CORS -> DELETE -> list.html의 javascript에서도 POST->DELETE
     @PostMapping("/delete/{id}")
-    public String deleteInquiry(@PathVariable("id") Integer id) {
+    public ResponseEntity<Void> deleteInquiry(@PathVariable("id") Integer id) {
         hotelInquiryService.deleteInquiry(id);
-        return "redirect:/api/hotel/inquiries";
+        return ResponseEntity.ok().build();
     }
 
 
