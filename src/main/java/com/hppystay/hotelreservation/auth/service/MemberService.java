@@ -142,8 +142,8 @@ public class MemberService implements UserDetailsService {
         return sb.toString();
     }
 
-    // 비밀번호 인증 메서드
-    public ResponseEntity<String> resetPassword(String email, String code) {
+    // 비밀번호 인증 코드 확인 메서드
+    public ResponseEntity<String> passwordCode(String email, String code) {
         Optional<EmailVerification> optionalVerification = verificationRepository.findByEmail(email);
 
         if (optionalVerification.isPresent()) {
@@ -159,12 +159,28 @@ public class MemberService implements UserDetailsService {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email not found");
         }
+        //코드를 임시비밀번호로 저장
+        changeTempPassword(email, code); //지금은 code가 tempPassword의 개념
+        return ResponseEntity.ok("Success");
+    }
 
-        return ResponseEntity.ok("success");
+    //임시비밀번호 저장
+    public void changeTempPassword(String email, String code) {
+        if (!userExists(email))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
+        Optional<Member> optionalMember = memberRepository.findMemberByEmail(email);
+        if (optionalMember.isEmpty())
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+
+        Member member = optionalMember.get();
+
+        member.setPassword(passwordEncoder.encode(code));
+        memberRepository.save(member);
     }
 
     // 비밀번호 변경 메서드
-    public void changePassword(PasswordDto dto) {
+    public ResponseEntity<String> changePassword(PasswordDto dto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication.getName();
         log.info(currentUser);
@@ -173,16 +189,17 @@ public class MemberService implements UserDetailsService {
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
 
+            //비밀번호 일치 여부 확인
             if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())){
-             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
 
             member.setPassword(passwordEncoder.encode(dto.getNewPassword()));
             memberRepository.save(member);
+            log.info(member.getEmail());
         }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.ok("New password");
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

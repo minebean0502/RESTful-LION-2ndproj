@@ -45,7 +45,7 @@ public class MemberController {
         return ResponseEntity.ok("{}");
     }
 
-    // 비밀번호 찾기
+    // 비밀번호 찾기(아이디 입력시 인증코드 발송)
     @PostMapping("/password/find")
     public ResponseEntity<String> findPassword(
             @RequestParam("email")
@@ -55,24 +55,24 @@ public class MemberController {
         return ResponseEntity.ok("{}");
     }
 
-    // 비밀번호 인증 코드 입력
-    @PostMapping("/password/reset")
-    public ResponseEntity<String> resetPassword(
+    // 비밀번호 인증 코드 입력(임시비밀번호로 저장)
+    @PostMapping("/password/code")
+    public ResponseEntity<String> PasswordCode(
             @RequestParam("email")
             String email,
             @RequestParam("code")
             String code
     ) {
-        return memberService.resetPassword(email,code);
+        return memberService.passwordCode(email,code);
     }
 
-    //비밀번호 변경
+    // 비밀번호 변경
     @PutMapping("/password/change")
-    public void changePassword(
+    public ResponseEntity<String> changePassword(
             @RequestBody
             PasswordDto dto
     ) {
-        memberService.changePassword(dto);
+       return memberService.changePassword(dto);
     }
 }
 

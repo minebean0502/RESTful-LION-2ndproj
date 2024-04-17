@@ -7,7 +7,7 @@ public class PermitAllPath {
             "/api/auth/sign-in",
             "/api/auth/email/verify",
             "/api/auth/password/find",
-            "/api/auth/password/reset",
+            "/api/auth/password/code",
             "/api/auth/password/change",
 
             // toss 인증 관련 api (채운 작성)
