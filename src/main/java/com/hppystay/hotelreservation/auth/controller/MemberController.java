@@ -2,6 +2,7 @@ package com.hppystay.hotelreservation.auth.controller;
 
 import com.hppystay.hotelreservation.auth.dto.CreateMemberDto;
 import com.hppystay.hotelreservation.auth.dto.MemberDto;
+import com.hppystay.hotelreservation.auth.dto.PasswordDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtRequestDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtResponseDto;
 import com.hppystay.hotelreservation.auth.service.MemberService;
@@ -42,13 +43,34 @@ public class MemberController {
         return ResponseEntity.ok("{}");
     }
 
-    //비밀번호 찾기 페이지
-    @GetMapping("/find/password")
-    public String findPassword(
+    // 비밀번호 찾기
+    @PostMapping("/password/find")
+    public ResponseEntity<String> findPassword(
             @RequestParam("email")
             String email
-    ){
+    ) {
+        memberService.sendVerifyCode(email);
+        return ResponseEntity.ok("{}");
     }
 
+    // 비밀번호 인증 코드 입력
+    @PostMapping("/password/reset")
+    public ResponseEntity<String> resetPassword(
+            @RequestParam("email")
+            String email,
+            @RequestParam("code")
+            String code
+    ) {
+        return memberService.resetPassword(email,code);
+    }
 
+    //비밀번호 변경
+    @PutMapping("/password/change")
+    public void changePassword(
+            @RequestBody
+            PasswordDto dto
+    ) {
+        memberService.changePassword(dto);
+    }
 }
+

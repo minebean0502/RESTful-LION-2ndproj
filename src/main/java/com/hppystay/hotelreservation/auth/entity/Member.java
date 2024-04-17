@@ -2,10 +2,7 @@ package com.hppystay.hotelreservation.auth.entity;
 
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +20,7 @@ public class Member {
 
     private String nickname;
     private String email;
+    @Setter
     private String password;
 
     @Enumerated(EnumType.STRING)

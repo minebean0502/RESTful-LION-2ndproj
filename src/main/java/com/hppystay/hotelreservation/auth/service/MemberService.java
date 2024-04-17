@@ -2,6 +2,7 @@ package com.hppystay.hotelreservation.auth.service;
 
 import com.hppystay.hotelreservation.auth.dto.CreateMemberDto;
 import com.hppystay.hotelreservation.auth.dto.MemberDto;
+import com.hppystay.hotelreservation.auth.dto.PasswordDto;
 import com.hppystay.hotelreservation.auth.entity.CustomUserDetails;
 import com.hppystay.hotelreservation.auth.entity.EmailVerification;
 import com.hppystay.hotelreservation.auth.entity.Member;
@@ -12,14 +13,16 @@ import com.hppystay.hotelreservation.auth.entity.MemberRole;
 import com.hppystay.hotelreservation.auth.repository.VerificationRepository;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,6 +34,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
@@ -58,7 +62,7 @@ public class MemberService implements UserDetailsService {
         return memberRepository.existsByEmail(email);
     }
 
-    //로그인 (jwt 발급)
+    //로그인 (jwt 토큰 발급)
     public JwtResponseDto issueToken(JwtRequestDto dto) {
         //아이디 확인
         if (!userExists(dto.getEmail()))
@@ -67,11 +71,12 @@ public class MemberService implements UserDetailsService {
         Optional<Member> optionalMember = memberRepository.findMemberByEmail(dto.getEmail());
         if (optionalMember.isEmpty())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
         Member member = optionalMember.get();
 
         //비밀번호 같은지 확인
         if (!passwordEncoder.matches(dto.getPassword(), member.getPassword()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 
         String jwt = jwtTokenUtils.generateToken(member);
         JwtResponseDto response = new JwtResponseDto();
@@ -122,6 +127,7 @@ public class MemberService implements UserDetailsService {
 
         // 인증 코드 발송 내역 저장
         verificationRepository.save(verification);
+
     }
 
     // 랜덤 숫자코드를 생성하는 메서드
@@ -132,6 +138,47 @@ public class MemberService implements UserDetailsService {
             sb.append(random.nextInt(10));
         }
         return sb.toString();
+    }
+
+    // 비밀번호 인증 메서드
+    public ResponseEntity<String> resetPassword(String email, String code) {
+        Optional<EmailVerification> optionalVerification = verificationRepository.findByEmail(email);
+
+        if (optionalVerification.isPresent()) {
+            EmailVerification verification = optionalVerification.get();
+            log.info(verification.getVerifyCode());
+
+            //이메일로 전송된 인증 코드와 DB에 저장된 인증 코드가 일치하는지 확인
+            if (!verification.getVerifyCode().equals(code)) {
+                log.info("Invalid code");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid code");
+            }
+
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email not found");
+        }
+
+        return ResponseEntity.ok("success");
+    }
+
+    // 비밀번호 변경 메서드
+    public void changePassword(PasswordDto dto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUser = authentication.getName();
+        log.info(currentUser);
+
+        Optional<Member> optionalMember = memberRepository.findMemberByEmail(currentUser);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+
+            if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())){
+             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            }
+
+            member.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+            memberRepository.save(member);
+        }
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
     }
 
 
