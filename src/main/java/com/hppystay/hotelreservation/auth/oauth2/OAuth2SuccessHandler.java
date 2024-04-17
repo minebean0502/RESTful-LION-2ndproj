@@ -4,6 +4,7 @@ import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.entity.MemberRole;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
+import com.nimbusds.jose.shaded.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,9 +42,6 @@ public class OAuth2SuccessHandler
     ) throws IOException, ServletException {
         OAuth2User oAuth2User
                 = (OAuth2User) authentication.getPrincipal();
-
-        Map<String, Object> attributes = oAuth2User.getAttributes();
-        System.out.println(attributes);
 
         String email = oAuth2User.getName();
         String nickname = oAuth2User.getAttribute("nickname");
