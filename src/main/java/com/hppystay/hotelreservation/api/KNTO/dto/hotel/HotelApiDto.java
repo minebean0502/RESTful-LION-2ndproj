@@ -17,8 +17,8 @@ public class HotelApiDto {
     private int contentTypeId;
     private String firstImage;
     private String tel;
-    private double mapX;
-    private double mapY;
+    private String mapX;
+    private String mapY;
 
     public SimpleHotel toResponse() {
         return SimpleHotel.builder()

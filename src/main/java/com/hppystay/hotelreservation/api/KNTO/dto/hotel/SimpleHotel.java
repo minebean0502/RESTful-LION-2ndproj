@@ -15,6 +15,6 @@ public class SimpleHotel {
     private String contentName;
     private String firstImage;
     private String tel;
-    private double mapX;
-    private double mapY;
+    private String mapX;
+    private String mapY;
 }
