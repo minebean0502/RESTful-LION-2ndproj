@@ -1,4 +1,4 @@
-package com.hppystay.hotelreservation.api.KNTO.dto.hotel;
+package com.hppystay.hotelreservation.api.KNTO.dto.tourinfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class SimpleHotel {
+public class SimpleTourInfo {
 
     private String title;
     private String address;
