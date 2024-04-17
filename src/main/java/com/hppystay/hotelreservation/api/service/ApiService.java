@@ -48,7 +48,10 @@ public class ApiService {
             for (Object o : jsonItemList) {
                 JSONObject item = (JSONObject) o;
                 HotelApiDto dto = makeLocationDto(item);
-                if (dto == null) continue;
+                if (dto == null) {
+                    log.info("DTO null");
+                    continue;
+                }
                 HotelApiDtos.add(dto);
                 log.info("{}", makeLocationDto(item));
             }
@@ -82,22 +85,21 @@ public class ApiService {
     }
 
     private HotelApiDto makeLocationDto(JSONObject item) {
-
-        // 가끔 좌표 데이터가 타입이 다른경우 널.
-        if (item.get("mapx") instanceof String || item.get("mapy") instanceof String
+        // 가끔 좌표 데이터가 타입이 다른 경우 null 반환
+        if (!(item.get("mapx") instanceof String) || !(item.get("mapy") instanceof String)
                 || item.get("addr1") == null || item.get("firstimage") == null
                 || item.get("areacode") == null || item.get("contenttypeid") == null || item.get("title") == null) {
             return null;
         }
         return HotelApiDto.builder().
-                title((String) item.get("title")).
-                address((String) item.get("addr1")).
-                areaCode((Integer) item.get("areacode")).
-                contentTypeId((Integer) item.get("contenttypeid")).
-                firstImage((String) item.get("firstimage")).
-                tel((String)item.get("tel")).
-                mapX((double) item.get("mapx")).
-                mapY((double) item.get("mapy")).
+                title(item.get("title").toString()).
+                address(item.get("addr1").toString()).
+                areaCode(Integer.parseInt(item.get("areacode").toString())).
+                contentTypeId(Integer.parseInt(item.get("contenttypeid").toString())).
+                firstImage(item.get("firstimage").toString()).
+                tel(item.get("tel").toString()).
+                mapX(item.get("mapx").toString()).
+                mapY(item.get("mapy").toString()).
                 build();
     }
 }
