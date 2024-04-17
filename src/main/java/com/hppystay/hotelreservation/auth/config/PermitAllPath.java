@@ -25,6 +25,8 @@ public class PermitAllPath {
             // 숙소
             "test",
             "/test/**",
+            "test/keyword/**",
+            "test/areaCode/**",
             "/login"
 
     };
