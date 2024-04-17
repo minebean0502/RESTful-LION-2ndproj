@@ -55,6 +55,9 @@ public class TossOrderService {
                 .build()
         ));
     }
+
+
+    // 실질적으로 이 이하의 Service는 아이템 Order과 관련되어 있음
     public List<PaymentDto> readAll() {
         return paymentRepository.findAll().stream()
                 .map(PaymentDto::fromEntity)
@@ -91,8 +94,14 @@ public class TossOrderService {
                 .orElseThrow(()
                         -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         // 2. 주문정보를 갱신한다.
-        payment.setStatus("CANCEL");
-        // 3. 취소후 결과를 응답한다.
-        return tossService.cancelPayment(payment.getTossPaymentKey(), dto);
+        if (!(payment.getStatus().equals("CANCEL"))) {
+            payment.setStatus("CANCEL");
+            // 3. 취소후 결과를 응답한다.
+            return tossService.cancelPayment(payment.getTossPaymentKey(), dto);
+        }
+        else {
+            // 이미 cancel건에 대해 있을 경우 HttpStatus CONFLICT = 이미 취소된 건에 대하여 또 취소 신청 에러값
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Payment is already canceled");
+        }
     }
 }

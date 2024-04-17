@@ -29,6 +29,7 @@ public class TempReservationEntity {
     // Member -> Reservation (@OneToMany) 양방향 관계가 성립해야 하나, 테스트 목적이라 Long로 빼둠
     private Long member;
 
+    // 표시되지는 않으나 존재함
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     private Payment payment;
 
