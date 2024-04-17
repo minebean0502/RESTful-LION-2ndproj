@@ -1,23 +1,27 @@
-package com.hppystay.hotelreservation.payment.toss.temp.entity;
+package com.hppystay.hotelreservation.payment.toss.entity;
 
+import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class TempPaymentEntity {
+public class PaymentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    // 여기 아래부터는 필수 요소
     // 중복 방지를 위함
-    private String paymentUID;
+    private String tossPaymentKey;
+    private String tossOrderId;
+    @Setter
     private String status;
+    // 여기 위에는 필수 요소
+
+    // Reservation의 price 가져올 것?
     private String price;
 
     @OneToOne
