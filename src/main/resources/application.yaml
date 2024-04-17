@@ -1,7 +1,16 @@
 spring:
-#  web:
-#    resources:
-#      static-locations: classpath:/static/
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SMTP_USERNAME}
+    password: ${SMTP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
   mvc:
     static-path-pattern: '/static/**'
 
@@ -77,3 +86,5 @@ toss:
 jwt:
   secret: ${JWT_SECRET}
 
+api:
+  key: ${API_KEY}
