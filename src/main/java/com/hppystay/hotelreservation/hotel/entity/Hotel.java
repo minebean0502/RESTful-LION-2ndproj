@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Hotel extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // id
@@ -31,9 +32,9 @@ public class Hotel extends BaseEntity {
 
     private Double avg_score; // 별점
 
-    private Double mapX; // 경도
+    private String mapX; // 경도
 
-    private Double mapY; // 위도
+    private String mapY; // 위도
 
     private String phone; // 숙소 연락처
 

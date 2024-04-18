@@ -143,7 +143,7 @@ public class MemberService implements UserDetailsService {
     }
 
     // 비밀번호 인증 코드 확인 메서드
-    public ResponseEntity<String> passwordCode(String email, String code) {
+    public ResponseEntity<String> passwordCode(String email, String code, String newPassword) {
         Optional<EmailVerification> optionalVerification = verificationRepository.findByEmail(email);
 
         if (optionalVerification.isPresent()) {
@@ -155,29 +155,17 @@ public class MemberService implements UserDetailsService {
                 log.info("Invalid code");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid code");
             }
+            Member member = memberRepository.findMemberByEmail(email).orElseThrow(
+                    ()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+            member.setPassword(passwordEncoder.encode(newPassword));
+            memberRepository.save(member);
 
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email not found");
         }
-        //코드를 임시비밀번호로 저장
-        changeTempPassword(email, code); //지금은 code가 tempPassword의 개념
         return ResponseEntity.ok("Success");
     }
 
-    //임시비밀번호 저장
-    public void changeTempPassword(String email, String code) {
-        if (!userExists(email))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
-        Optional<Member> optionalMember = memberRepository.findMemberByEmail(email);
-        if (optionalMember.isEmpty())
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
-        Member member = optionalMember.get();
-
-        member.setPassword(passwordEncoder.encode(code));
-        memberRepository.save(member);
-    }
 
     // 비밀번호 변경 메서드
     public ResponseEntity<String> changePassword(PasswordDto dto) {

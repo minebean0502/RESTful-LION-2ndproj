@@ -6,8 +6,7 @@ import com.hppystay.hotelreservation.api.KNTO.utils.ContentCode;
 import lombok.*;
 
 
-@Data
-@AllArgsConstructor
+@Getter
 @Builder
 public class TourInfoApiDto {
 
