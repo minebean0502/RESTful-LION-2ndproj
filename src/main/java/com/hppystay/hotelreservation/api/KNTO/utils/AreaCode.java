@@ -1,12 +1,14 @@
 package com.hppystay.hotelreservation.api.KNTO.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class AreaCode {
 
     static Map<Integer, String> areaCodeMap = new HashMap<>();
-
 
     public AreaCode() {
         areaCodeMap.put(1, "서울");

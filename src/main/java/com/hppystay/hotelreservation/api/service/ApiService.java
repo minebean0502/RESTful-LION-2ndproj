@@ -2,6 +2,7 @@ package com.hppystay.hotelreservation.api.service;
 
 
 import com.hppystay.hotelreservation.api.KNTO.dto.tourinfo.TourInfoApiDto;
+import com.hppystay.hotelreservation.api.KNTO.utils.AreaCode;
 import com.hppystay.hotelreservation.api.exception.OpenApiException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -83,7 +84,7 @@ public class ApiService {
                 if (dto.getContentTypeId() == 32)
                     continue;
                 spotApiDtos.add(dto);
-                log.info("{}", makeLocationDto(item));
+                log.info("{}", dto);
             }
 
             log.info("fetch 완료");
@@ -119,6 +120,7 @@ public class ApiService {
                 title(item.get("title").toString()).
                 address(item.get("addr1").toString()).
                 areaCode(Integer.parseInt(item.get("areacode").toString())).
+                area(AreaCode.getAreaName(Integer.parseInt(item.get("areacode").toString()))).
                 contentTypeId(Integer.parseInt(item.get("contenttypeid").toString())).
                 firstImage(item.get("firstimage").toString()).
                 tel(item.get("tel").toString()).
@@ -142,7 +144,7 @@ public class ApiService {
                     continue;
                 }
                 HotelApiDtos.add(dto);
-                log.info("{}", makeLocationDto(item));
+                log.info("{}", dto);
             }
 
             log.info("fetch 완료");
