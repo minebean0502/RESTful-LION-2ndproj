@@ -16,9 +16,9 @@ public class HotelController {
     private final ApiService apiService;
     private final HotelService hotelService;
 
-    @GetMapping("/test/areaCode/{areaCode}")
-    public List<TourInfoApiDto> findHotelByRegion(@PathVariable("areaCode") Integer areaCode){
-       return apiService.callHotelByRegionApi(areaCode);
+    @GetMapping("/test/areaCode/{area}")
+    public List<TourInfoApiDto> findHotelByRegion(@PathVariable("area") String area){
+       return apiService.callHotelByRegionApi(area);
     }
 
     @GetMapping("/test/keyword/{keyword}")
