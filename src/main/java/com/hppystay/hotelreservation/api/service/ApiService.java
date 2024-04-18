@@ -30,7 +30,8 @@ public class ApiService {
     private String apiKey;
 
     // 지역으로 숙소 검색
-    public List<TourInfoApiDto> callHotelByRegionApi(Integer areaCode) {
+    public List<TourInfoApiDto> callHotelByRegionApi(String area) {
+        Integer areaCode = AreaCode.getAreaCode(area);
 
         String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/searchStay1?MobileOS=WIN&MobileApp=RL&_type=JSON&areaCode={areaCode}&serviceKey={api_Key}")
                 .buildAndExpand(areaCode,this.apiKey)

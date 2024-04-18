@@ -7,7 +7,6 @@ import lombok.*;
 @Builder
 @ToString
 public class TourInfoApiDto {
-
     private String title;
     private String address;
     private int areaCode;
@@ -17,17 +16,4 @@ public class TourInfoApiDto {
     private String tel;
     private String mapX;
     private String mapY;
-
-//    public SimpleTourInfo toResponse() {
-//        return SimpleTourInfo.builder()
-//                .title(title)
-//                .address(address)
-//                .areaName(AreaCode.getAreaName(areaCode))
-//                .contentName(ContentCode.getContentName(contentTypeId))
-//                .firstImage(firstImage)
-//                .tel(tel)
-//                .mapX(mapX)
-//                .mapY(mapY)
-//                .build();
-//    }
 }
