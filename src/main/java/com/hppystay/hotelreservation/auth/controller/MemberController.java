@@ -55,15 +55,17 @@ public class MemberController {
         return ResponseEntity.ok("{}");
     }
 
-    // 비밀번호 인증 코드 입력(임시비밀번호로 저장)
+    // 비밀번호 인증 코드 입력 후 비밀번호 변경
     @PostMapping("/password/code")
     public ResponseEntity<String> PasswordCode(
             @RequestParam("email")
             String email,
             @RequestParam("code")
-            String code
+            String code,
+            @RequestParam("newPassword")
+            String newPassword
     ) {
-        return memberService.passwordCode(email,code);
+        return memberService.passwordCode(email,code,newPassword);
     }
 
     // 비밀번호 변경
