@@ -4,6 +4,8 @@ import com.hppystay.hotelreservation.auth.entity.CustomUserDetails;
 import com.hppystay.hotelreservation.hotel.inquiry.dto.HotelInquiryDto;
 import com.hppystay.hotelreservation.hotel.inquiry.service.HotelInquiryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -87,6 +89,19 @@ public class HotelInquiryController {
         return ResponseEntity.ok().body("Inquiry deleted successfully");
     }
 
+    /**
+     * 모든 호텔 문의사항의 목록을 페이지네이션하여 조회합니다.
+     * 클라이언트는 페이지네이션 파라미터를 이용해 요청할 수 있으며,
+     * 응답은 Page<HotelInquiryDto> 형태의 JSON 데이터로 제공됩니다.
+     *
+     * @param pageable 페이지네이션 정보(페이지 번호, 페이지 크기 등)를 포함하는 Pageable 객체
+     * @return 페이지네이션 처리된 호텔 문의사항 목록
+     */
+    @GetMapping("/list")
+    public ResponseEntity<Page<HotelInquiryDto>> listInquiries(Pageable pageable) {
+        Page<HotelInquiryDto> inquiries = hotelInquiryService.getAllInquiries(pageable);
+        return ResponseEntity.ok(inquiries);
+    }
 
 }
 
