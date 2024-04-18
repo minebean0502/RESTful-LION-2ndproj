@@ -26,11 +26,14 @@ public class PermitAllPath {
             "/templates/**",
 
             // 숙소
-            "test",
             "/test/**",
             "test/keyword/**",
             "test/areaCode/**",
             "/login"
+
+            ,// 문의사항
+            "/hotel/inquiries/**",
+            "/api/hotel/inquiries/**"
 
     };
 }
