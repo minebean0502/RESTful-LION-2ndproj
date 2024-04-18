@@ -20,7 +20,7 @@ public class PaymentClientConfig {
     @Value("${KAKAO_PAY_SECRET}")
     private String kakaoPaySecret;
 
-    // 토스 기초 설정
+    // 토스 설정
     @Bean
     public RestClient tossClient() {
         String basicAuth = Base64.getEncoder().encodeToString((tossSecret + ":").getBytes());
@@ -38,7 +38,7 @@ public class PaymentClientConfig {
                 .createClient(TossHttpService.class);
     }
 
-    // 기초 설정
+    // 카카오 설정
     @Bean
     public RestClient kakaoClient() {
         return RestClient
@@ -55,8 +55,40 @@ public class PaymentClientConfig {
                 .createClient(KakaoHttpService.class);
     }
 
+    /* 04-18 리팩토링 하려고 했으나
+    toss는 base64 암호화로 header 전송 // kakao는 암호화 없이 header 전송이라 그냥 일일히 구현했음
+    @Bean
+    public RestClient tossClient() {
+        return createRestClient("https://api.tosspayments.com/v1", tossSecret);
+    }
 
+    @Bean
+    public RestClient kakaoClient() {
+        return createRestClient("https://open-api.kakaopay.com/online/v1", kakaoPaySecret);
+    }
 
+    private RestClient createRestClient(String baseUrl, String secret) {
+        return RestClient
+                .builder()
+                .baseUrl(baseUrl)
+                .defaultHeader("Authorization", String.format("Basic %s", Base64.getEncoder().encodeToString((secret + ":").getBytes())))
+                .build();
+    }
+
+    @Bean
+    public TossHttpService tossHttpService() {
+        return HttpServiceProxyFactory.builderFor(RestClientAdapter.create(tossClient()))
+                .build()
+                .createClient(TossHttpService.class);
+    }
+
+    @Bean
+    public KakaoHttpService kakaoHttpService() {
+        return HttpServiceProxyFactory.builderFor(RestClientAdapter.create(kakaoClient()))
+                .build()
+                .createClient(KakaoHttpService.class);
+    }
+     */
 
 
 }
