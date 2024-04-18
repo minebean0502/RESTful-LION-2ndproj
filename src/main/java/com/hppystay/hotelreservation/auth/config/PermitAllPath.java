@@ -30,7 +30,9 @@ public class PermitAllPath {
             "/test/**",
             "test/keyword/**",
             "test/areaCode/**",
-            "/login"
+            "/login",
+            "/hotel/",
+            "/hotel/**"
 
             ,// 문의사항
             "/hotel/inquiries/**",
