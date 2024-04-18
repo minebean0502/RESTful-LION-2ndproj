@@ -12,6 +12,7 @@ public class TourInfoApiDto {
     private int areaCode;
     private String area;
     private int contentTypeId;
+    private String content;
     private String firstImage;
     private String tel;
     private String mapX;
