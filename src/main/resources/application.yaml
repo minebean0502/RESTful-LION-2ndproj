@@ -83,8 +83,12 @@ spring:
 toss:
   secret: ${TOSS_SECRET}
 
+kakaoPay:
+  secret: ${KAKAO_PAY_SECRET}
+
 jwt:
   secret: ${JWT_SECRET}
 
 api:
   key: ${API_KEY}
+
