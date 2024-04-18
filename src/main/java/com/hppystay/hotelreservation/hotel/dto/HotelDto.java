@@ -10,6 +10,7 @@ public class HotelDto {
 
     private Long id;
     private String name;
+    private String address;
     private String region;
     private String description;
     private String images;
@@ -18,7 +19,7 @@ public class HotelDto {
     private String mapY;
     private String phone;
 
-    public HotelDto fromEntity(Hotel entity) {
+    public static HotelDto fromEntity(Hotel entity) {
         return HotelDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
