@@ -2,6 +2,7 @@ package com.hppystay.hotelreservation.auth.service;
 
 import com.hppystay.hotelreservation.auth.dto.CreateMemberDto;
 import com.hppystay.hotelreservation.auth.dto.MemberDto;
+import com.hppystay.hotelreservation.auth.dto.PasswordChangeRequestDto;
 import com.hppystay.hotelreservation.auth.dto.PasswordDto;
 import com.hppystay.hotelreservation.auth.entity.CustomUserDetails;
 import com.hppystay.hotelreservation.auth.entity.EmailVerification;
@@ -12,13 +13,14 @@ import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
 import com.hppystay.hotelreservation.auth.entity.MemberRole;
 import com.hppystay.hotelreservation.auth.repository.VerificationRepository;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
+import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
+import com.hppystay.hotelreservation.common.exception.GlobalException;
 import jakarta.mail.Message;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -30,7 +32,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 import java.util.Random;
@@ -48,7 +49,7 @@ public class MemberService implements UserDetailsService {
     public MemberDto signUp(CreateMemberDto createMemberDto) {
         // 이메일 중복 체크
         if (userExists(createMemberDto.getEmail()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalException(GlobalErrorCode.EMAIL_ALREADY_EXISTS);
 
         Member member = Member.builder()
                 .nickname(createMemberDto.getNickname())
@@ -66,19 +67,15 @@ public class MemberService implements UserDetailsService {
 
     //로그인 (jwt 토큰 발급)
     public JwtResponseDto issueToken(JwtRequestDto dto) {
-        //아이디 확인
-        if (!userExists(dto.getEmail()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
-
         Optional<Member> optionalMember = memberRepository.findMemberByEmail(dto.getEmail());
         if (optionalMember.isEmpty())
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new GlobalException(GlobalErrorCode.EMAIL_PASSWORD_MISMATCH);
 
         Member member = optionalMember.get();
 
-        //비밀번호 같은지 확인
+        // 비밀번호 같은지 확인
         if (!passwordEncoder.matches(dto.getPassword(), member.getPassword()))
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new GlobalException(GlobalErrorCode.EMAIL_PASSWORD_MISMATCH);
 
         String jwt = jwtTokenUtils.generateToken(member);
         JwtResponseDto response = new JwtResponseDto();
@@ -116,7 +113,7 @@ public class MemberService implements UserDetailsService {
 
             javaMailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new GlobalException(GlobalErrorCode.EMAIL_SENDING_FAILED);
         }
 
         // 기존 진행중인 인증 코드 발송 내역은 삭제
@@ -129,7 +126,6 @@ public class MemberService implements UserDetailsService {
 
         // 인증 코드 발송 내역 저장
         verificationRepository.save(verification);
-
     }
 
     // 랜덤 숫자코드를 생성하는 메서드
@@ -142,9 +138,23 @@ public class MemberService implements UserDetailsService {
         return sb.toString();
     }
 
+    @Transactional
+    public ResponseEntity<String> findPassword(String email) {
+        // email 이 존재하는 멤버인지 확인
+        if (!userExists(email))
+            throw new GlobalException(GlobalErrorCode.EMAIL_NOT_FOUND);
+        sendVerifyCode(email);
+        return ResponseEntity.ok("{}");
+    }
+
     // 비밀번호 인증 코드 확인 메서드
-    public ResponseEntity<String> passwordCode(String email, String code, String newPassword) {
-        Optional<EmailVerification> optionalVerification = verificationRepository.findByEmail(email);
+    public ResponseEntity<String> passwordCode(PasswordChangeRequestDto requestDto) {
+        String email = requestDto.getEmail();
+        String code = requestDto.getCode();
+        String newPassword = requestDto.getNewPassword();
+
+        Optional<EmailVerification> optionalVerification
+                = verificationRepository.findByEmail(email);
 
         if (optionalVerification.isPresent()) {
             EmailVerification verification = optionalVerification.get();
@@ -152,16 +162,15 @@ public class MemberService implements UserDetailsService {
 
             //이메일로 전송된 인증 코드와 DB에 저장된 인증 코드가 일치하는지 확인
             if (!verification.getVerifyCode().equals(code)) {
-                log.info("Invalid code");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid code");
+                throw new GlobalException(GlobalErrorCode.VERIFICATION_CODE_MISMATCH);
             }
             Member member = memberRepository.findMemberByEmail(email).orElseThrow(
-                    ()-> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+                    () -> new GlobalException(GlobalErrorCode.EMAIL_NOT_FOUND));
             member.setPassword(passwordEncoder.encode(newPassword));
             memberRepository.save(member);
 
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email not found");
+            throw new GlobalException(GlobalErrorCode.VERIFICATION_NOT_FOUND);
         }
         return ResponseEntity.ok("Success");
     }
@@ -178,8 +187,8 @@ public class MemberService implements UserDetailsService {
             Member member = optionalMember.get();
 
             //비밀번호 일치 여부 확인
-            if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())) {
+                throw new GlobalException(GlobalErrorCode.PASSWORD_MISMATCH);
             }
 
             member.setPassword(passwordEncoder.encode(dto.getNewPassword()));
@@ -194,7 +203,7 @@ public class MemberService implements UserDetailsService {
         Optional<Member> optionalMember = memberRepository.findMemberByEmail(username);
 
         if (optionalMember.isEmpty())
-            throw new UsernameNotFoundException("email not found");
+            throw new GlobalException(GlobalErrorCode.EMAIL_NOT_FOUND);
         Member member = optionalMember.get();
 
         return CustomUserDetails.builder()
