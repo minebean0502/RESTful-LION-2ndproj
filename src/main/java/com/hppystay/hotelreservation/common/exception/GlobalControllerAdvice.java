@@ -15,9 +15,12 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<Map<String, String>> handleException(GlobalException e) {
+        log.error("Exception: {}", e.getErrorCode().toString());
+
         Map<String, String> response = new HashMap<>();
         response.put("code", e.getErrorCode().getCode());
         response.put("message", e.getErrorCode().getMessage());
+
         return ResponseEntity.status(e.getErrorCode().getStatus()).body(response);
     }
 }

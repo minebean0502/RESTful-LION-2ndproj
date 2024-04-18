@@ -4,13 +4,10 @@ import com.hppystay.hotelreservation.auth.dto.CreateMemberDto;
 import com.hppystay.hotelreservation.auth.dto.MemberDto;
 import com.hppystay.hotelreservation.auth.dto.PasswordChangeRequestDto;
 import com.hppystay.hotelreservation.auth.dto.PasswordDto;
-import com.hppystay.hotelreservation.auth.entity.CustomUserDetails;
-import com.hppystay.hotelreservation.auth.entity.EmailVerification;
-import com.hppystay.hotelreservation.auth.entity.Member;
+import com.hppystay.hotelreservation.auth.entity.*;
 import com.hppystay.hotelreservation.auth.jwt.JwtRequestDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtResponseDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
-import com.hppystay.hotelreservation.auth.entity.MemberRole;
 import com.hppystay.hotelreservation.auth.repository.VerificationRepository;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
@@ -33,6 +30,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
@@ -46,10 +44,19 @@ public class MemberService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
 
+    // 회원 가입
+    @Transactional
     public MemberDto signUp(CreateMemberDto createMemberDto) {
         // 이메일 중복 체크
         if (userExists(createMemberDto.getEmail()))
             throw new GlobalException(GlobalErrorCode.EMAIL_ALREADY_EXISTS);
+
+        EmailVerification verification = verificationRepository.findByEmail(createMemberDto.getEmail())
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.VERIFICATION_NOT_FOUND));
+        if (!verification.getStatus().equals(VerificationStatus.VERIFIED)) {
+            // 상태가 적절하지 않은 경우
+            throw new GlobalException(GlobalErrorCode.VERIFICATION_INVALID_STATUS);
+        }
 
         Member member = Member.builder()
                 .nickname(createMemberDto.getNickname())
@@ -57,6 +64,9 @@ public class MemberService implements UserDetailsService {
                 .password(passwordEncoder.encode(createMemberDto.getPassword()))
                 .role(MemberRole.ROLE_USER)
                 .build();
+
+        verificationRepository.deleteByEmail(createMemberDto.getEmail());
+
         return MemberDto.fromEntity(memberRepository.save(member));
     }
 
@@ -122,9 +132,29 @@ public class MemberService implements UserDetailsService {
         EmailVerification verification = EmailVerification.builder()
                 .email(receiverEmail)
                 .verifyCode(verifyCode)
+                .status(VerificationStatus.SENT)
                 .build();
 
         // 인증 코드 발송 내역 저장
+        verificationRepository.save(verification);
+    }
+
+    public void verifyEmail(String email, String code) {
+        EmailVerification verification = verificationRepository.findByEmail(email)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.VERIFICATION_NOT_FOUND));
+
+        if (!verification.getVerifyCode().equals(code)) {
+            // 이메일로 전송된 인증 코드와 DB에 저장된 인증 코드가 일치하는지 확인
+            throw new GlobalException(GlobalErrorCode.VERIFICATION_CODE_MISMATCH);
+        } else if (!verification.getStatus().equals(VerificationStatus.SENT)) {
+            // 상태가 적절하지 않은 경우
+            throw new GlobalException(GlobalErrorCode.VERIFICATION_INVALID_STATUS);
+        } else if (verification.getCreatedAt().isBefore(LocalDateTime.now().minusMinutes(5))) {
+            // 인증 시간 만료
+            throw new GlobalException(GlobalErrorCode.VERIFICATION_EXPIRED);
+        }
+
+        verification.setStatus(VerificationStatus.VERIFIED);
         verificationRepository.save(verification);
     }
 
@@ -139,7 +169,15 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public ResponseEntity<String> findPassword(String email) {
+    public ResponseEntity<String> signUpSendCode(String email) {
+        if (userExists(email))
+            throw new GlobalException(GlobalErrorCode.EMAIL_ALREADY_EXISTS);
+        sendVerifyCode(email);
+        return ResponseEntity.ok("{}");
+    }
+
+    @Transactional
+    public ResponseEntity<String> passwordSendCode(String email) {
         // email 이 존재하는 멤버인지 확인
         if (!userExists(email))
             throw new GlobalException(GlobalErrorCode.EMAIL_NOT_FOUND);
@@ -148,35 +186,36 @@ public class MemberService implements UserDetailsService {
     }
 
     // 비밀번호 인증 코드 확인 메서드
-    public ResponseEntity<String> passwordCode(PasswordChangeRequestDto requestDto) {
+    @Transactional
+    public ResponseEntity<String> resetPassword(PasswordChangeRequestDto requestDto) {
         String email = requestDto.getEmail();
         String code = requestDto.getCode();
         String newPassword = requestDto.getNewPassword();
 
-        Optional<EmailVerification> optionalVerification
-                = verificationRepository.findByEmail(email);
+        EmailVerification verification = verificationRepository.findByEmail(email)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.VERIFICATION_NOT_FOUND));
 
-        if (optionalVerification.isPresent()) {
-            EmailVerification verification = optionalVerification.get();
-            log.info(verification.getVerifyCode());
-
-            //이메일로 전송된 인증 코드와 DB에 저장된 인증 코드가 일치하는지 확인
-            if (!verification.getVerifyCode().equals(code)) {
-                throw new GlobalException(GlobalErrorCode.VERIFICATION_CODE_MISMATCH);
-            }
-            Member member = memberRepository.findMemberByEmail(email).orElseThrow(
-                    () -> new GlobalException(GlobalErrorCode.EMAIL_NOT_FOUND));
-            member.setPassword(passwordEncoder.encode(newPassword));
-            memberRepository.save(member);
-
-        } else {
-            throw new GlobalException(GlobalErrorCode.VERIFICATION_NOT_FOUND);
+        if (!verification.getVerifyCode().equals(code)) {
+            // 이메일로 전송된 인증 코드와 DB에 저장된 인증 코드가 일치하는지 확인
+            throw new GlobalException(GlobalErrorCode.VERIFICATION_CODE_MISMATCH);
+        } else if (!verification.getStatus().equals(VerificationStatus.VERIFIED)) {
+            // 상태가 적절하지 않은 경우
+            throw new GlobalException(GlobalErrorCode.VERIFICATION_INVALID_STATUS);
         }
+
+        Member member = memberRepository.findMemberByEmail(email).orElseThrow(
+                () -> new GlobalException(GlobalErrorCode.EMAIL_NOT_FOUND));
+        member.setPassword(passwordEncoder.encode(newPassword));
+        memberRepository.save(member);
+
+        verificationRepository.deleteByEmail(email);
+
         return ResponseEntity.ok("Success");
     }
 
 
     // 비밀번호 변경 메서드
+    @Transactional
     public ResponseEntity<String> changePassword(PasswordDto dto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUser = authentication.getName();
