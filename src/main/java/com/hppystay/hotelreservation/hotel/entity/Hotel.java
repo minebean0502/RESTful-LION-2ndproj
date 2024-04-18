@@ -38,11 +38,10 @@ public class Hotel extends BaseEntity {
 
     private String phone; // 숙소 연락처
 
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Room> rooms = new ArrayList<>();
 
 //    @Setter
 //    @OneToMany
 //    Member manager_id;
-
 }

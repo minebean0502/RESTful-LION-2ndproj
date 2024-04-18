@@ -2,10 +2,10 @@ package com.hppystay.hotelreservation.hotel.controller;
 
 import com.hppystay.hotelreservation.api.KNTO.dto.tourinfo.TourInfoApiDto;
 import com.hppystay.hotelreservation.api.service.ApiService;
+import com.hppystay.hotelreservation.hotel.dto.HotelDto;
+import com.hppystay.hotelreservation.hotel.service.HotelService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,6 +14,7 @@ import java.util.List;
 public class HotelController {
 
     private final ApiService apiService;
+    private final HotelService hotelService;
 
     @GetMapping("/test/areaCode/{areaCode}")
     public List<TourInfoApiDto> findHotelByRegion(@PathVariable("areaCode") Integer areaCode){
@@ -34,5 +35,43 @@ public class HotelController {
     ) {
         return apiService.callSpotByLocationApi(mapX, mapY);
     }
+
+    @PostMapping("/hotel")
+    public HotelDto createHotel(
+            @RequestBody
+            HotelDto dto
+    ) {
+        return hotelService.createHotel(dto);
+    }
+
+    @GetMapping("/hotel/{id}")
+    public HotelDto readHotel(
+            @PathVariable("id")
+            Long id
+    ) {
+        return hotelService.readOneHotel(id);
+    }
+
+    @PutMapping("/hotel/{id}")
+    public HotelDto updateHotel(
+            @PathVariable("id")
+            Long id,
+            @RequestBody
+            HotelDto dto
+    ) {
+        return hotelService.updateHotel(id, dto);
+    }
+
+    @DeleteMapping("/hotel/{id}")
+    public void deleteHotel(
+            @PathVariable("id")
+            Long id
+    ) {
+        hotelService.deleteHotel(id);
+    }
+
+
+
+
 
 }
