@@ -60,7 +60,7 @@ public class ApiService {
     // 숙소 반경 10km 이내 관광지 검색
     // 관광타입 중 숙소(32) 제외하고 불러오기
     public List<TourInfoApiDto> callSpotByLocationApi(String mapX, String mapY) {
-        String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=WIN&MobileApp=RL&mapX={mapX}&mapY={mapY}&radius=10000&serviceKey={apiKey}")
+        String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=WIN&MobileApp=RL&_type=json&mapX={mapX}&mapY={mapY}&radius=10000&serviceKey={apiKey}")
                 .buildAndExpand(mapX, mapY, apiKey)
                 .toString();
 

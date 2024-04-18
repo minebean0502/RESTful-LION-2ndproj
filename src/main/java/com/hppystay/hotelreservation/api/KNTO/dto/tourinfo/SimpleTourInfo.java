@@ -1,11 +1,9 @@
 package com.hppystay.hotelreservation.api.KNTO.dto.tourinfo;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
-@AllArgsConstructor
+@Getter
 @Builder
 public class SimpleTourInfo {
 
