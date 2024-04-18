@@ -2,6 +2,7 @@ package com.hppystay.hotelreservation.auth.controller;
 
 import com.hppystay.hotelreservation.auth.dto.CreateMemberDto;
 import com.hppystay.hotelreservation.auth.dto.MemberDto;
+import com.hppystay.hotelreservation.auth.dto.PasswordChangeRequestDto;
 import com.hppystay.hotelreservation.auth.dto.PasswordDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtRequestDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtResponseDto;
@@ -41,7 +42,7 @@ public class MemberController {
             @RequestParam("email")
             String email
     ) {
-        memberService.sendVerifyCode(email);
+        memberService.findPassword(email);
         return ResponseEntity.ok("{}");
     }
 
@@ -51,21 +52,16 @@ public class MemberController {
             @RequestParam("email")
             String email
     ) {
-        memberService.sendVerifyCode(email);
-        return ResponseEntity.ok("{}");
+        return memberService.findPassword(email);
     }
 
     // 비밀번호 인증 코드 입력 후 비밀번호 변경
     @PostMapping("/password/code")
     public ResponseEntity<String> PasswordCode(
-            @RequestParam("email")
-            String email,
-            @RequestParam("code")
-            String code,
-            @RequestParam("newPassword")
-            String newPassword
+            @RequestBody
+            PasswordChangeRequestDto requestDto
     ) {
-        return memberService.passwordCode(email,code,newPassword);
+        return memberService.passwordCode(requestDto);
     }
 
     // 비밀번호 변경
@@ -74,7 +70,7 @@ public class MemberController {
             @RequestBody
             PasswordDto dto
     ) {
-       return memberService.changePassword(dto);
+        return memberService.changePassword(dto);
     }
 }
 

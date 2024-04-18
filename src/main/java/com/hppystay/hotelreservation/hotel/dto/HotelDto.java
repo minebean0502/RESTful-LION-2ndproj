@@ -4,12 +4,15 @@ import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @Builder
 public class HotelDto {
 
     private Long id;
     private String name;
+    private String address;
     private String region;
     private String description;
     private String images;
@@ -17,18 +20,25 @@ public class HotelDto {
     private String mapX;
     private String mapY;
     private String phone;
+    private List<RoomDto> rooms;
 
-    public HotelDto fromEntity(Hotel entity) {
+    public static HotelDto fromEntity(Hotel hotel) {
+        List<RoomDto> roomDtoList = hotel.getRooms().stream()
+                .map(RoomDto::fromEntity)
+                .toList();
+
         return HotelDto.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .region(entity.getRegion())
-                .description(entity.getDescription())
-                .images(entity.getImages())
-                .avg_score(entity.getAvg_score())
-                .mapX(entity.getMapX())
-                .mapY(entity.getMapY())
-                .phone(entity.getPhone())
+                .id(hotel.getId())
+                .name(hotel.getName())
+                .address(hotel.getAddress())
+                .region(hotel.getRegion())
+                .description(hotel.getDescription())
+                .images(hotel.getImages())
+                .avg_score(hotel.getAvg_score())
+                .mapX(hotel.getMapX())
+                .mapY(hotel.getMapY())
+                .phone(hotel.getPhone())
+                .rooms(roomDtoList)
                 .build();
     }
 }

@@ -13,7 +13,7 @@ public class RoomDto {
     private Integer price;
     private String content;
 
-    public RoomDto fromEntity(Room entity) {
+    public static RoomDto fromEntity(Room entity) {
         return RoomDto.builder()
                 .id(entity.getId())
                 .hotelId(entity.getHotel().getId())
