@@ -1,8 +1,8 @@
 package com.hppystay.hotelreservation.payment.toss.service;
 
-import com.hppystay.hotelreservation.payment.toss.dto.PaymentCancelDto;
-import com.hppystay.hotelreservation.payment.toss.dto.PaymentConfirmDto;
-import com.hppystay.hotelreservation.payment.toss.dto.PaymentDto;
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentDto;
 import com.hppystay.hotelreservation.payment.toss.entity.Payment;
 import com.hppystay.hotelreservation.payment.toss.repository.PaymentRepository;
 import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
@@ -25,7 +25,7 @@ public class TossOrderService {
     private final PaymentRepository paymentRepository;
     private final TempReservationRepository reservationRepository;
 
-    public Object confirmPayment(PaymentConfirmDto dto) {
+    public Object confirmPayment(TossPaymentConfirmDto dto) {
         // 1. Object 형태로 DTO를 받습니다.
         Object tossPaymentObj = tossService.confirmPayment(dto);
         log.info(tossPaymentObj.toString());
@@ -47,7 +47,7 @@ public class TossOrderService {
         // --------------------------------------------------------------------------- //
 
         // 필요한 정보만 뽑아옵니다
-        return PaymentDto.fromEntity(paymentRepository.save(Payment.builder()
+        return TossPaymentDto.fromEntity(paymentRepository.save(Payment.builder()
                 .reservation(reservation)
                 .tossPaymentKey(dto.getPaymentKey())
                 .tossOrderId(dto.getOrderId())
@@ -58,15 +58,15 @@ public class TossOrderService {
 
 
     // 실질적으로 이 이하의 Service는 아이템 Order과 관련되어 있음
-    public List<PaymentDto> readAll() {
+    public List<TossPaymentDto> readAll() {
         return paymentRepository.findAll().stream()
-                .map(PaymentDto::fromEntity)
+                .map(TossPaymentDto::fromEntity)
                 .toList();
     }
 
-    public PaymentDto readOne(Long id) {
+    public TossPaymentDto readOne(Long id) {
         return paymentRepository.findById(id)
-                .map(PaymentDto::fromEntity)
+                .map(TossPaymentDto::fromEntity)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
@@ -87,7 +87,7 @@ public class TossOrderService {
     @Transactional
     public Object cancelPayment(
             Long id,
-            PaymentCancelDto dto
+            TossPaymentCancelDto dto
     ) {
         // 1. 취소할 주문을 찾는다.
         Payment payment = paymentRepository.findById(id)

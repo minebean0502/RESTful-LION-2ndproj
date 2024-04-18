@@ -11,7 +11,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import java.util.Base64;
 
 @Configuration
-public class RestClientConfig {
+public class TossClientConfig {
     @Value("${toss.secret}")
     private String tossSecret;
 

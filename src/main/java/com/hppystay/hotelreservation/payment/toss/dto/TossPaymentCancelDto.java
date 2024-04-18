@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentCancelDto {
+public class TossPaymentCancelDto {
     private String cancelReason;
 }

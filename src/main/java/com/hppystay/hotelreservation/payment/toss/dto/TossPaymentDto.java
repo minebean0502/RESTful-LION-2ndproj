@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentDto {
+public class TossPaymentDto {
     private Long id;
     // 어떤 방에 대한 예약인지
     private Long reservationId;
@@ -18,8 +18,8 @@ public class PaymentDto {
     private String tossOrderId;
     private String status;
 
-    public static PaymentDto fromEntity(Payment entity) {
-        return PaymentDto.builder()
+    public static TossPaymentDto fromEntity(Payment entity) {
+        return TossPaymentDto.builder()
                 .id(entity.getId())
                 .reservationId(entity.getReservation().getId())
                 .tossPaymentKey(entity.getTossPaymentKey())

@@ -1,8 +1,8 @@
 package com.hppystay.hotelreservation.payment.toss.controller;
 
-import com.hppystay.hotelreservation.payment.toss.dto.PaymentCancelDto;
-import com.hppystay.hotelreservation.payment.toss.dto.PaymentConfirmDto;
-import com.hppystay.hotelreservation.payment.toss.dto.PaymentDto;
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentDto;
 import com.hppystay.hotelreservation.payment.toss.service.TossOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ public class TossController {
     @PostMapping("/confirm-payment")
     public Object confirmPayment(
             @RequestBody
-            PaymentConfirmDto dto
+            TossPaymentConfirmDto dto
     ) {
         log.info("시작했습니다");
         log.info("received: {}", dto.toString());
@@ -29,12 +29,12 @@ public class TossController {
 
     // 임시로 Reservation Controller 사용
     @GetMapping("/reservations")
-    public List<PaymentDto> readAll() {
+    public List<TossPaymentDto> readAll() {
         return service.readAll();
     }
 
     @GetMapping("/reservation/{id}")
-    public PaymentDto readOne(
+    public TossPaymentDto readOne(
             @PathVariable("id")
             Long id
     ) {
@@ -54,7 +54,7 @@ public class TossController {
             @PathVariable("id")
             Long id,
             @RequestBody
-            PaymentCancelDto dto
+            TossPaymentCancelDto dto
     ) {
         return service.cancelPayment(id, dto);
     }
