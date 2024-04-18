@@ -46,7 +46,7 @@ public class MemberService implements UserDetailsService {
                 .nickname(createMemberDto.getNickname())
                 .email(createMemberDto.getEmail())
                 .password(passwordEncoder.encode(createMemberDto.getPassword()))
-                .role(MemberRole.valueOf(createMemberDto.getRole()))
+                .role(MemberRole.ROLE_USER)
                 .build();
         return MemberDto.fromEntity(memberRepository.save(member));
     }
