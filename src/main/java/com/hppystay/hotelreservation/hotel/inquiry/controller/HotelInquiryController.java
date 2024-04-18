@@ -12,6 +12,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * 이 컨트롤러는 호텔 문의사항에 관한 API 엔드포인트를 제공합니다.
+ * 사용자는 호텔에 대한 문의사항을 제출, 수정, 삭제할 수 있습니다.
+ */
 @RestController
 @RequestMapping("/api/hotel/inquiries")
 public class HotelInquiryController {
@@ -23,6 +27,14 @@ public class HotelInquiryController {
         this.hotelInquiryService = hotelInquiryService;
     }
 
+    /**
+     * 새로운 호텔 문의사항을 제출합니다.
+     * 사용자가 제출한 문의사항은 데이터베이스에 저장됩니다.
+     *
+     * @param userDetails 현재 로그인한 사용자의 정보
+     * @param hotelInquiryDto 문의사항 내용을 담은 DTO
+     * @return 성공 시 "Inquiry created successfully" 메시지와 함께 OK 응답을 반환
+     */
     @PostMapping("/submit")
     public ResponseEntity<?> submitInquiry(
             @AuthenticationPrincipal CustomUserDetails userDetails,
@@ -36,6 +48,15 @@ public class HotelInquiryController {
         return ResponseEntity.ok().body("Inquiry created successfully");
     }
 
+    /**
+     * 기존 문의사항을 수정합니다.
+     * 문의사항 ID와 새로운 문의 내용을 기반으로 문의사항을 업데이트합니다.
+     *
+     * @param userDetails 현재 로그인한 사용자의 정보
+     * @param id 수정할 문의사항의 ID
+     * @param hotelInquiryDto 새로운 문의사항 내용을 담은 DTO
+     * @return 성공 시 "Inquiry updated successfully" 메시지와 함께 OK 응답을 반환
+     */
     //TODO CORS -> PUT
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateInquiry(
@@ -48,6 +69,14 @@ public class HotelInquiryController {
         return ResponseEntity.ok().body("Inquiry updated successfully");
     }
 
+    /**
+     * 사용자가 제출한 문의사항을 삭제합니다.
+     * 문의사항 ID를 기반으로 해당 문의사항을 데이터베이스에서 삭제합니다.
+     *
+     * @param id 삭제할 문의사항의 ID
+     * @param currentUser 현재 로그인한 사용자의 정보
+     * @return 성공 시 "Inquiry deleted successfully" 메시지와 함께 OK 응답을 반환
+     */
     //TODO CORS -> DELETE -> list.html의 javascript에서도 POST->DELETE
     @PostMapping("/delete/{id}")
     public ResponseEntity<?> deleteInquiry(
