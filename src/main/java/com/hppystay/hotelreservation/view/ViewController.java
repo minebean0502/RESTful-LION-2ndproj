@@ -15,4 +15,9 @@ public class ViewController {
     public String signUp() {
         return "sign-up";
     }
+
+    @GetMapping("/oauth2/callback")
+    public String oAuthCallback() {
+        return "oauth-redirect";
+    }
 }
