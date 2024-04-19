@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.payment.toss.entity;
 
+import com.hppystay.hotelreservation.payment.kakao.entity.KakaoPayment;
 import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,22 +10,18 @@ import lombok.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payment {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    // 여기 아래부터는 필수 요소
-    // 중복 방지를 위함
-    private String tossPaymentKey;
-    private String tossOrderId;
     @Setter
     private String status;
-    // 여기 위에는 필수 요소
+    // 애가 어떤 payment로 되었는지
+    @Setter
+    private String category;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reservation_id")
     private TempReservationEntity reservation;
-    // private Reservation reservation;
-    // reservation에서 가져올건
-    // reservation의 id와, reservation에 연결된 member의 id
 }
