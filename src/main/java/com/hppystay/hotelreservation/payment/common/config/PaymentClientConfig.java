@@ -1,4 +1,4 @@
-package com.hppystay.hotelreservation.payment.common;
+package com.hppystay.hotelreservation.payment.common.config;
 
 import com.hppystay.hotelreservation.payment.kakao.service.KakaoHttpService;
 import com.hppystay.hotelreservation.payment.toss.service.TossHttpService;
