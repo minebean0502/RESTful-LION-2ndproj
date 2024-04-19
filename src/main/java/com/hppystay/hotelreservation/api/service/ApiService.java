@@ -2,6 +2,8 @@ package com.hppystay.hotelreservation.api.service;
 
 
 import com.hppystay.hotelreservation.api.KNTO.dto.tourinfo.TourInfoApiDto;
+import com.hppystay.hotelreservation.api.KNTO.utils.AreaCode;
+import com.hppystay.hotelreservation.api.KNTO.utils.ContentCode;
 import com.hppystay.hotelreservation.api.exception.OpenApiException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +31,8 @@ public class ApiService {
     private String apiKey;
 
     // 지역으로 숙소 검색
-    public List<TourInfoApiDto> callHotelByRegionApi(Integer areaCode) {
+    public List<TourInfoApiDto> callHotelByRegionApi(String area) {
+        Integer areaCode = AreaCode.getAreaCode(area);
 
         String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/searchStay1?MobileOS=WIN&MobileApp=RL&_type=JSON&areaCode={areaCode}&serviceKey={api_Key}")
                 .buildAndExpand(areaCode,this.apiKey)
@@ -83,7 +86,7 @@ public class ApiService {
                 if (dto.getContentTypeId() == 32)
                     continue;
                 spotApiDtos.add(dto);
-                log.info("{}", makeLocationDto(item));
+                log.info("{}", dto);
             }
 
             log.info("fetch 완료");
@@ -115,16 +118,18 @@ public class ApiService {
                 || item.get("areacode") == null || item.get("contenttypeid") == null || item.get("title") == null) {
             return null;
         }
-        return TourInfoApiDto.builder().
-                title(item.get("title").toString()).
-                address(item.get("addr1").toString()).
-                areaCode(Integer.parseInt(item.get("areacode").toString())).
-                contentTypeId(Integer.parseInt(item.get("contenttypeid").toString())).
-                firstImage(item.get("firstimage").toString()).
-                tel(item.get("tel").toString()).
-                mapX(item.get("mapx").toString()).
-                mapY(item.get("mapy").toString()).
-                build();
+        return TourInfoApiDto.builder()
+                .title(item.get("title").toString())
+                .address(item.get("addr1").toString())
+                .areaCode(Integer.parseInt(item.get("areacode").toString()))
+                .area(AreaCode.getAreaName(Integer.parseInt(item.get("areacode").toString())))
+                .contentTypeId(Integer.parseInt(item.get("contenttypeid").toString()))
+                .content(ContentCode.getContentName(Integer.parseInt(item.get("contenttypeid").toString())))
+                .firstImage(item.get("firstimage").toString())
+                .tel(item.get("tel").toString())
+                .mapX(item.get("mapx").toString())
+                .mapY(item.get("mapy").toString())
+                .build();
     }
 
     private List<TourInfoApiDto> jsonToDtoList(String url) {
@@ -142,7 +147,7 @@ public class ApiService {
                     continue;
                 }
                 HotelApiDtos.add(dto);
-                log.info("{}", makeLocationDto(item));
+                log.info("{}", dto);
             }
 
             log.info("fetch 완료");

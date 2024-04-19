@@ -5,9 +5,10 @@ public class PermitAllPath {
             // 회원 인증 관련 api
             "/api/auth/sign-up",
             "/api/auth/sign-in",
+            "/api/auth/sign-up/send-code",
             "/api/auth/email/verify",
-            "/api/auth/password/find",
-            "/api/auth/password/code",
+            "/api/auth/password/send-code",
+            "/api/auth/password/reset",
             "/api/auth/password/change",
 
             // toss 인증 관련 api (채운 작성)
@@ -29,13 +30,17 @@ public class PermitAllPath {
             "/test/**",
             "test/keyword/**",
             "test/areaCode/**",
-            "/login",
             "/hotel/",
-            "/hotel/**"
+            "/hotel/**",
 
-            ,// 문의사항
+            // 문의사항
             "/hotel/inquiries/**",
-            "/api/hotel/inquiries/**"
+            "/api/hotel/inquiries/**",
+
+
+            // View
+            "/login",
+            "/sign-up"
 
     };
 }

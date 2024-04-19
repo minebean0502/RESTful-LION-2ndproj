@@ -1,12 +1,14 @@
 package com.hppystay.hotelreservation.api.KNTO.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class AreaCode {
 
-    static Map<Integer, String> areaCodeMap = new HashMap<>();
-
+    private final static Map<Integer, String> areaCodeMap = new HashMap<>();
 
     public AreaCode() {
         areaCodeMap.put(1, "서울");
@@ -30,5 +32,13 @@ public class AreaCode {
 
     public static String getAreaName(int areaCode) {
        return areaCodeMap.get(areaCode);
+    }
+
+    public static int getAreaCode(String name) {
+        return areaCodeMap.entrySet().stream()
+                .filter(entry -> entry.getValue().equals(name))
+                .map(Map.Entry::getKey)
+                .toList()
+                .get(0); // 지역명에 매칭되는 코드는 1개이므로 첫번째 원소 반환
     }
 }
