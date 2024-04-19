@@ -2,7 +2,7 @@ package com.hppystay.hotelreservation.view;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class ViewController {
@@ -16,8 +16,11 @@ public class ViewController {
         return "sign-up";
     }
 
-    @GetMapping("/oauth2/callback")
-    public String oAuthCallback() {
+    @GetMapping("/token/callback")
+    public String oAuthCallback(
+            @RequestParam("uuid")
+            String uuid
+    ) {
         return "oauth-redirect";
     }
 }
