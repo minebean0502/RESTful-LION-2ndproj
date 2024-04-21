@@ -24,7 +24,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TossOrderService {
     private final TossHttpService tossService;
-    private final PaymentRepository paymentRepository;
     private final TossPaymentRepository tossPaymentRepository;
     private final TempReservationRepository reservationRepository;
 
