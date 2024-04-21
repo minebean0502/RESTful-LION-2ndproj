@@ -3,7 +3,7 @@ package com.hppystay.hotelreservation.payment.toss.controller;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentDto;
-import com.hppystay.hotelreservation.payment.toss.service.TossOrderService;
+import com.hppystay.hotelreservation.payment.toss.service.TossService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/toss")
 @RequiredArgsConstructor
 public class TossController {
-    private final TossOrderService service;
+    private final TossService service;
 
     @PostMapping("/confirm-payment")
     public Object confirmPayment(

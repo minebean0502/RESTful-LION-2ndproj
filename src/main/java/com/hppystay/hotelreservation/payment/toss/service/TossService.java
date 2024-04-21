@@ -3,9 +3,7 @@ package com.hppystay.hotelreservation.payment.toss.service;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentDto;
-import com.hppystay.hotelreservation.payment.toss.entity.Payment;
 import com.hppystay.hotelreservation.payment.toss.entity.TossPayment;
-import com.hppystay.hotelreservation.payment.toss.repository.PaymentRepository;
 import com.hppystay.hotelreservation.payment.toss.repository.TossPaymentRepository;
 import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import com.hppystay.hotelreservation.payment.toss.temp.repository.TempReservationRepository;
@@ -22,7 +20,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TossOrderService {
+public class TossService {
     private final TossHttpService tossService;
     private final TossPaymentRepository tossPaymentRepository;
     private final TempReservationRepository reservationRepository;
