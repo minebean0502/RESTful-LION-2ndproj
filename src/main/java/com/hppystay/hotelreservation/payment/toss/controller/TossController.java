@@ -27,12 +27,14 @@ public class TossController {
         return service.confirmPayment(dto);
     }
 
+
     // 임시로 Reservation Controller 사용
     @GetMapping("/reservations")
     public List<TossPaymentDto> readAll() {
         return service.readAll();
     }
 
+    // 해당 Reservation에 대한 결제정보(TossPayment의 내용)
     @GetMapping("/reservation/{id}")
     public TossPaymentDto readOne(
             @PathVariable("id")
@@ -41,6 +43,7 @@ public class TossController {
         return service.readOne(id);
     }
 
+    // 해당 ReservationId로 본 payment의 전체 정보
     @GetMapping("/reservation/{id}/payment")
     public Object readTossPayment(
             @PathVariable("id")
@@ -49,6 +52,7 @@ public class TossController {
         return service.readTossPayment(id);
     }
 
+    // 해당 Reservation의 결제 취소
     @PostMapping("/reservation/{id}/cancel")
     public Object cancelPayment(
             @PathVariable("id")
@@ -58,5 +62,4 @@ public class TossController {
     ) {
         return service.cancelPayment(id, dto);
     }
-
 }

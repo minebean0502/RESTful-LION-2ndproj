@@ -6,5 +6,5 @@ import lombok.Data;
 public class TossPaymentConfirmDto {
     private String paymentKey;
     private String orderId;
-    private Integer amount;
+    private String amount;
 }
