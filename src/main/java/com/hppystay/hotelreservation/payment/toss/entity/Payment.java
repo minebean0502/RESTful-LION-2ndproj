@@ -4,9 +4,10 @@ import com.hppystay.hotelreservation.payment.kakao.entity.KakaoPayment;
 import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
-@Builder
+@SuperBuilder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor

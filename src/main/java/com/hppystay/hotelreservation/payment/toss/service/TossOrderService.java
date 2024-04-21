@@ -4,7 +4,9 @@ import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentDto;
 import com.hppystay.hotelreservation.payment.toss.entity.Payment;
+import com.hppystay.hotelreservation.payment.toss.entity.TossPayment;
 import com.hppystay.hotelreservation.payment.toss.repository.PaymentRepository;
+import com.hppystay.hotelreservation.payment.toss.repository.TossPaymentRepository;
 import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import com.hppystay.hotelreservation.payment.toss.temp.repository.TempReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,10 @@ import java.util.List;
 public class TossOrderService {
     private final TossHttpService tossService;
     private final PaymentRepository paymentRepository;
+    private final TossPaymentRepository tossPaymentRepository;
     private final TempReservationRepository reservationRepository;
 
+    @Transactional
     public Object confirmPayment(TossPaymentConfirmDto dto) {
         // 1. Object 형태로 DTO를 받습니다.
         Object tossPaymentObj = tossService.confirmPayment(dto);
@@ -34,38 +38,49 @@ public class TossOrderService {
         // id = 1 / memberId = 1 / roomId = 500번방 -> orderName = 1-500번방
         // id = 2 / memberId = 2 / roomId = 1번방 -> orderName = 2-1번방
         // id = 4 / memberId = 2 / roomId = 10번방 -> orderName = 4-10번방
-        String orderName = ((LinkedHashMap<String, Object>) tossPaymentObj)
-                .get("orderName").toString();
-        log.info(orderName);
-        // [0]은 reservation의 PK // [1]은 reservation에 저장된 room의 Id
-        // 일단 Reservation의 PK 추출
-        Long reservationId = Long.parseLong(orderName.split("-")[0]);
+        String orderNameInfo = ((LinkedHashMap<String, Object>) tossPaymentObj).get("orderName").toString();
+        Long reservationId = Long.parseLong(orderNameInfo.split("-")[0]);
+        String requestedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("requestedAt").toString();
+        String approvedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("approvedAt").toString();
+        String lastTransactionKey = ((LinkedHashMap<String, Object>) tossPaymentObj).get("lastTransactionKey").toString();
+
         // 해당 PK로 Reservation 정보 추출 (Temp라서 나중에 로직상 사라질 부분입니다)
         // --------------------------------------------------------------------------- //
         TempReservationEntity reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
         // --------------------------------------------------------------------------- //
-
-        // 필요한 정보만 뽑아옵니다
-        return TossPaymentDto.fromEntity(paymentRepository.save(Payment.builder()
+        // 1. 일단 tosspayment에 저장정보 생성
+        TossPayment tossPayment = tossPaymentRepository.save(TossPayment.builder()
                 .reservation(reservation)
+                .reservationId(reservationId)
                 .tossPaymentKey(dto.getPaymentKey())
                 .tossOrderId(dto.getOrderId())
+                .totalAmount(dto.getAmount())
+                .requestedAt(requestedAt)
+                .approvedAt(approvedAt)
+                .lastTransactionKey(lastTransactionKey)
                 .status("DONE")
-                .build()
-        ));
+                .build());
+
+        // 2. 그 뒤 reservation에 Payment id 추가하기
+        reservation.setPayment(tossPayment);
+        TossPaymentDto tossPaymentDto = TossPaymentDto.fromEntity(tossPayment);
+
+        // 3. dto 반환
+        return tossPaymentDto;
     }
 
 
     // 실질적으로 이 이하의 Service는 아이템 Order과 관련되어 있음
     public List<TossPaymentDto> readAll() {
-        return paymentRepository.findAll().stream()
+        return tossPaymentRepository.findAll().stream()
                 .map(TossPaymentDto::fromEntity)
                 .toList();
     }
 
+    //
     public TossPaymentDto readOne(Long id) {
-        return paymentRepository.findById(id)
+        return tossPaymentRepository.findById(id)
                 .map(TossPaymentDto::fromEntity)
                 .orElseThrow(() ->
                         new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -74,9 +89,9 @@ public class TossOrderService {
     // TossPaymentKey를 기준으로 결제상황 조회 (단건)
     public Object readTossPayment(Long id) {
         // Payment의 id(PK)를 기준으로 toss_payment_Key 조회
-        Payment payment = paymentRepository.findById(id)
+        TossPayment tossPayment = tossPaymentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        Object response = tossService.getPayment(payment.getTossPaymentKey());
+        Object response = tossService.getPayment(tossPayment.getTossPaymentKey());
         // Object가 뭘 반환하고 있는지 체크
         log.info(response.toString());
         return response;
@@ -90,14 +105,14 @@ public class TossOrderService {
             TossPaymentCancelDto dto
     ) {
         // 1. 취소할 주문을 찾는다.
-        Payment payment = paymentRepository.findById(id)
+        TossPayment tossPayment = tossPaymentRepository.findById(id)
                 .orElseThrow(()
                         -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         // 2. 주문정보를 갱신한다.
-        if (!(payment.getStatus().equals("CANCEL"))) {
-            payment.setStatus("CANCEL");
+        if (!(tossPayment.getStatus().equals("CANCEL"))) {
+            tossPayment.setStatus("CANCEL");
             // 3. 취소후 결과를 응답한다.
-            return tossService.cancelPayment(payment.getTossPaymentKey(), dto);
+            return tossService.cancelPayment(tossPayment.getTossPaymentKey(), dto);
         }
         else {
             // 이미 cancel건에 대해 있을 경우 HttpStatus CONFLICT = 이미 취소된 건에 대하여 또 취소 신청 에러값
