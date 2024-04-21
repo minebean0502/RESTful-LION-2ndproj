@@ -3,7 +3,9 @@ package com.hppystay.hotelreservation.payment.kakao.dto;
 import lombok.Data;
 
 @Data
-public class KaKaoPaymentConfirmDto {
+public class KaKaoPaymentReadyDto {
+    // 결제 준비시 송신할 Dto
+
     private String cid;                 // 가맹점 코드 (테스트 가맹점 코드 넣을 곳)
     private String partner_order_id;    // 주문 번호
     private String partner_user_id;     // 회원 id
