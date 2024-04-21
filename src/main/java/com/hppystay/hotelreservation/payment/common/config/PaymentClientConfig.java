@@ -17,8 +17,12 @@ public class PaymentClientConfig {
     @Value("${toss.secret}")
     private String tossSecret;
     // kakaoPay_secret키
-    @Value("${KAKAO_PAY_SECRET}")
+    @Value("${kakaoPay.secret}")
     private String kakaoPaySecret;
+    // kakaoPay_secret_Dev키 // 안쓰는듯?
+    @Value("${kakaoPay.dev}")
+    private String kakaoPayDev;
+
 
     // 토스 설정
     @Bean

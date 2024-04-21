@@ -1,4 +1,4 @@
-package com.hppystay.hotelreservation.payment.kakao.dto;
+package com.hppystay.hotelreservation.payment.kakao.dto.Request;
 
 import lombok.Data;
 
