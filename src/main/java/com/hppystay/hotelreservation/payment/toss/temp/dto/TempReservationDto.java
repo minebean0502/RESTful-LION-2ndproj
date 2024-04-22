@@ -1,5 +1,7 @@
 package com.hppystay.hotelreservation.payment.toss.temp.dto;
 
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentDto;
+import com.hppystay.hotelreservation.payment.toss.entity.TossPayment;
 import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,8 +18,12 @@ public class TempReservationDto {
     private String price;
     private String status;
     private String imageUrl;
+    private TossPaymentDto payment;
 
     public static TempReservationDto fromEntity(TempReservationEntity reservation){
+        TossPaymentDto paymentDto = reservation.getPayment() != null ?
+                TossPaymentDto.fromEntity((TossPayment) reservation.getPayment()) : null;
+
         return TempReservationDto.builder()
                 .id(reservation.getId())
                 .memberEmail(reservation.getMemberEmail())
@@ -25,6 +31,7 @@ public class TempReservationDto {
                 .numberOfPeople(reservation.getNumberOfPeople())
                 .price(reservation.getPrice())
                 .status(reservation.getStatus())
+                .payment(paymentDto)
 
                 // 나중에 지울곳
                 .imageUrl(reservation.getImageUrl())

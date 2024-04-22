@@ -24,6 +24,9 @@ public class PermitAllPath {
             // fetch('/api/reservations/lists')
             "/api/reservations/**",
 
+            // kakao API 관련
+            "/kakao/**",
+
             // static/templates 에 이미지 표시 경로
             "/static/**",
             "/templates/**",
