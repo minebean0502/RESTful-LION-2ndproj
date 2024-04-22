@@ -47,6 +47,8 @@ public class PermitAllPath {
             // View
             "/login",
             "/sign-up",
-            "/token/callback"
+            "/token/callback",
+            "/is-login",
+            "/main"
     };
 }

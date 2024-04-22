@@ -15,6 +15,8 @@ public enum GlobalErrorCode {
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "1002", "존재하지 않는 이메일입니다."),
     EMAIL_PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "1003", "이메일과 패스워드가 일치하지 않습니다."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "1004", "비밀번호가 일치하지 않습니다."),
+    AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "1005", "인증에 실패했습니다."),
+    USER_DETAILS_INVALID_FORMAT(HttpStatus.UNAUTHORIZED, "1006", "UserDetails의 형식이 올바르지 않습니다."),
 
     // 이메일 관련 에러
     EMAIL_SENDING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "2001", "이메일 발송에 실패했습니다."),

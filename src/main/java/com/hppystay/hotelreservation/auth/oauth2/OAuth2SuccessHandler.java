@@ -66,19 +66,29 @@ public class OAuth2SuccessHandler
         String accessToken = tokenUtils.generateAccessToken(member);
         String refreshToken = tokenUtils.generateRefreshToken(member);
 
-        // refresh 토큰은 쿠키로 저장
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+        // 방법 1. 토큰을 쿠키로 저장
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(60 * 5)
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .path("/")
                 .maxAge(60 * 60)
                 .build();
-        response.addHeader("Set-Cookie", cookie.toString());
+        response.addHeader("Set-Cookie", accessCookie.toString());
+        response.addHeader("Set-Cookie", refreshCookie.toString());
 
-        String uuid = UUID.randomUUID().toString();
-        stringRedisTemplate.opsForValue().set(uuid, accessToken, Duration.ofSeconds(60));
+        getRedirectStrategy().sendRedirect(request,response, "http://localhost:8080/main");
 
-        String targetUrl = String.format(
-                "http://localhost:8080/token/callback?uuid=%s", uuid);
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        // 방법 2.
+//        String uuid = UUID.randomUUID().toString();
+//        stringRedisTemplate.opsForValue().set(uuid, accessToken, Duration.ofSeconds(60));
+//
+//        String targetUrl = String.format(
+//                "http://localhost:8080/token/callback?uuid=%s", uuid);
+//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }
