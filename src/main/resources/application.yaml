@@ -91,9 +91,9 @@ spring:
 toss:
   secret: ${TOSS_SECRET}
 
-kakaoPay:
-  secret: ${KAKAO_PAY_SECRET}
-  dev: ${KAKAO_PAY_DEV}
+#kakaoPay:
+#  secret: ${KAKAO_PAY_SECRET}
+#  dev: ${KAKAO_PAY_DEV}
 
 jwt:
   secret: ${JWT_SECRET}

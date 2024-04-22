@@ -1,6 +1,6 @@
 package com.hppystay.hotelreservation.payment.common.config;
 
-import com.hppystay.hotelreservation.payment.kakao.service.KakaoHttpService;
+
 import com.hppystay.hotelreservation.payment.toss.service.TossHttpService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,11 +17,11 @@ public class PaymentClientConfig {
     @Value("${toss.secret}")
     private String tossSecret;
     // kakaoPay_secret키
-    @Value("${kakaoPay.secret}")
-    private String kakaoPaySecret;
-    // kakaoPay_secret_Dev키 // 안쓰는듯?
-    @Value("${kakaoPay.dev}")
-    private String kakaoPayDev;
+//    @Value("${kakaoPay.secret}")
+//    private String kakaoPaySecret;
+//    // kakaoPay_secret_Dev키 // 안쓰는듯?
+//    @Value("${kakaoPay.dev}")
+//    private String kakaoPayDev;
 
 
     // 토스 설정
@@ -43,21 +43,21 @@ public class PaymentClientConfig {
     }
 
     // 카카오 설정
-    @Bean
-    public RestClient kakaoClient() {
-        return RestClient
-                .builder()
-                .baseUrl("https://open-api.kakaopay.com/online/v1")
-                .defaultHeader("Authorization", String.format("SECRET_KEY %s", kakaoPaySecret))
-                .build();
-    }
+//    @Bean
+//    public RestClient kakaoClient() {
+//        return RestClient
+//                .builder()
+//                .baseUrl("https://open-api.kakaopay.com/online/v1")
+//                .defaultHeader("Authorization", String.format("SECRET_KEY %s", kakaoPaySecret))
+//                .build();
+//    }
 
-    @Bean
-    public KakaoHttpService KakaoHttpService() {
-        return HttpServiceProxyFactory.builderFor(RestClientAdapter.create(kakaoClient()))
-                .build()
-                .createClient(KakaoHttpService.class);
-    }
+//    @Bean
+//    public KakaoHttpService KakaoHttpService() {
+//        return HttpServiceProxyFactory.builderFor(RestClientAdapter.create(kakaoClient()))
+//                .build()
+//                .createClient(KakaoHttpService.class);
+//    }
 
     /* 04-18 리팩토링 하려고 했으나
     toss는 base64 암호화로 header 전송 // kakao는 암호화 없이 header 전송이라 그냥 일일히 구현했음
