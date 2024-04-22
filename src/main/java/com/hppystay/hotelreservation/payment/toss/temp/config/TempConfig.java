@@ -42,7 +42,6 @@ public class TempConfig {
         };
     }
 
-
     // config로 temp reservation 값들 넣어주기
     @Bean
     public CommandLineRunner createReservation() {

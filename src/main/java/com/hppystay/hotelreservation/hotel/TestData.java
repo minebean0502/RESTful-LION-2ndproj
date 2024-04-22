@@ -21,17 +21,17 @@ public class TestData {
     public TestData(MemberRepository memberRepository,
                     HotelRepository hotelRepository,
                     RoomRepository roomRepository,
-                    ReservationRepository reservationRepository)
-    {
+                    ReservationRepository reservationRepository) {
         this.memberRepository = memberRepository;
         this.hotelRepository = hotelRepository;
         this.roomRepository = roomRepository;
         this.reservationRepository = reservationRepository;
 
-        testHotels();
-        testRooms();
+        // testHotels();
+        // testRooms();
     }
 
+    /*
     private void testHotels()
     {
         hotelRepository.saveAll(
@@ -92,4 +92,5 @@ public class TestData {
                 .build()));
     }
 
+     */
 }
