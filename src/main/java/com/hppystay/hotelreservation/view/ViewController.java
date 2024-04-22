@@ -23,6 +23,7 @@ public class ViewController {
     ) {
         return "oauth-redirect";
     }
+
     @GetMapping("/is-login")
     public String isLogin() {
         return "is-login";
