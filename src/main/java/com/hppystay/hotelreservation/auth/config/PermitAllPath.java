@@ -11,6 +11,8 @@ public class PermitAllPath {
             "/api/auth/password/reset",
             "/api/auth/password/change",
 
+            "/api/oauth2/get-token",
+
             // toss 인증 관련 api (채운 작성)
             "/toss/**",
             "/payments/**",
@@ -22,6 +24,9 @@ public class PermitAllPath {
             // fetch('/api/reservations/lists')
             "/api/reservations/**",
 
+            // kakao API 관련
+            "/kakao/**",
+
             // static/templates 에 이미지 표시 경로
             "/static/**",
             "/templates/**",
@@ -32,6 +37,7 @@ public class PermitAllPath {
             "test/areaCode/**",
             "/hotel/",
             "/hotel/**",
+            "/hotel/room/**",
 
             // 문의사항
             "/hotel/inquiries/**",
@@ -40,7 +46,7 @@ public class PermitAllPath {
 
             // View
             "/login",
-            "/sign-up"
-
+            "/sign-up",
+            "/token/callback"
     };
 }

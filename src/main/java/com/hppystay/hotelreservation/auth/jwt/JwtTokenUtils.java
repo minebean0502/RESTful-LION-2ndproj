@@ -30,7 +30,20 @@ public class JwtTokenUtils {
                 .build();
     }
 
-    public String generateToken(Member member) {
+    public String generateAccessToken(Member member) {
+        Instant now = Instant.now();
+        Claims jwtClaims = Jwts.claims()
+                .setSubject(member.getEmail())
+                .setIssuedAt(Date.from(now))
+                .setExpiration(Date.from(now.plusSeconds(60 * 5)));
+
+        return Jwts.builder()
+                .setClaims(jwtClaims)
+                .signWith(this.siginingKey)
+                .compact();
+    }
+
+    public String generateRefreshToken(Member member) {
         Instant now = Instant.now();
         Claims jwtClaims = Jwts.claims()
                 .setSubject(member.getEmail())

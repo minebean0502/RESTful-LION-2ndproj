@@ -2,10 +2,7 @@ package com.hppystay.hotelreservation.payment.toss.temp.entity;
 
 import com.hppystay.hotelreservation.payment.toss.entity.Payment;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @Builder
@@ -31,6 +28,7 @@ public class TempReservationEntity {
 
     // 표시되지는 않으나 존재함
     @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
+    @Setter
     private Payment payment;
 
 

@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.hotel.service;
 
+import com.hppystay.hotelreservation.api.KNTO.utils.AreaCode;
 import com.hppystay.hotelreservation.hotel.dto.HotelDto;
 import com.hppystay.hotelreservation.hotel.dto.RoomDto;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
@@ -27,15 +28,15 @@ public class HotelService {
     public HotelDto createHotel(HotelDto hotelDto) {
         // 호텔 생성
         Hotel hotel = Hotel.builder()
-                .name(hotelDto.getName())
+                .title(hotelDto.getTitle())
                 .address(hotelDto.getAddress())
-                .region(hotelDto.getRegion())
+                .area(hotelDto.getArea())
                 .description(hotelDto.getDescription())
-                .images(hotelDto.getImages())
+                .firstImage(hotelDto.getFirstImage())
                 .avg_score(hotelDto.getAvg_score())
                 .mapX(hotelDto.getMapX())
                 .mapY(hotelDto.getMapY())
-                .phone(hotelDto.getPhone())
+                .tel(hotelDto.getTel())
                 .rooms(new ArrayList<>())
                 .build();
         hotel = hotelRepo.save(hotel);
@@ -55,7 +56,7 @@ public class HotelService {
         }
 
         hotel.setRooms(roomList);
-        log.info("호텔명: " + hotel.getName() + "/" + "방 개수: " + hotel.getRooms().size());
+        log.info("호텔명: " + hotel.getTitle() + "/" + "방 개수: " + hotel.getRooms().size());
         return HotelDto.fromEntity(hotelRepo.save(hotel));
     }
 
@@ -71,15 +72,15 @@ public class HotelService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         // 호텔 업데이트
-        hotel.setName(hotelDto.getName());
+        hotel.setTitle(hotelDto.getTitle());
         hotel.setAddress(hotelDto.getAddress());
-        hotel.setRegion(hotelDto.getRegion());
+        hotel.setArea(hotelDto.getArea());
         hotel.setDescription(hotelDto.getDescription());
-        hotel.setImages(hotelDto.getImages());
+        hotel.setFirstImage(hotelDto.getFirstImage());
         hotel.setAvg_score(hotelDto.getAvg_score()); //TODO: 사용자가 업데이트할때 Entity의 avg_score 업데이트 여부
         hotel.setMapX(hotelDto.getMapX());
         hotel.setMapY(hotelDto.getMapY());
-        hotel.setPhone(hotelDto.getPhone());
+        hotel.setTel(hotelDto.getTel());
         hotel = hotelRepo.save(hotel);
 
         // 방 업데이트
@@ -107,5 +108,26 @@ public class HotelService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         hotelRepo.delete(hotel);
+    }
+
+    // 기존 호텔에 방만 추가하는 경우
+    public HotelDto addRoom(RoomDto roomDto, Long hotelId) {
+        Hotel hotel = hotelRepo.findById(hotelId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        Room room = roomRepo.save(Room.builder()
+                .name(roomDto.getName())
+                .price(roomDto.getPrice())
+                .content(roomDto.getContent())
+                .hotel(hotel)
+                .build());
+
+        return HotelDto.fromEntity(hotelRepo.save(hotel.addRoom(room)));
+    }
+  
+    public boolean checkRegion(String regionName) {
+        int areaCode = AreaCode.getAreaCode(regionName);
+
+        return areaCode !=0;
     }
 }
