@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.hotel.service;
 
+import com.hppystay.hotelreservation.api.KNTO.utils.AreaCode;
 import com.hppystay.hotelreservation.hotel.dto.HotelDto;
 import com.hppystay.hotelreservation.hotel.dto.RoomDto;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
@@ -122,5 +123,11 @@ public class HotelService {
                 .build());
 
         return HotelDto.fromEntity(hotelRepo.save(hotel.addRoom(room)));
+    }
+  
+    public boolean checkRegion(String regionName) {
+        int areaCode = AreaCode.getAreaCode(regionName);
+
+        return areaCode !=0;
     }
 }

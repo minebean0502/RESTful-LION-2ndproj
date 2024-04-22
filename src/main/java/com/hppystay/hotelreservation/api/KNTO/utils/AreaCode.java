@@ -35,10 +35,18 @@ public class AreaCode {
     }
 
     public static int getAreaCode(String name) {
+
+        if(areaCodeMap.entrySet().stream()
+                .noneMatch(entry -> entry.getValue().equals(name)))
+            return 0;
+
+        else
+        {
         return areaCodeMap.entrySet().stream()
                 .filter(entry -> entry.getValue().equals(name))
                 .map(Map.Entry::getKey)
                 .toList()
                 .get(0); // 지역명에 매칭되는 코드는 1개이므로 첫번째 원소 반환
+        }
     }
 }

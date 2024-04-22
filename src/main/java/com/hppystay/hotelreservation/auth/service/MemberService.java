@@ -87,7 +87,7 @@ public class MemberService implements UserDetailsService {
         if (!passwordEncoder.matches(dto.getPassword(), member.getPassword()))
             throw new GlobalException(GlobalErrorCode.EMAIL_PASSWORD_MISMATCH);
 
-        String jwt = jwtTokenUtils.generateToken(member);
+        String jwt = jwtTokenUtils.generateAccessToken(member);
         JwtResponseDto response = new JwtResponseDto();
         response.setToken(jwt);
 

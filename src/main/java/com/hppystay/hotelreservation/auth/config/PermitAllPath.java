@@ -11,6 +11,8 @@ public class PermitAllPath {
             "/api/auth/password/reset",
             "/api/auth/password/change",
 
+            "/api/oauth2/get-token",
+
             // toss 인증 관련 api (채운 작성)
             "/toss/**",
             "/payments/**",
@@ -41,7 +43,7 @@ public class PermitAllPath {
 
             // View
             "/login",
-            "/sign-up"
-
+            "/sign-up",
+            "/token/callback"
     };
 }
