@@ -24,6 +24,7 @@ public class TempMemberEntity {
     private String role;
     private String businessNumber;
 
+    @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<TempReservationEntity> reservations = new ArrayList<>();
 
