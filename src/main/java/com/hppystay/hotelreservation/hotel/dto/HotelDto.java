@@ -11,16 +11,17 @@ import java.util.List;
 public class HotelDto {
 
     private Long id;
-    private String name;
+    private String title;
     private String address;
-    private String region;
-    private String description;
-    private String images;
-    private Double avg_score;
+    private String area;
+    private String firstImage;
+    private String tel;
     private String mapX;
     private String mapY;
-    private String phone;
-    private List<RoomDto> rooms;
+
+    private String description; // 사용자가 추가
+    private Double avg_score; // 리뷰 생성 시 갱신
+    private List<RoomDto> rooms; // 사용자가 추가
 
     public static HotelDto fromEntity(Hotel hotel) {
         List<RoomDto> roomDtoList = hotel.getRooms().stream()
@@ -29,15 +30,15 @@ public class HotelDto {
 
         return HotelDto.builder()
                 .id(hotel.getId())
-                .name(hotel.getName())
+                .title(hotel.getTitle())
                 .address(hotel.getAddress())
-                .region(hotel.getRegion())
+                .area(hotel.getArea())
                 .description(hotel.getDescription())
-                .images(hotel.getImages())
+                .firstImage(hotel.getFirstImage())
                 .avg_score(hotel.getAvg_score())
                 .mapX(hotel.getMapX())
                 .mapY(hotel.getMapY())
-                .phone(hotel.getPhone())
+                .tel(hotel.getTel())
                 .rooms(roomDtoList)
                 .build();
     }
