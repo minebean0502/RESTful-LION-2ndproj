@@ -29,4 +29,9 @@ public class ViewController {
     public String hotelCreate() {
         return "create-hotel";
     }
+
+    @GetMapping("/is-login")
+    public String isLogin() {
+        return "is-login";
+    }
 }

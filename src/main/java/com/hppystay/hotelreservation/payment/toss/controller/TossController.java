@@ -1,9 +1,9 @@
 package com.hppystay.hotelreservation.payment.toss.controller;
 
-import com.hppystay.hotelreservation.payment.toss.dto.PaymentCancelDto;
-import com.hppystay.hotelreservation.payment.toss.dto.PaymentConfirmDto;
-import com.hppystay.hotelreservation.payment.toss.dto.PaymentDto;
-import com.hppystay.hotelreservation.payment.toss.service.TossOrderService;
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
+import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentDto;
+import com.hppystay.hotelreservation.payment.toss.service.TossService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -15,32 +15,35 @@ import java.util.List;
 @RequestMapping("/toss")
 @RequiredArgsConstructor
 public class TossController {
-    private final TossOrderService service;
+    private final TossService service;
 
     @PostMapping("/confirm-payment")
     public Object confirmPayment(
             @RequestBody
-            PaymentConfirmDto dto
+            TossPaymentConfirmDto dto
     ) {
         log.info("시작했습니다");
         log.info("received: {}", dto.toString());
         return service.confirmPayment(dto);
     }
 
+
     // 임시로 Reservation Controller 사용
     @GetMapping("/reservations")
-    public List<PaymentDto> readAll() {
+    public List<TossPaymentDto> readAll() {
         return service.readAll();
     }
 
+    // 해당 Reservation에 대한 결제정보(TossPayment의 내용)
     @GetMapping("/reservation/{id}")
-    public PaymentDto readOne(
+    public TossPaymentDto readOne(
             @PathVariable("id")
             Long id
     ) {
         return service.readOne(id);
     }
 
+    // 해당 ReservationId로 본 payment의 전체 정보
     @GetMapping("/reservation/{id}/payment")
     public Object readTossPayment(
             @PathVariable("id")
@@ -49,14 +52,14 @@ public class TossController {
         return service.readTossPayment(id);
     }
 
+    // 해당 Reservation의 결제 취소
     @PostMapping("/reservation/{id}/cancel")
     public Object cancelPayment(
             @PathVariable("id")
             Long id,
             @RequestBody
-            PaymentCancelDto dto
+            TossPaymentCancelDto dto
     ) {
         return service.cancelPayment(id, dto);
     }
-
 }

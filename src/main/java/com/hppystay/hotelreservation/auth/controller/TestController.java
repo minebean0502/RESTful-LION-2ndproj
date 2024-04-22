@@ -1,6 +1,8 @@
 package com.hppystay.hotelreservation.auth.controller;
 
+import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
+import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -18,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 public class TestController {
     private final JwtTokenUtils jwtTokenUtils;
     private final StringRedisTemplate redisTemplate;
+    private final AuthenticationFacade facade;
 
     @GetMapping("/token")
     public Claims val(@RequestParam("token") String token) {
@@ -29,12 +32,9 @@ public class TestController {
         return redisTemplate.opsForValue().get(uuid);
     }
 
-    @GetMapping("/redis")
-    public String test() {
-        ValueOperations<String, String> operations
-                = redisTemplate.opsForValue();
 
-        operations.set("토큰", "리프레시 토큰", 10, TimeUnit.SECONDS);
-        return "test";
+    @GetMapping("/login")
+    public String isLogin() {
+        return facade.getCurrentMember().getEmail();
     }
 }

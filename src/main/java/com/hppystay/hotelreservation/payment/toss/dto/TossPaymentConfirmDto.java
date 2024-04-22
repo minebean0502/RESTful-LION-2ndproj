@@ -3,8 +3,8 @@ package com.hppystay.hotelreservation.payment.toss.dto;
 import lombok.Data;
 
 @Data
-public class PaymentConfirmDto {
+public class TossPaymentConfirmDto {
     private String paymentKey;
     private String orderId;
-    private Integer amount;
+    private String amount;
 }
