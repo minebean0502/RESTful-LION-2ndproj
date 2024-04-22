@@ -25,7 +25,7 @@ public class Room extends BaseEntity {
 
     private String name;
 
-    private Integer price;
+    private String price;
 
     private String content;
 

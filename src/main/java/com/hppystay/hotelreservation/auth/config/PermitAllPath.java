@@ -30,11 +30,13 @@ public class PermitAllPath {
 
             // 숙소
             "/test/**",
+            "/test/view-test",
             "test/keyword/**",
             "test/areaCode/**",
             "/hotel/",
             "/hotel/**",
             "/hotel/room/**",
+//            "create-hotel",
 
             // 문의사항
             "/hotel/inquiries/**",
