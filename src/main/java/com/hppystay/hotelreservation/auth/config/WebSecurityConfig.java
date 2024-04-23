@@ -41,8 +41,6 @@ public class WebSecurityConfig {
                         auth -> auth
                                 .requestMatchers(PermitAllPath.paths)
                                 .permitAll()
-                                .requestMatchers("/log-out")
-                                .authenticated()
                                 .anyRequest()
                                 .denyAll()
                 )
