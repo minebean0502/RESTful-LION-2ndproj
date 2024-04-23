@@ -49,12 +49,20 @@ public class PermitAllPath {
             // View
             "/login",
             "/sign-up",
+
+
             "/token/callback",
             "/is-login",
             "/main",
             "/denied",
 
+
             // resources
-            "/favicon.ico"
+            "/favicon.ico",
+
+
+            // 리뷰
+            "/api/{hotelId}/review/**"
+
     };
 }
