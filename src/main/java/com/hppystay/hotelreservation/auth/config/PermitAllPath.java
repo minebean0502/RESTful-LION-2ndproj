@@ -55,9 +55,7 @@ public class PermitAllPath {
 
             // resources
             "/favicon.ico",
-            "/static/tossImage/**",
-            "/static/templates/**",
-            "/static/img/**",
+            "/static/**",
 
 
 

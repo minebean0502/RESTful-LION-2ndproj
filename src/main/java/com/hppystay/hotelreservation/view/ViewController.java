@@ -43,5 +43,9 @@ public class ViewController {
         return "denied";
     }
 
+    @GetMapping("/main")
+    public String mainPage() {
+        return "main";
+    }
 
 }
