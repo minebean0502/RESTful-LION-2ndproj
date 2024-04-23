@@ -307,7 +307,7 @@ public class MemberService implements UserDetailsService {
             image.transferTo(imgPath);
             log.info(image.getName());
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new GlobalException(GlobalErrorCode.PROFILE_UPLOAD_FAILED);
         }
         return imgPath.toString();
     }
@@ -317,7 +317,7 @@ public class MemberService implements UserDetailsService {
         try {
             Files.deleteIfExists(Path.of(imagePath));
         } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new GlobalException(GlobalErrorCode.PROFILE_DELETE_FAILED);
         }
     }
 
