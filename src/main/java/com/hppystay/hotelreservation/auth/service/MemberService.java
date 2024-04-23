@@ -10,6 +10,7 @@ import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
 import com.hppystay.hotelreservation.common.exception.GlobalException;
 import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
+import com.hppystay.hotelreservation.common.util.GlobalConstants;
 import jakarta.mail.Message;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletResponse;
@@ -106,13 +107,13 @@ public class MemberService implements UserDetailsService {
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
                 .path("/")
-                .maxAge(60 * 5)
+                .maxAge(GlobalConstants.ACCESS_TOKEN_EXPIRE_SECOND)
                 .build();
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .path("/")
-                .maxAge(60 * 60)
+                .maxAge(GlobalConstants.REFRESH_TOKEN_EXPIRE_SECOND)
                 .build();
 
         response.addHeader("Set-Cookie", accessCookie.toString());
@@ -193,7 +194,8 @@ public class MemberService implements UserDetailsService {
         } else if (!verification.getStatus().equals(VerificationStatus.SENT)) {
             // 상태가 적절하지 않은 경우
             throw new GlobalException(GlobalErrorCode.VERIFICATION_INVALID_STATUS);
-        } else if (verification.getCreatedAt().isBefore(LocalDateTime.now().minusMinutes(5))) {
+        } else if (verification.getCreatedAt().isBefore(
+                LocalDateTime.now().minusMinutes(GlobalConstants.EMAIL_VERIFY_CODE_EXPIRE_SECOND))) {
             // 인증 시간 만료
             throw new GlobalException(GlobalErrorCode.VERIFICATION_EXPIRED);
         }
