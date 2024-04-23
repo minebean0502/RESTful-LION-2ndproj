@@ -5,6 +5,7 @@ import com.hppystay.hotelreservation.auth.entity.MemberRole;
 
 import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
 import com.hppystay.hotelreservation.common.exception.GlobalException;
+
 import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
@@ -26,7 +27,7 @@ public class ReviewService {
     // 리뷰 생성
     public ReviewDto createReview(Long hotelId, ReviewDto dto) {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                () -> new GlobalException(GlobalErrorCode.NOT_FOUND));
 
         Member member = auth.getCurrentMember();
         log.info("auth account: {}", member.getEmail());
