@@ -2,9 +2,10 @@ package com.hppystay.hotelreservation.hotel.review;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.entity.MemberRole;
-import com.hppystay.hotelreservation.auth.facade.AuthenticationFacade;
+
 import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
 import com.hppystay.hotelreservation.common.exception.GlobalException;
+import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +57,9 @@ public class ReviewService {
             throw new GlobalException(GlobalErrorCode.MISMATCH);
         }
 
-        // 리뷰를 작성한 유저가 맞는지
+        //  // 리뷰를 수정하려는 사람이 리뷰 주인과 일치하지 않으면
         if (!review.getMember().getId().equals(member.getId())) {
+            // 시스템 관리자가 아니라면
             if (!member.getRole().equals(MemberRole.ROLE_ADMIN)) {
                 throw new GlobalException(GlobalErrorCode.MEMBER_MISMATCH);
             }
@@ -80,7 +82,6 @@ public class ReviewService {
 
         // 리뷰를 삭제하려는 사람이 리뷰 주인과 일치하지 않으면
         if (!review.getMember().getId().equals(member.getId())) {
-
             // 시스템 관리자가 아니라면
             if (!member.getRole().equals(MemberRole.ROLE_ADMIN))
                 throw new GlobalException(GlobalErrorCode.MEMBER_MISMATCH);
