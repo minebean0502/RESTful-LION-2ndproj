@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns="http://www.w3.org/1999/html">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <!-- 반응형 웹 설정 추가 -->
@@ -12,6 +12,8 @@
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/static/css/slider.css">
+<!--    <link rel="stylesheet" href="/static/css/header.css">-->
+<!--    <link rel="stylesheet" href="/static/css/footer.css">-->
     <style>
         .header-bar {background-color: #FF9900;color: white;padding: 10px;margin: 10px;text-align: center;}
         .header-bar a {color: white;text-decoration: none;margin: 0 10px;}
@@ -55,7 +57,7 @@
         .lion-background {
             border: 2px solid #000; border-radius: 50px;
             text-align: center;
-            background-image: url("tempHotel/lion2.png");
+            background-image: url("../static/tempHotel/lion2.png");
             background-color: yellow;
             /*background-size: cover;*/
             background-size: auto; /* 원본 크기 유지 */
@@ -81,7 +83,7 @@
 
 <!-- 네비게이션 바, -->
 <header>
-    <th:block th:replace="~{updown/temp-header :: header}"></th:block>
+    <th:block th:replace="~{updown/temp-header}"></th:block>
 </header>
 
 <header>
@@ -125,11 +127,11 @@
     <div class="main-content">
         <div id="slider" class="slider">
             <!-- TODO 나중에 호텔 썸네일 이미지 링크로 바꿔두기 -->
-            <div class="slide" style="background-image: url('tempHotel/h1.jpg');"></div>
-            <div class="slide" style="background-image: url('tempHotel/h2.jpg');"></div>
-            <div class="slide" style="background-image: url('tempHotel/h3.jpg');"></div>
-            <div class="slide" style="background-image: url('tempHotel/h4.jpg');"></div>
-            <div class="slide" style="background-image: url('tempHotel/h5.jpg');"></div>
+            <div class="slide" style="background-image: url('../static/tempHotel/h1.jpg');"></div>
+            <div class="slide" style="background-image: url('../static/tempHotel/h2.jpg');"></div>
+            <div class="slide" style="background-image: url('../static/tempHotel/h3.jpg');"></div>
+            <div class="slide" style="background-image: url('../static/tempHotel/h4.jpg');"></div>
+            <div class="slide" style="background-image: url('../static/tempHotel/h5.jpg');"></div>
 
             <a class="prev" onclick="moveSlide(-1)">&#10094;</a>
             <a class="next" onclick="moveSlide(1)">&#10095;</a>
@@ -143,7 +145,7 @@
 </div>
 
 <!--맨 밑에 쓸 footer-->
-<th:block th:replace="~{updown/footer :: footer}"></th:block>
+<th:block th:replace="~{updown/footer}"></th:block>
 </body>
 <script>
     let slideIndex = 0;
