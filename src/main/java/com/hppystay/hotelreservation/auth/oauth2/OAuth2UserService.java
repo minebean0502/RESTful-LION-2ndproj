@@ -1,6 +1,8 @@
 package com.hppystay.hotelreservation.auth.oauth2;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -15,7 +17,10 @@ import java.util.Map;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class OAuth2UserService extends DefaultOAuth2UserService {
+    private final StringRedisTemplate stringRedisTemplate;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
@@ -63,5 +68,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 attributes,
                 nameAttribute
         );
+    }
+
+    public TokenDto getAccessToken(String uuid) {
+        // TODO 인증 시간 만료 에러
+        String accessToken = stringRedisTemplate.opsForValue().get(uuid);
+        log.info(accessToken);
+        return new TokenDto(accessToken);
     }
 }

@@ -34,7 +34,7 @@ public class ApiService {
     public List<TourInfoApiDto> callHotelByRegionApi(String area) {
         Integer areaCode = AreaCode.getAreaCode(area);
 
-        String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/searchStay1?MobileOS=WIN&MobileApp=RL&_type=JSON&areaCode={areaCode}&serviceKey={api_Key}")
+        String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/searchStay1?MobileOS=WIN&MobileApp=RL&_type=JSON&arrange=O&areaCode={areaCode}&serviceKey={api_Key}")
                 .buildAndExpand(areaCode,this.apiKey)
                 .toUriString();
 
@@ -47,7 +47,7 @@ public class ApiService {
     public List<TourInfoApiDto> callHotelByKeywordApi(String keyword) {
         try {
             String encodedKeyword = URLEncoder.encode(keyword, "UTF-8");
-            String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/searchKeyword1?MobileOS=WIN&MobileApp=RL&_type=JSON&keyword={keyword}&contentTypeId=32&serviceKey={apiKey}")
+            String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/searchKeyword1?MobileOS=WIN&MobileApp=RL&_type=JSON&arrange=O&keyword={keyword}&contentTypeId=32&serviceKey={apiKey}")
                     .buildAndExpand(encodedKeyword, apiKey)
                     .toString();
 
@@ -63,7 +63,7 @@ public class ApiService {
     // 숙소 반경 10km 이내 관광지 검색
     // 관광타입 중 숙소(32) 제외하고 불러오기
     public List<TourInfoApiDto> callSpotByLocationApi(String mapX, String mapY) {
-        String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=WIN&MobileApp=RL&_type=json&mapX={mapX}&mapY={mapY}&radius=10000&serviceKey={apiKey}")
+        String url = UriComponentsBuilder.fromUriString("https://apis.data.go.kr/B551011/KorService1/locationBasedList1?MobileOS=WIN&MobileApp=RL&_type=json&arrange=O&mapX={mapX}&mapY={mapY}&radius=10000&serviceKey={apiKey}")
                 .buildAndExpand(mapX, mapY, apiKey)
                 .toString();
 

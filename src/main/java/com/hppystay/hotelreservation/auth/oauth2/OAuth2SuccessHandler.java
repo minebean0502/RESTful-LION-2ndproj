@@ -4,24 +4,21 @@ import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.entity.MemberRole;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
-import com.nimbusds.jose.shaded.gson.JsonObject;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,6 +30,7 @@ public class OAuth2SuccessHandler
     private final JwtTokenUtils tokenUtils;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StringRedisTemplate stringRedisTemplate;
 
     @Override
     public void onAuthenticationSuccess(
@@ -65,12 +63,32 @@ public class OAuth2SuccessHandler
         }
 
         // 토큰 발급
-        String jwt = tokenUtils.generateToken(member);
+        String accessToken = tokenUtils.generateAccessToken(member);
+        String refreshToken = tokenUtils.generateRefreshToken(member);
 
-        // TODO: 만들어진 토큰을 어떻게 로그인 과정까지 연결시킬 것인지 논의 필요
-        // TODO: Get 방식으로 JWT토큰을 보내는건 안전한지?
-        String targetUrl = String.format(
-                "http://localhost:8080/test/token?token=%s", jwt);
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        // 방법 1. 토큰을 쿠키로 저장
+        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(60 * 5)
+                .build();
+
+        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .path("/")
+                .maxAge(60 * 60)
+                .build();
+        response.addHeader("Set-Cookie", accessCookie.toString());
+        response.addHeader("Set-Cookie", refreshCookie.toString());
+
+        getRedirectStrategy().sendRedirect(request,response, "http://localhost:8080/main");
+
+        // 방법 2.
+//        String uuid = UUID.randomUUID().toString();
+//        stringRedisTemplate.opsForValue().set(uuid, accessToken, Duration.ofSeconds(60));
+//
+//        String targetUrl = String.format(
+//                "http://localhost:8080/token/callback?uuid=%s", uuid);
+//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

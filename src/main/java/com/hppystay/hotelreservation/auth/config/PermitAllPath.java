@@ -11,6 +11,8 @@ public class PermitAllPath {
             "/api/auth/password/reset",
             "/api/auth/password/change",
 
+            "/api/oauth2/get-token",
+
             // toss 인증 관련 api (채운 작성)
             "/toss/**",
             "/payments/**",
@@ -22,16 +24,22 @@ public class PermitAllPath {
             // fetch('/api/reservations/lists')
             "/api/reservations/**",
 
+            // kakao API 관련
+            "/kakao/**",
+
             // static/templates 에 이미지 표시 경로
-            "/static/**",
-            "/templates/**",
+            "/static/tossImage/**",
+            "/static/templates/**",
 
             // 숙소
             "/test/**",
+            "/test/view-test",
             "test/keyword/**",
             "test/areaCode/**",
             "/hotel/",
             "/hotel/**",
+            "/hotel/room/**",
+//            "create-hotel",
 
             // 문의사항
             "/hotel/inquiries/**",
@@ -41,6 +49,17 @@ public class PermitAllPath {
             // View
             "/login",
             "/sign-up",
+
+
+            "/token/callback",
+            "/is-login",
+            "/main",
+            "/denied",
+
+
+            // resources
+            "/favicon.ico",
+
 
             // 리뷰
             "/api/{hotelId}/review/**"
