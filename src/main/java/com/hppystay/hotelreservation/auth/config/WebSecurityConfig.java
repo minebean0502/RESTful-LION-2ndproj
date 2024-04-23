@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.auth.config;
 
+import com.hppystay.hotelreservation.auth.handler.CustomAuthenticationEntrypoint;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenFilter;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
 import com.hppystay.hotelreservation.auth.oauth2.OAuth2SuccessHandler;
@@ -11,19 +12,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
@@ -34,6 +29,7 @@ public class WebSecurityConfig {
     private final MemberService memberService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final OAuth2UserService oAuth2UserService;
+    private final CustomAuthenticationEntrypoint authenticationEntrypoint;
 
     @Bean
     public SecurityFilterChain securityFilterChai(
@@ -47,17 +43,15 @@ public class WebSecurityConfig {
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
-
-                )
-                .httpBasic(httpSecurityHttpBasicConfigurer ->
-                        httpSecurityHttpBasicConfigurer
-                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
                         .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService))
+                )
+                .exceptionHandling(configurer -> configurer
+                        .authenticationEntryPoint(authenticationEntrypoint)
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
