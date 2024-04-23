@@ -28,7 +28,7 @@ public class PermitAllPath {
             "/kakao/**",
 
             // static/templates 에 이미지 표시 경로
-            "/static/**",
+            "/tossImage/**",
             "/templates/**",
 
             // 숙소
