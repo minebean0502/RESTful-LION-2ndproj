@@ -44,7 +44,7 @@ public class ViewController {
     }
 
     @GetMapping("/main")
-    public String main() {
+    public String mainPage() {
         return "main";
     }
 

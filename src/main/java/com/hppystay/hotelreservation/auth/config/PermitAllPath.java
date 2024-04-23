@@ -23,13 +23,9 @@ public class PermitAllPath {
             // fetch('/api/reservations/lists')
             "/api/reservations/**",
 
-            "/main",
+            // kakao API 관련
+            "/kakao/**",
 
-            // static/templates 에 이미지 표시 경로
-            "/static/tossImage/**",
-            "/static/templates/**",
-            "/static/css/**",
-            "/static/templates/tempHotel/**",
 
             // 숙소
             "/test/**",
@@ -59,10 +55,11 @@ public class PermitAllPath {
 
             // resources
             "/favicon.ico",
+            "/static/**",
+
 
 
             // 리뷰
-            "/api/{hotelId}/review/**"
-
+            "/api/{hotelId}/review/**",
     };
 }

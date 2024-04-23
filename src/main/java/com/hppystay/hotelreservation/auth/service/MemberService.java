@@ -2,14 +2,14 @@ package com.hppystay.hotelreservation.auth.service;
 
 import com.hppystay.hotelreservation.auth.dto.*;
 import com.hppystay.hotelreservation.auth.entity.*;
-import com.hppystay.hotelreservation.auth.jwt.JwtRequestDto;
-import com.hppystay.hotelreservation.auth.jwt.JwtResponseDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
 import com.hppystay.hotelreservation.auth.repository.VerificationRepository;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
 import com.hppystay.hotelreservation.common.exception.GlobalException;
 import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
+import com.hppystay.hotelreservation.common.util.FileService;
+import com.hppystay.hotelreservation.common.util.GlobalConstants;
 import jakarta.mail.Message;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +17,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -31,15 +30,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -50,6 +44,7 @@ public class MemberService implements UserDetailsService {
     private final JwtTokenUtils jwtTokenUtils;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
+    private final FileService fileService;
     private final AuthenticationFacade facade;
 
     // 회원 가입
@@ -106,13 +101,13 @@ public class MemberService implements UserDetailsService {
         ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
                 .path("/")
-                .maxAge(60 * 5)
+                .maxAge(GlobalConstants.ACCESS_TOKEN_EXPIRE_SECOND)
                 .build();
 
         ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .path("/")
-                .maxAge(60 * 60)
+                .maxAge(GlobalConstants.REFRESH_TOKEN_EXPIRE_SECOND)
                 .build();
 
         response.addHeader("Set-Cookie", accessCookie.toString());
@@ -193,7 +188,8 @@ public class MemberService implements UserDetailsService {
         } else if (!verification.getStatus().equals(VerificationStatus.SENT)) {
             // 상태가 적절하지 않은 경우
             throw new GlobalException(GlobalErrorCode.VERIFICATION_INVALID_STATUS);
-        } else if (verification.getCreatedAt().isBefore(LocalDateTime.now().minusMinutes(5))) {
+        } else if (verification.getCreatedAt().isBefore(
+                LocalDateTime.now().minusMinutes(GlobalConstants.EMAIL_VERIFY_CODE_EXPIRE_SECOND))) {
             // 인증 시간 만료
             throw new GlobalException(GlobalErrorCode.VERIFICATION_EXPIRED);
         }
@@ -284,41 +280,20 @@ public class MemberService implements UserDetailsService {
     public void uploadProfileImage(MultipartFile image) {
         Member member = facade.getCurrentMember();
 
+        String rootDir = "media/";
+        String relativeDir = "img/profiles/";
+
         // 기존 프로필 이미지 삭제
         String oldProfile = member.getProfileImage();
-        if (oldProfile != null) deleteImage(oldProfile);
+        if (oldProfile != null) {
+            fileService.deleteFile(rootDir + oldProfile);
+        }
 
         // 새로운 이미지 저장
-        String newProfile = saveImage(image);
-        newProfile = newProfile.replaceAll("\\\\", "/");
+        String newProfile = fileService.saveImage(rootDir, relativeDir, image);
         member.setProfileImage(newProfile);
 
         memberRepository.save(member);
-    }
-
-    // 이미지 저장
-    public String saveImage(MultipartFile image) {
-        String imgDir = "media/img/profiles/";
-        String imgName = UUID.randomUUID() + "_" + image.getOriginalFilename();
-        Path imgPath = Path.of(imgDir + imgName);
-
-        try {
-            Files.createDirectories(Path.of(imgDir));
-            image.transferTo(imgPath);
-            log.info(image.getName());
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return imgPath.toString();
-    }
-
-    // 이미지 삭제
-    public void deleteImage(String imagePath) {
-        try {
-            Files.deleteIfExists(Path.of(imagePath));
-        } catch (IOException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @Override
