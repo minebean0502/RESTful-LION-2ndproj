@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<!--<style>-->
+<!--    .search-container {-->
+<!--        width: 100%; /* 검색 컨테이너의 폭을 조정하려면 이 값을 변경하세요 */-->
+<!--        background-color: #fff; /* 배경색 변경 */-->
+<!--        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */-->
+<!--        border-radius: 4px; /* 모서리 둥글기 */-->
+<!--        padding: 1rem;-->
+<!--        margin: 1rem auto;-->
+<!--        display: flex;-->
+<!--        justify-content: space-between; /* 내부 요소들을 양 끝과 중간으로 분배 */-->
+<!--    }-->
+
+<!--    .search-form {-->
+<!--        display: flex;-->
+<!--        width: 100%;-->
+<!--    }-->
+
+<!--    .form-control {-->
+<!--        margin: 0 0.5rem;-->
+<!--        position: relative; /* 상대적 위치 */-->
+<!--    }-->
+
+<!--    .form-control input[type="date"],-->
+<!--    .form-control .search-keyword input[type="text"] {-->
+<!--        width: 100%; /* 입력 필드 폭 전체 사용 */-->
+<!--        padding: 0.5rem;-->
+<!--        border: 1px solid #ddd;-->
+<!--        border-radius: 4px; /* 입력 필드 모서리 둥글기 */-->
+<!--    }-->
+
+<!--    .search-keyword {-->
+<!--        flex: 1; /* 키워드 입력란이 남는 공간을 모두 차지하도록 함 */-->
+<!--    }-->
+
+<!--    .search-btn {-->
+<!--        padding: 0.5rem;-->
+<!--        margin-left: -1px; /* 버튼이 입력 필드와 정확히 맞도록 조정 */-->
+<!--        border: none;-->
+<!--        background: #007bff;-->
+<!--        color: #fff;-->
+<!--        border-radius: 0 4px 4px 0; /* 오른쪽 모서리만 둥글게 */-->
+<!--        cursor: pointer;-->
+<!--    }-->
+
+<!--    .search-icon {-->
+<!--        font-size: 1rem; /* 아이콘 크기 조정 */-->
+<!--    }-->
+
+<!--    /* 스크린 리더용 클래스 */-->
+<!--    .sr-only {-->
+<!--        position: absolute;-->
+<!--        width: 1px;-->
+<!--        height: 1px;-->
+<!--        padding: 0;-->
+<!--        margin: -1px;-->
+<!--        overflow: hidden;-->
+<!--        clip: rect(0, 0, 0, 0);-->
+<!--        border: 0;-->
+<!--    }-->
+<!--</style>-->
+<body>
+<div class="search-container">
+    <form id="search-form" class="search-form">
+        <div class="form-control">
+            <label for="checkin-date" class="sr-only">체크인 날짜</label>
+            <input type="date" id="checkin-date" name="checkin" aria-label="체크인 날짜">
+        </div>
+        <div class="form-control">
+            <label for="checkout-date" class="sr-only">체크아웃 날짜</label>
+            <input type="date" id="checkout-date" name="checkout" aria-label="체크아웃 날짜">
+        </div>
+        <div class="form-control search-keyword">
+            <input type="text" id="search-keyword" name="keyword" placeholder="검색어 입력">
+            <button type="submit" class="search-btn">
+                <span class="sr-only">검색</span>
+                <i class="search-icon">🔍</i>
+            </button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
