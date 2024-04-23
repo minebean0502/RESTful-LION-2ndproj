@@ -6,6 +6,7 @@ import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
 import com.hppystay.hotelreservation.auth.oauth2.OAuth2SuccessHandler;
 import com.hppystay.hotelreservation.auth.oauth2.OAuth2UserService;
 import com.hppystay.hotelreservation.auth.service.MemberService;
+import com.hppystay.hotelreservation.hotel.review.ReviewService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,6 +31,7 @@ public class WebSecurityConfig {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final OAuth2UserService oAuth2UserService;
     private final CustomAuthenticationEntrypoint authenticationEntrypoint;
+
 
     @Bean
     public SecurityFilterChain securityFilterChai(

@@ -10,7 +10,9 @@ import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 
 @Slf4j
@@ -24,7 +26,7 @@ public class ReviewService {
     // 리뷰 생성
     public ReviewDto createReview(Long hotelId, ReviewDto dto) {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(
-                () -> new GlobalException(GlobalErrorCode.NOT_FOUND));
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         Member member = auth.getCurrentMember();
         log.info("auth account: {}", member.getEmail());

@@ -62,6 +62,7 @@ public class PermitAllPath {
 
 
             // 리뷰
+            "/api/{hotelId}/review",
             "/api/{hotelId}/review/**"
 
     };
