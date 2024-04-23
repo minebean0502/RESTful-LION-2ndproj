@@ -26,9 +26,6 @@ public class PermitAllPath {
             // kakao API 관련
             "/kakao/**",
 
-            // static/templates 에 이미지 표시 경로
-            "/static/tossImage/**",
-            "/static/templates/**",
 
             // 숙소
             "/test/**",
@@ -58,10 +55,13 @@ public class PermitAllPath {
 
             // resources
             "/favicon.ico",
+            "/static/tossImage/**",
+            "/static/templates/**",
+            "/static/img/**",
+
 
 
             // 리뷰
-            "/api/{hotelId}/review/**"
-
+            "/api/{hotelId}/review/**",
     };
 }
