@@ -1,16 +1,15 @@
 package com.hppystay.hotelreservation.auth.controller;
 
-import com.hppystay.hotelreservation.auth.dto.CreateMemberDto;
-import com.hppystay.hotelreservation.auth.dto.MemberDto;
-import com.hppystay.hotelreservation.auth.dto.PasswordChangeRequestDto;
-import com.hppystay.hotelreservation.auth.dto.PasswordDto;
+import com.hppystay.hotelreservation.auth.dto.*;
 import com.hppystay.hotelreservation.auth.jwt.JwtRequestDto;
 import com.hppystay.hotelreservation.auth.jwt.JwtResponseDto;
 import com.hppystay.hotelreservation.auth.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -28,12 +27,22 @@ public class MemberController {
     }
 
     @PostMapping("/sign-in")
-    public JwtResponseDto signIn(
+    public ResponseEntity<String> signIn(
             @RequestBody
-            JwtRequestDto dto
+            LoginDto dto,
+            HttpServletResponse response
     ) {
-        return memberService.issueToken(dto);
+        memberService.signIn(dto, response);
+        return ResponseEntity.ok("{}");
     }
+
+//    @PostMapping("/sign-in")
+//    public JwtResponseDto signIn(
+//            @RequestBody
+//            JwtRequestDto dto
+//    ) {
+//        return memberService.issueToken(dto);
+//    }
 
     // 회원가입용 이메일 인증 코드 전송
     @PostMapping("/sign-up/send-code")
@@ -81,6 +90,15 @@ public class MemberController {
             PasswordDto dto
     ) {
         return memberService.changePassword(dto);
+    }
+
+    @PostMapping("profile-upload")
+    public ResponseEntity<String> uploadProfileImage(
+            @RequestPart("image")
+            MultipartFile image
+    ) {
+        memberService.uploadProfileImage(image);
+        return ResponseEntity.ok("{}");
     }
 }
 

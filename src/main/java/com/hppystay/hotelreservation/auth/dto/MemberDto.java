@@ -12,6 +12,7 @@ public class MemberDto {
     private String nickname;
     private String email;
     private String password;
+    private String profileImage;
     private MemberRole role;
 
     public static MemberDto fromEntity(Member member) {
@@ -20,6 +21,7 @@ public class MemberDto {
                 .nickname(member.getNickname())
                 .email(member.getEmail())
                 .password(member.getPassword())
+                .profileImage(member.getProfileImage())
                 .role(member.getRole())
                 .build();
     }

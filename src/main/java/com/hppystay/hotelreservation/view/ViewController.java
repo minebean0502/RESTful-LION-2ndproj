@@ -1,20 +1,16 @@
 package com.hppystay.hotelreservation.view;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Slf4j
 @Controller
 public class ViewController {
     @GetMapping("/login")
-    public String login(
-            @RequestParam(value = "error", required = false) boolean error,
-            @RequestParam(value = "exception", required = false) String exception,
-            Model model
-    ) {
-        model.addAttribute("error", error);
-        model.addAttribute("exception", exception);
+    public String login() {
         return "login";
     }
 
@@ -46,4 +42,6 @@ public class ViewController {
     public String denied() {
         return "denied";
     }
+
+
 }

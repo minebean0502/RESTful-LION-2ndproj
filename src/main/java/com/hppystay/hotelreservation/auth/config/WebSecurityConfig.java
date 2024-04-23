@@ -41,14 +41,20 @@ public class WebSecurityConfig {
                         auth -> auth
                                 .requestMatchers(PermitAllPath.paths)
                                 .permitAll()
-                                .anyRequest()
+                                .requestMatchers("/api/auth/profile-upload")
                                 .authenticated()
+                                .anyRequest()
+                                .denyAll()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
                         .successHandler(oAuth2SuccessHandler)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2UserService))
+                )
+                .logout(configure -> configure
+                        .deleteCookies("accessToken", "refreshToken")
+                        .logoutSuccessUrl("/main")
                 )
                 .exceptionHandling(configurer -> configurer
                         .authenticationEntryPoint(authenticationEntrypoint)

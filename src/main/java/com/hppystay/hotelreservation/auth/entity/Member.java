@@ -27,6 +27,9 @@ public class Member extends BaseEntity {
     @Setter
     private String password;
 
+    @Setter
+    private String profileImage;
+
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
