@@ -33,11 +33,13 @@ public class PermitAllPath {
 
             // 숙소
             "/test/**",
+            "/test/view-test",
             "test/keyword/**",
             "test/areaCode/**",
             "/hotel/",
             "/hotel/**",
             "/hotel/room/**",
+//            "create-hotel",
 
             // 문의사항
             "/hotel/inquiries/**",
@@ -47,12 +49,20 @@ public class PermitAllPath {
             // View
             "/login",
             "/sign-up",
+
+
             "/token/callback",
             "/is-login",
             "/main",
             "/denied",
 
+
             // resources
-            "/favicon.ico"
+            "/favicon.ico",
+
+
+            // 리뷰
+            "/api/{hotelId}/review/**"
+
     };
 }

@@ -19,7 +19,7 @@ public class HotelController {
 
     @GetMapping("/test/areaCode/{area}")
     public List<TourInfoApiDto> findHotelByRegion(@PathVariable("area") String area){
-       return apiService.callHotelByRegionApi(area);
+        return apiService.callHotelByRegionApi(area);
     }
 
     @GetMapping("/test/keyword/{keyword}")

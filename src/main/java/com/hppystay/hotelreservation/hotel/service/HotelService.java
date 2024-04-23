@@ -33,7 +33,7 @@ public class HotelService {
                 .area(hotelDto.getArea())
                 .description(hotelDto.getDescription())
                 .firstImage(hotelDto.getFirstImage())
-                .avg_score(hotelDto.getAvg_score())
+                .avg_score(0.0)
                 .mapX(hotelDto.getMapX())
                 .mapY(hotelDto.getMapY())
                 .tel(hotelDto.getTel())
