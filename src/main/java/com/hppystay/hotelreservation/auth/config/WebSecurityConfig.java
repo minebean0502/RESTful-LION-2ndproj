@@ -41,6 +41,8 @@ public class WebSecurityConfig {
                         auth -> auth
                                 .requestMatchers(PermitAllPath.paths)
                                 .permitAll()
+                                .requestMatchers("/api/auth/profile-upload")
+                                .authenticated()
                                 .anyRequest()
                                 .denyAll()
                 )
