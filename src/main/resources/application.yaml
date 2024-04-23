@@ -11,8 +11,8 @@ spring:
             enable: true
           auth: true
 
-  mvc:
-    static-path-pattern: '/static/**'
+#  mvc:
+#    static-path-pattern: '/static/**'
 
   datasource:
     url: jdbc:mysql://localhost:3306/${DB_NAME}
@@ -24,6 +24,12 @@ spring:
     hibernate:
       ddl-auto: create
     show-sql: true
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+
 
   security:
     oauth2:

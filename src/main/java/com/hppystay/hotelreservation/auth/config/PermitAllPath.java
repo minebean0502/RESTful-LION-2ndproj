@@ -40,7 +40,10 @@ public class PermitAllPath {
 
             // View
             "/login",
-            "/sign-up"
+            "/sign-up",
+
+            // 리뷰
+            "/api/{hotelId}/review/**"
 
     };
 }
