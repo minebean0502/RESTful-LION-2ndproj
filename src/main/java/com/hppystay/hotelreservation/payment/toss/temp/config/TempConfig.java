@@ -55,7 +55,7 @@ public class TempConfig {
                                 .price("50000")
                                 .status("IN_PROGRESS")
                                 // 나중에 지울곳
-                                .imageUrl("/tossImage/hotel1.png")
+                                .imageUrl("/static/tossImage/hotel1.png")
                                 .member(1L)
                                 .build(),
                         TempReservationEntity.builder()
@@ -65,7 +65,7 @@ public class TempConfig {
                                 .price("10000")
                                 .status("IN_PROGRESS")
                                 // 나중에 지울곳
-                                .imageUrl("/tossImage/hotel2.png")
+                                .imageUrl("/static/tossImage/hotel2.png")
                                 .member(2L)
                                 .build(),
                         TempReservationEntity.builder()
@@ -75,7 +75,7 @@ public class TempConfig {
                                 .price("12345")
                                 .status("IN_PROGRESS")
                                 // 나중에 지울곳
-                                .imageUrl("/tossImage/hotel3.png")
+                                .imageUrl("/static/tossImage/hotel3.png")
                                 .member(1L)
                                 .build(),
                         TempReservationEntity.builder()
@@ -85,7 +85,7 @@ public class TempConfig {
                                 .price("20000")
                                 .status("IN_PROGRESS")
                                 // 나중에 지울곳
-                                .imageUrl("/tossImage/hotel4.png")
+                                .imageUrl("/static/tossImage/hotel4.png")
                                 .member(2L)
                                 .build()
                 ));

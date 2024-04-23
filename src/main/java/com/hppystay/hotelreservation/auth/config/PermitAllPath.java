@@ -28,8 +28,8 @@ public class PermitAllPath {
             "/kakao/**",
 
             // static/templates 에 이미지 표시 경로
-            "/tossImage/**",
-            "/templates/**",
+            "/static/tossImage/**",
+            "/static/templates/**",
 
             // 숙소
             "/test/**",
@@ -51,6 +51,10 @@ public class PermitAllPath {
             "/sign-up",
             "/token/callback",
             "/is-login",
-            "/main"
+            "/main",
+            "/denied",
+
+            // resources
+            "/favicon.ico"
     };
 }
