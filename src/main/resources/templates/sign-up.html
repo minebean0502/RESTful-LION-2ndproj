@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입 폼</title>
+    <style>
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+            background-color: #f9f9f9; /* 배경색 */
+        }
+
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px; /* 제목과 폼 사이의 간격 */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        form > div {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; /* 각 입력 요소 사이의 간격 */
+        }
+
+        form > div label {
+            flex: 0 0 120px;
+            margin-right: 10px;
+        }
+
+        form > div input,
+        form > div button {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form > div button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+
+        form > button {
+            align-self: flex-end;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        #sendCodeButton:disabled,
+        #emailVerifyButton:disabled {
+            background-color: #999; /* 회색 배경색 적용 */
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>회원가입</h2>
+    <form id="signupForm" method="post">
+        <div>
+            <label for="nickname">닉네임:</label>
+            <input type="text" id="nickname" name="nickname" required>
+        </div>
+        <div id="emailSection">
+            <label for="email">이메일:</label>
+            <input type="text" id="email" name="email" required>
+            <button type="button" id="sendCodeButton">인증코드 전송</button>
+        </div>
+        <div id="verificationCodeSection">
+            <label for="verificationCode">인증코드:</label>
+            <input type="text" id="verificationCode" name="verificationCode" required>
+            <button type="button" id="emailVerifyButton">검증</button>
+        </div>
+        <div>
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="button" id="signUpButton">가입</button>
+    </form>
+</div>
+<script>
+    // 인증코드 전송 버튼 클릭 이벤트 처리
+    document.getElementById("sendCodeButton").addEventListener("click", function () {
+        var emailInput = document.getElementById("email");
+        var email = emailInput.value;
+
+        // 이메일 형식 검증
+        if (!isValidEmail(email)) {
+            alert("올바른 이메일 주소를 입력하세요.");
+            return;
+        }
+
+        // 이메일 주소로 인증 코드 요청
+        sendVerificationCode(email);
+    });
+
+    // 이메일 형식 유효성 검사 함수
+    function isValidEmail(email) {
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    // 이메일 주소로 인증 코드 요청하는 함수
+    async function sendVerificationCode(email) {
+        const response = await fetch('/api/auth/sign-up/send-code?email=' + email, {
+            method: 'POST'
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message);
+        } else {
+            alert('이메일이 전송되었습니다.');
+        }
+    }
+
+    // 이메일 검증 버튼 클릭 이벤트
+    document.getElementById('emailVerifyButton').addEventListener('click', async function () {
+        const formData = new FormData();
+        formData.append('email', document.getElementById('email').value);
+        formData.append('code', document.getElementById('verificationCode').value)
+
+        const response = await fetch('/api/auth/email/verify', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message);
+        } else {
+            alert('이메일이 확인되었습니다.');
+            // 이메일 입력칸, 발송버튼, code 입력칸, 검증 버튼 비활성화
+            document.getElementById('email').disabled = true;
+            document.getElementById('sendCodeButton').disabled = true;
+            document.getElementById('verificationCode').disabled = true;
+            document.getElementById('emailVerifyButton').disabled = true;
+        }
+    })
+
+    // 회원가입 버튼 클릭 이벤트
+    document.getElementById('signUpButton').addEventListener('click', async function () {
+        const nickname = document.getElementById('nickname').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const response = await fetch('api/auth/sign-up', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nickname: nickname,
+                email: email,
+                password: password
+            })
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message);
+        } else {
+            alert('회원가입에 성공했습니다.');
+            window.location.href = '/login';
+        }
+    })
+</script>
+</body>
+</html>
