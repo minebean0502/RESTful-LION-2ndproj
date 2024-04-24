@@ -367,19 +367,6 @@
                 // Handle error, such as displaying an error message to the user
             });
     });
-
-    document.getElementById('searchType').addEventListener('change', function () {
-        const searchByRegion = document.getElementById('searchByRegion');
-        const searchByKeyword = document.getElementById('searchByKeyword');
-
-        if (this.value === 'region') {
-            searchByRegion.style.display = 'block';
-            searchByKeyword.style.display = 'none';
-        } else {
-            searchByRegion.style.display = 'none';
-            searchByKeyword.style.display = 'block';
-        }
-    });
 </script>
 </body>
 </html>
