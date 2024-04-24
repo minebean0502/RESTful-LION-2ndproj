@@ -69,11 +69,4 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 nameAttribute
         );
     }
-
-    public TokenDto getAccessToken(String uuid) {
-        // TODO 인증 시간 만료 에러
-        String accessToken = stringRedisTemplate.opsForValue().get(uuid);
-        log.info(accessToken);
-        return new TokenDto(accessToken);
-    }
 }
