@@ -13,13 +13,17 @@ public enum GlobalErrorCode {
     // 회원 관련 에러
     EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "1001", "이미 가입된 이메일입니다."),
     EMAIL_NOT_FOUND(HttpStatus.NOT_FOUND, "1002", "존재하지 않는 이메일입니다."),
-    EMAIL_PASSWORD_MISMATCH(HttpStatus.UNAUTHORIZED, "1003", "이메일과 패스워드가 일치하지 않습니다."),
+    EMAIL_PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "1003", "이메일과 패스워드가 일치하지 않습니다."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, "1004", "비밀번호가 일치하지 않습니다."),
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "1005", "인증에 실패했습니다."),
     USER_DETAILS_INVALID_FORMAT(HttpStatus.UNAUTHORIZED, "1006", "UserDetails의 형식이 올바르지 않습니다."),
     MEMBER_MISMATCH(HttpStatus.UNAUTHORIZED, "1007", "일치하지 않는 회원입니다."),
     PROFILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "1008", "프로필 이미지 저장에 실패했습니다."),
     PROFILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "1009", "프로필 이미지 삭제에 실패했습니다."),
+    ROLE_UPGRADE_DENIED(HttpStatus.FORBIDDEN, "1010", "권한이 없습니다. 일반 회원만 가능합니다."),
+    DUPLICATE_MANAGER_REQUEST(HttpStatus.BAD_REQUEST, "1011", "이미 매니저 신청이 진행 중입니다."),
+    MANAGER_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "1012", "존재하지 않는 매니저 신청입니다."),
+    MANAGER_REQUEST_ALREADY_PROCESSED(HttpStatus.BAD_REQUEST, "1013", "이미 처리된 매니저 신청입니다."),
 
 
 

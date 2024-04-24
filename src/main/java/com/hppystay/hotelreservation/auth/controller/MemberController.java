@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
@@ -92,12 +94,41 @@ public class MemberController {
         return memberService.changePassword(dto);
     }
 
-    @PostMapping("profile-upload")
+    @PostMapping("/profile-upload")
     public ResponseEntity<String> uploadProfileImage(
             @RequestPart("image")
             MultipartFile image
     ) {
         memberService.uploadProfileImage(image);
+        return ResponseEntity.ok("{}");
+    }
+
+    @PostMapping("/manager-requests")
+    public ResponseEntity<String> requestManagerRole() {
+        memberService.requestManagerRole();
+        return ResponseEntity.ok("{}");
+    }
+
+    @GetMapping("/manager-requests")
+    public List<ManagerRequestDto> readAllManagerRequests() {
+        return memberService.readAllManagerRequests();
+    }
+
+    @PostMapping("/manager-requests/{requestId}/approve")
+    public ResponseEntity<String> approveManagerRole(
+            @PathVariable("requestId")
+            Long requestId
+    ) {
+        memberService.approveManagerRole(requestId);
+        return ResponseEntity.ok("{}");
+    }
+
+    @PostMapping("/manager-requests/{requestId}/reject")
+    public ResponseEntity<String> rejectManagerRole(
+            @PathVariable("requestId")
+            Long requestId
+    ) {
+        memberService.rejectManagerRole(requestId);
         return ResponseEntity.ok("{}");
     }
 }

@@ -6,21 +6,14 @@ import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
 import com.hppystay.hotelreservation.auth.oauth2.OAuth2SuccessHandler;
 import com.hppystay.hotelreservation.auth.oauth2.OAuth2UserService;
 import com.hppystay.hotelreservation.auth.service.MemberService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
-
-import java.io.IOException;
 
 @Configuration
 @RequiredArgsConstructor
@@ -41,10 +34,14 @@ public class WebSecurityConfig {
                         auth -> auth
                                 .requestMatchers(PermitAllPath.paths)
                                 .permitAll()
-                                .requestMatchers("/api/auth/profile-upload")
+                                .requestMatchers(CustomRequestMatchers.authenticatedMatchers)
                                 .authenticated()
-                                .anyRequest()
-                                .denyAll()
+                                .requestMatchers(CustomRequestMatchers.userMatchers)
+                                .hasRole("USER")
+                                .requestMatchers(CustomRequestMatchers.managerMatchers)
+                                .hasRole("Manager")
+                                .requestMatchers(CustomRequestMatchers.adminMatchers)
+                                .hasRole("ADMIN")
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
@@ -58,6 +55,7 @@ public class WebSecurityConfig {
                 )
                 .exceptionHandling(configurer -> configurer
                         .authenticationEntryPoint(authenticationEntrypoint)
+                        .accessDeniedPage("/denied")
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

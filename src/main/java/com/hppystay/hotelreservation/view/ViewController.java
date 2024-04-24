@@ -19,14 +19,6 @@ public class ViewController {
         return "sign-up";
     }
 
-    @GetMapping("/token/callback")
-    public String oAuthCallback(
-            @RequestParam("uuid")
-            String uuid
-    ) {
-        return "oauth-redirect";
-    }
-
     // 호텔 생성 view 테스트
     @GetMapping("/hotel/view-test")
     public String hotelCreate() {

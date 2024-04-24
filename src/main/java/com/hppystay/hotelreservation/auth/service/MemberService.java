@@ -3,6 +3,7 @@ package com.hppystay.hotelreservation.auth.service;
 import com.hppystay.hotelreservation.auth.dto.*;
 import com.hppystay.hotelreservation.auth.entity.*;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
+import com.hppystay.hotelreservation.auth.repository.ManagerRequestRepository;
 import com.hppystay.hotelreservation.auth.repository.VerificationRepository;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
@@ -32,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -41,6 +43,7 @@ import java.util.Random;
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final VerificationRepository verificationRepository;
+    private final ManagerRequestRepository managerRequestRepository;
     private final JwtTokenUtils jwtTokenUtils;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
@@ -294,6 +297,55 @@ public class MemberService implements UserDetailsService {
         member.setProfileImage(newProfile);
 
         memberRepository.save(member);
+    }
+
+    public void requestManagerRole() {
+        Member member = facade.getCurrentMember();
+
+        // 진행 중인 신청이 있을 경우 예외 처리
+        Optional<ManagerRequest> optionalRequest = managerRequestRepository
+                .findByMemberAndStatus(member, ManagerRequestStatus.PENDING);
+        if (optionalRequest.isPresent())
+            throw new GlobalException(GlobalErrorCode.DUPLICATE_MANAGER_REQUEST);
+
+        // 새로운 요청 생성
+        ManagerRequest request = ManagerRequest.builder()
+                .member(member)
+                .status(ManagerRequestStatus.PENDING)
+                .build();
+
+        managerRequestRepository.save(request);
+    }
+
+    public List<ManagerRequestDto> readAllManagerRequests() {
+        return managerRequestRepository.findAll().stream()
+                .map(ManagerRequestDto::fromEntity)
+                .toList();
+    }
+
+    public void approveManagerRole(Long requestId) {
+        ManagerRequest request = managerRequestRepository.findById(requestId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.MANAGER_REQUEST_NOT_FOUND));
+
+        // 상태가 Pending이 아니라면 오류
+        if (request.getStatus() != ManagerRequestStatus.PENDING)
+            throw new GlobalException(GlobalErrorCode.MANAGER_REQUEST_ALREADY_PROCESSED);
+
+        request.getMember().setRole(MemberRole.ROLE_MANAGER);
+        request.setStatus(ManagerRequestStatus.APPROVED);
+        managerRequestRepository.save(request);
+    }
+
+    public void rejectManagerRole(Long requestId) {
+        ManagerRequest request = managerRequestRepository.findById(requestId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.MANAGER_REQUEST_NOT_FOUND));
+
+        // 상태가 Pending이 아니라면 오류
+        if (request.getStatus() != ManagerRequestStatus.PENDING)
+            throw new GlobalException(GlobalErrorCode.MANAGER_REQUEST_ALREADY_PROCESSED);
+
+        request.setStatus(ManagerRequestStatus.REJECTED);
+        managerRequestRepository.save(request);
     }
 
     @Override
