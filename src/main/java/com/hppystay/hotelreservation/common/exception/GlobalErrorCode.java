@@ -26,7 +26,6 @@ public enum GlobalErrorCode {
     MANAGER_REQUEST_ALREADY_PROCESSED(HttpStatus.BAD_REQUEST, "1013", "이미 처리된 매니저 신청입니다."),
 
 
-
     // 이메일 관련 에러
     EMAIL_SENDING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "2001", "이메일 발송에 실패했습니다."),
     VERIFICATION_CODE_MISMATCH(HttpStatus.BAD_REQUEST, "2002", "인증 번호가 틀렸습니다."),
@@ -36,8 +35,11 @@ public enum GlobalErrorCode {
 
     // 리뷰 관련 에러
     MISMATCH(HttpStatus.BAD_REQUEST, "3001", "일치하지 않습니다."),
-    NOT_FOUND(HttpStatus.NOT_FOUND, "3002", "존재하지 않습니다.");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "3002", "존재하지 않습니다."),
 
+    // 호텔 생성 관련 에러
+    NOT_AUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "4001", "호텔생성 권한이 없습니다."),
+    ALREADY_MANAGER(HttpStatus.CONFLICT,"4002", "이미 호텔 1개를 생성했습니다.");
 
 
     // errorCode는 영역별로 나누기 (EX: 회원 관련 에러는 1000번대)
