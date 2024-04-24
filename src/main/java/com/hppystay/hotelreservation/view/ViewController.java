@@ -19,7 +19,7 @@ public class ViewController {
     }
 
     // 호텔 생성 view 테스트
-    @GetMapping("/hotel/view-test")
+    @GetMapping("/hotel/create-view")
     public String hotelCreate() {
         return "create-hotel";
     }

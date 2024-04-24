@@ -11,6 +11,7 @@ import com.hppystay.hotelreservation.hotel.dto.RoomDto;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.entity.Room;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
+import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import java.util.List;
 public class HotelService {
     private final HotelRepository hotelRepo;
     private final RoomRepository roomRepo;
+    private final ReservationRepository reservationRepo;
     private final AuthenticationFacade facade;
 
     @Transactional
@@ -36,12 +39,12 @@ public class HotelService {
         Member member = facade.getCurrentMember();
 
         // 멤버 권한 확인
-        if (!member.getRole().equals(MemberRole.ROLE_MANAGER))
-            throw new GlobalException(GlobalErrorCode.NOT_AUTHORIZED_MEMBER);
+//        if (!member.getRole().equals(MemberRole.ROLE_MANAGER))
+//            throw new GlobalException(GlobalErrorCode.NOT_AUTHORIZED_MEMBER);
 
         // 멤버가 가진 호텔 확인
-        if (member.getHotel() != null)
-            throw new GlobalException(GlobalErrorCode.ALREADY_MANAGER);
+//        if (member.getHotel() != null)
+//            throw new GlobalException(GlobalErrorCode.ALREADY_MANAGER);
 
         // 호텔 생성
         Hotel hotel = Hotel.builder()
@@ -83,6 +86,23 @@ public class HotelService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         return HotelDto.fromEntity(hotel);
+    }
+
+    // 예약 가능한 호텔과 방 조회
+    public List<HotelDto> readHotelsReservationPossible(LocalDate checkIn, LocalDate checkOut) {
+        List<Hotel> hotels = hotelRepo.findAll();
+        List<Long> unavailableRoomIds = reservationRepo.findUnavailableRoomIds(checkIn, checkOut);
+
+        return hotels.stream()
+                .map(HotelDto::fromEntity)
+                .map(hotel -> {
+                    hotel.setRooms(hotel.getRooms().stream()
+                            .filter(room -> !unavailableRoomIds.contains(room.getId())) // 예약된 방 제외
+                            .toList());
+                    return hotel;
+                })
+                .filter(hotel -> !hotel.getRooms().isEmpty()) // 모든 방이 예약된 호텔 제외
+                .toList();
     }
 
     public HotelDto updateHotel(Long id, HotelDto hotelDto) {
