@@ -1,6 +1,11 @@
 package com.hppystay.hotelreservation.hotel.service;
 
 import com.hppystay.hotelreservation.api.KNTO.utils.AreaCode;
+import com.hppystay.hotelreservation.auth.entity.Member;
+import com.hppystay.hotelreservation.auth.entity.MemberRole;
+import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
+import com.hppystay.hotelreservation.common.exception.GlobalException;
+import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
 import com.hppystay.hotelreservation.hotel.dto.HotelDto;
 import com.hppystay.hotelreservation.hotel.dto.RoomDto;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
@@ -23,9 +28,21 @@ import java.util.List;
 public class HotelService {
     private final HotelRepository hotelRepo;
     private final RoomRepository roomRepo;
+    private final AuthenticationFacade facade;
 
     @Transactional
     public HotelDto createHotel(HotelDto hotelDto) {
+        // 현재 멤버 불러오기
+        Member member = facade.getCurrentMember();
+
+        // 멤버 권한 확인
+        if (!member.getRole().equals(MemberRole.ROLE_MANAGER))
+            throw new GlobalException(GlobalErrorCode.NOT_AUTHORIZED_MEMBER);
+
+        // 멤버가 가진 호텔 확인
+        if (member.getHotel() != null)
+            throw new GlobalException(GlobalErrorCode.ALREADY_MANAGER);
+
         // 호텔 생성
         Hotel hotel = Hotel.builder()
                 .title(hotelDto.getTitle())
@@ -38,6 +55,7 @@ public class HotelService {
                 .mapY(hotelDto.getMapY())
                 .tel(hotelDto.getTel())
                 .rooms(new ArrayList<>())
+                .manager(member)
                 .build();
         hotel = hotelRepo.save(hotel);
 

@@ -25,6 +25,8 @@ public class HotelDto {
     private List<RoomDto> rooms; // 사용자가 추가
     private List<ReviewDto> reviews;
 
+    private Long managerId;
+
     public static HotelDto fromEntity(Hotel hotel) {
         List<RoomDto> roomDtoList = hotel.getRooms().stream()
                 .map(RoomDto::fromEntity)
@@ -42,6 +44,7 @@ public class HotelDto {
                 .mapY(hotel.getMapY())
                 .tel(hotel.getTel())
                 .rooms(roomDtoList)
+                .managerId(hotel.getManager().getId())
                 .build();
     }
 }

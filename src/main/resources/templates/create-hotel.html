@@ -104,7 +104,7 @@
         }
 
         #hotelInfoForm {
-            display: none;
+            /*display: none;*/
             text-align: center;
             margin-top: 20px;
         }
@@ -188,7 +188,7 @@
     <h2>검색 결과</h2>
     <ul id="hotelList"></ul>
 
-    <h2>선택된 호텔</h2>
+    <h2>호텔 정보</h2>
     <form id="hotelInfoForm">
         <label for="hotelTitle">Title:</label>
         <input type="text" id="hotelTitle" name="title">
@@ -215,11 +215,11 @@
         <textarea id="hotelDescription" name="description"></textarea>
 
         <!-- Room input fields -->
-        <h2>Room Information</h2>
+        <h2>방 정보</h2>
         <div id="roomFields">
             <!-- Room fields will be dynamically added here -->
         </div>
-        <button type="button" onclick="addRoom()">Add Room</button>
+        <button type="button" onclick="addRoom()">새로운 방 추가하기</button>
 
         <input type="submit" value="Submit">
     </form>
@@ -234,8 +234,8 @@
 
         const roomDiv = document.createElement('div');
         roomDiv.innerHTML = `
-                <h3>Room ${roomNumber}</h3>
-                <div id="roomInfoForm">
+                <h3>${roomNumber}번 방</h3>
+                <div id="roomInfoForm${roomNumber}">
                     <label for="roomName${roomNumber}">Name:</label>
                     <input type="text" id="roomName${roomNumber}" name="roomName${roomNumber}">
 
@@ -244,14 +244,30 @@
 
                     <label for="roomContent${roomNumber}">Content:</label>
                     <textarea id="roomContent${roomNumber}" name="roomContent${roomNumber}"></textarea><br>
+
+                    <button id="pushRoomButton${roomNumber}" type="button" onclick="pushRoom(${roomNumber})">추가하기</button>
                 </div>
             `;
         roomFields.appendChild(roomDiv);
+    }
+
+    function pushRoom(roomNumber) {
+        const roomName = document.getElementById('roomName'+roomNumber).value;
+        const roomPrice = document.getElementById('roomPrice'+roomNumber).value;
+        const roomContent = document.getElementById('roomContent'+roomNumber).value;
+
+        console.log(roomName)
+
+        document.getElementById('roomName'+roomNumber).disabled = true;
+        document.getElementById('roomPrice'+roomNumber).disabled = true;
+        document.getElementById('roomContent'+roomNumber).disabled = true;
+        document.getElementById('pushRoomButton'+roomNumber).style.display = 'none';
+
 
         rooms.push({
-            name: `${roomNumber}`,
-            price: `${roomNumber}`,
-            content: `${roomNumber}`
+            name: roomName,
+            price: roomPrice,
+            content: roomContent
         });
     }
 
@@ -316,7 +332,7 @@
         document.getElementById('hotelMapX').value = hotel.mapX;
         document.getElementById('hotelMapY').value = hotel.mapY;
 
-        document.getElementById('hotelInfoForm').style.display = 'block';
+        // document.getElementById('hotelInfoForm').style.display = 'block';
     }
 
     document.getElementById('hotelInfoForm').addEventListener('submit', function (event) {
