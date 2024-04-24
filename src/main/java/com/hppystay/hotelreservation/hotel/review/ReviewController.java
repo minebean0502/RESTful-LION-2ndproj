@@ -20,6 +20,19 @@ public class ReviewController {
         return reviewService.createReview(hotelId, dto);
     }
 
+    // 대댓글 작성
+    @PostMapping("{reviewId}")
+    public ReviewDto replyReview(
+            @PathVariable("hotelId")
+            Long hotelId,
+            @PathVariable("reviewId")
+            Long reviewId,
+            @RequestBody
+            ReviewDto dto
+    ) {
+        return reviewService.replyReview(hotelId, reviewId, dto);
+    }
+
     // 리뷰 수정
     @PutMapping("{reviewId}/update")
     public ReviewDto updateReview(

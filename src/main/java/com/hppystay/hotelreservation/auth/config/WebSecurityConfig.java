@@ -24,6 +24,7 @@ public class WebSecurityConfig {
     private final OAuth2UserService oAuth2UserService;
     private final CustomAuthenticationEntrypoint authenticationEntrypoint;
 
+
     @Bean
     public SecurityFilterChain securityFilterChai(
             HttpSecurity http

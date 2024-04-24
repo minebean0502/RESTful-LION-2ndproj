@@ -4,9 +4,13 @@ import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Builder
@@ -14,18 +18,24 @@ public class ReviewDto {
     private Long id;
     private Long memberId;
     private Long hotelId;
-    @Setter
+    private Integer depth;
     private String content;
-    @Setter
-    private int score;
+    private double score;
+    private List<ReviewDto> childReviews;
 
     public static ReviewDto fromEntity(Review entity) {
-        return ReviewDto.builder()
-                .id(entity.getId())
-                .hotelId(entity.getHotel().getId())
-                .memberId(entity.getMember().getId())
-                .content(entity.getContent())
-                .score(entity.getScore())
-                .build();
+        List<ReviewDto> childDtos = entity.getChildReviews().stream()
+                .map(ReviewDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return new ReviewDto(
+                entity.getId(),
+                entity.getHotel().getId(),
+                entity.getMember().getId(),
+                entity.getDepth(),
+                entity.getContent(),
+                entity.getScore(),
+                childDtos
+        );
     }
 }

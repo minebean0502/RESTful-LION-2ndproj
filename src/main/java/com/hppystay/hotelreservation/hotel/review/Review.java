@@ -7,6 +7,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @SuperBuilder
@@ -18,12 +21,24 @@ public class Review extends BaseEntity {
     private Long id;
     @Setter
     private String content; // 리뷰 내용
+    private Integer depth;
     @Setter
-    private int score; // 별점
+    private double score; // 별점
+
     @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     private Hotel hotel;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Review parentReview;
+
+    @OneToMany(mappedBy = "parentReview", fetch = FetchType.LAZY)
+    private List<Review> childReviews = new ArrayList<>();
+
+    public static Review.ReviewBuilder customBuilder() {
+        return builder().childReviews(new ArrayList<>());
+    }
 }
