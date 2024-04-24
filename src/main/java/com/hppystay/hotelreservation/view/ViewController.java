@@ -2,7 +2,6 @@ package com.hppystay.hotelreservation.view;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -43,5 +42,13 @@ public class ViewController {
         return "denied";
     }
 
+    @GetMapping("/main")
+    public String mainPage() {
+        return "main";
+    }
 
+    @GetMapping("/hotel/search")
+    public String hotelSearch() {
+        return "hotelSearch/hotel-list-search";
+    }
 }

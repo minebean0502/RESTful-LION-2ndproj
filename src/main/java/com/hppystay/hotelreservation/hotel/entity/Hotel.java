@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.hotel.entity;
 
+import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
 import com.hppystay.hotelreservation.hotel.review.Review;
 import jakarta.persistence.*;
@@ -45,9 +46,9 @@ public class Hotel extends BaseEntity {
     @OneToMany(mappedBy = "hotel")
     private List<Review> reviews = new ArrayList<>();
 
-//    @Setter
-//    @OneToMany
-//    Member manager_id;
+    @Setter
+    @OneToOne
+    private Member manager;
 
     public Hotel addRoom(Room room) {
         this.getRooms().add(room);
