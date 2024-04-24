@@ -26,4 +26,17 @@ public class AdminConfig {
                     .build());
         }
     }
+
+    // 테스트용 계정 추가
+//    @PostConstruct
+//    public void createUser() {
+//        for(int i = 1; i <= 10; i++) {
+//            memberRepository.save(Member.builder()
+//                    .nickname(String.format("user %d", i))
+//                    .email(String.format("user%d@gmail.com",i))
+//                    .password(passwordEncoder.encode("1234"))
+//                    .role(MemberRole.ROLE_MANAGER)
+//                    .build());
+//        }
+//    }
 }
