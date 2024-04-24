@@ -26,22 +26,56 @@ public class ReviewService {
 
     // 리뷰 생성
     public ReviewDto createReview(Long hotelId, ReviewDto dto) {
+        // 호텔 정보 가져오기
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(
                 () -> new GlobalException(GlobalErrorCode.NOT_FOUND));
 
+        // 유저 정보 가져오기
         Member member = auth.getCurrentMember();
         log.info("auth account: {}", member.getEmail());
 
         //TODO: 리뷰를 작성하려는 고객이 해당 호텔에서 구매 기록이 없는 경우 로직 추가?
 
-        Review review = Review.builder()
+        Review review = Review.customBuilder()
                 .member(member)
                 .hotel(hotel)
                 .content(dto.getContent())
                 .score(dto.getScore())
+                .depth(0)
                 .build();
 
         return ReviewDto.fromEntity(reviewRepository.save(review));
+    }
+
+    // 작성된 리뷰에 답글 생성(대댓글) - 호텔 관리자 혹은 시스템 관리자만 답글 생성 가능
+    public ReviewDto replyReview(Long hotelId, Long reviewId, ReviewDto dto) {
+        // 호텔 정보 가져오기
+        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(
+                () -> new GlobalException(GlobalErrorCode.NOT_FOUND));
+
+        // 유저 정보 가져오기
+        Member member = auth.getCurrentMember();
+        log.info("auth account: {}", member.getEmail());
+
+        // 리뷰 정보 가져오기
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.NOT_FOUND));
+
+        // 호텔 관리자 혹은 시스템 관리자 인지
+        if (!member.getRole().equals(MemberRole.ROLE_ADMIN) || member.getRole().equals(MemberRole.ROLE_MANAGER)) {
+            throw new GlobalException(GlobalErrorCode.MEMBER_MISMATCH);
+        }
+
+        Review replyReview = Review.customBuilder()
+                .member(member)
+                .hotel(hotel)
+                .content(dto.getContent())
+                .score(dto.getScore())
+                .depth(1)
+                .parentReview(review)
+                .build();
+
+        return ReviewDto.fromEntity(reviewRepository.save(replyReview));
     }
 
     // 리뷰 수정
@@ -76,7 +110,6 @@ public class ReviewService {
 
     // 리뷰 삭제
     public void deleteReview(Long reviewId) {
-
         Review review = reviewRepository.findById(reviewId).orElseThrow(
                 () -> new GlobalException(GlobalErrorCode.NOT_FOUND));
 

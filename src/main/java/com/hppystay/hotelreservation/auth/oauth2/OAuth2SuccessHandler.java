@@ -4,6 +4,7 @@ import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.entity.MemberRole;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
+import com.hppystay.hotelreservation.auth.service.MemberService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +29,7 @@ import java.util.UUID;
 public class OAuth2SuccessHandler
         extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenUtils tokenUtils;
+    private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final StringRedisTemplate stringRedisTemplate;
@@ -62,26 +64,9 @@ public class OAuth2SuccessHandler
             member = optionalMember.get();
         }
 
-        // 토큰 발급
-        String accessToken = tokenUtils.generateAccessToken(member);
-        String refreshToken = tokenUtils.generateRefreshToken(member);
+        memberService.issueTokens(member, response);
 
-        // 방법 1. 토큰을 쿠키로 저장
-        ResponseCookie accessCookie = ResponseCookie.from("accessToken", accessToken)
-                .httpOnly(true)
-                .path("/")
-                .maxAge(60 * 5)
-                .build();
-
-        ResponseCookie refreshCookie = ResponseCookie.from("refreshToken", refreshToken)
-                .httpOnly(true)
-                .path("/")
-                .maxAge(60 * 60)
-                .build();
-        response.addHeader("Set-Cookie", accessCookie.toString());
-        response.addHeader("Set-Cookie", refreshCookie.toString());
-
-        getRedirectStrategy().sendRedirect(request,response, "http://localhost:8080/main");
+        getRedirectStrategy().sendRedirect(request, response, "http://localhost:8080/main");
 
         // 방법 2.
 //        String uuid = UUID.randomUUID().toString();
