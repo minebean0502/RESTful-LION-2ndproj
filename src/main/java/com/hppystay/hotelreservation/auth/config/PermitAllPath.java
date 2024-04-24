@@ -24,14 +24,13 @@ public class PermitAllPath {
 
 
             // 숙소
-            "/test/**",
-            "/test/view-test",
-            "test/keyword/**",
-            "test/areaCode/**",
-            "/hotel/",
-            "/hotel/**",
-            "/hotel/room/**",
-//            "create-hotel",
+            "/hotel/create-view",
+            "/api/hotel/keyword/**",
+            "/api/hotel/areaCode/**",
+            "/api/hotel/",
+            "/api/hotel/**",
+            "/api/hotel/room/**",
+            "/api/hotel/reservation",
 
             // 문의사항
             "/hotel/inquiries/**",
