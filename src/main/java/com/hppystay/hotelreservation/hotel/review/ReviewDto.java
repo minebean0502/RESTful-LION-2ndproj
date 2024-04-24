@@ -20,11 +20,11 @@ public class ReviewDto {
     private Long hotelId;
     private Integer depth;
     private String content;
-    private double score;
+    private double score; // 리뷰 점수
     private List<ReviewDto> childReviews;
 
     public static ReviewDto fromEntity(Review entity) {
-        List<ReviewDto> childDtos = entity.getChildReviews().stream()
+        List<ReviewDto> childDtoList = entity.getChildReviews().stream()
                 .map(ReviewDto::fromEntity)
                 .collect(Collectors.toList());
 
@@ -35,7 +35,7 @@ public class ReviewDto {
                 entity.getDepth(),
                 entity.getContent(),
                 entity.getScore(),
-                childDtos
+                childDtoList
         );
     }
 }
