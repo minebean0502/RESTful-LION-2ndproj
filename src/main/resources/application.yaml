@@ -109,4 +109,3 @@ jwt:
 
 api:
   key: ${API_KEY}
-
