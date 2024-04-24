@@ -3,11 +3,15 @@ package com.hppystay.hotelreservation.hotel.controller;
 import com.hppystay.hotelreservation.api.KNTO.dto.tourinfo.TourInfoApiDto;
 import com.hppystay.hotelreservation.api.service.ApiService;
 import com.hppystay.hotelreservation.hotel.dto.HotelDto;
+import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
 import com.hppystay.hotelreservation.hotel.dto.RoomDto;
+import com.hppystay.hotelreservation.hotel.dto.SearchDto;
 import com.hppystay.hotelreservation.hotel.service.HotelService;
+import com.hppystay.hotelreservation.hotel.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -16,7 +20,9 @@ public class HotelController {
 
     private final ApiService apiService;
     private final HotelService hotelService;
+    private final ReservationService reservationService;
 
+    // API 기능
     @GetMapping("/api/hotel/areaCode/{area}")
     public List<TourInfoApiDto> findHotelByRegion(@PathVariable("area") String area){
         return apiService.callHotelByRegionApi(area);
@@ -37,12 +43,23 @@ public class HotelController {
         return apiService.callSpotByLocationApi(mapX, mapY);
     }
 
+    // 호텔 기능
     @PostMapping("/api/hotel")
     public HotelDto createHotel(
             @RequestBody
             HotelDto dto
     ) {
         return hotelService.createHotel(dto);
+    }
+
+    @GetMapping("/api/hotel")
+    public List<HotelDto> readAllHotel(
+            @RequestBody
+            SearchDto dto
+    ) {
+        LocalDate checkIn = dto.getCheckIn();
+        LocalDate checkOut = dto.getCheckOut();
+        return hotelService.readHotelsReservationPossible(checkIn, checkOut);
     }
 
     @GetMapping("/api/hotel/{id}")
@@ -80,5 +97,14 @@ public class HotelController {
             RoomDto roomDto
     ) {
         return hotelService.addRoom(roomDto, hotelId);
+    }
+
+    // 예약 기능
+    @PostMapping("/api/hotel/reservation")
+    public ReservationDto addReservation(
+            @RequestBody
+            ReservationDto dto
+    ) {
+        return reservationService.createReservation(dto);
     }
 }
