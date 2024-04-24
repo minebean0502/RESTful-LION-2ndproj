@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>oauth2 redirect</title>
+</head>
+<body>
+</body>
+<script>
+    function fetchAccessToken() {
+        const queryParams = new URLSearchParams(window.location.search);
+        const uuid = queryParams.get('uuid');
+
+        fetch(`/api/oauth2/get-token?uuid=${uuid}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+            return response.json();
+        }).then(data => {
+            localStorage.setItem('token', data.accessToken);
+            alert('로그인 성공');
+            // 임시로 로그인 페이지로 이동
+            location.href = "/login";
+        })
+    }
+
+    fetchAccessToken();
+</script>
+</html>
