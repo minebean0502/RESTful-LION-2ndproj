@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>호텔 검색 조회 페이지</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { background-color: #f3f3f3; padding: 10px; text-align: center; }
+        .search-container { background-color: #fff; padding: 10px; border-bottom: 1px solid #ccc; }
+        .main-container { display: flex; justify-content: space-between; margin: 20px; }
+        .search-sidebar { border: 1px solid #ccc; padding: 10px; width: 20%; }
+        .hotel-list { width: 75%; }
+        .hotel-card { border: 1px solid #ccc; margin-bottom: 10px; padding: 10px; display: flex; }
+        .hotel-image { width: 30%; }
+        .hotel-details { width: 70%; padding-left: 10px; }
+        .search-bar { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        input, button { padding: 5px; margin-right: 5px; }
+        button { background-color: blue; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<header>
+    <th:block th:replace="~{updown/temp-header}"></th:block>
+</header>
+<!--<div class="header">-->
+<!--    Hotel Booking Project-->
+<!--</div>-->
+
+<div class="search-container">
+    <!-- Search Bar Here -->
+    <div class="search-bar">
+        <input type="text" placeholder="Search Keyword">
+        <input type="date">
+        <input type="date">
+        <button>Search</button>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="search-sidebar">
+        <!-- Filters or additional search options here -->
+        <label>Filter 1</label>
+        <input type="text">
+        <label>Filter 2</label>
+        <input type="text">
+        <button>Search</button>
+    </div>
+
+    <div class="hotel-list">
+        <!-- Hotel List from Backend API Here -->
+        <div class="hotel-card">
+            <div class="hotel-image">
+                <!-- Dynamic Image Here -->
+                Image Placeholder
+            </div>
+            <div class="hotel-details">
+                <!-- Dynamic Hotel Details Here -->
+                <h3>Hotel Title</h3>
+                <p>Hotel Address</p>
+                <p>Description</p>
+                <span>Rating</span>
+            </div>
+        </div>
+        <!-- Repeat for each hotel -->
+    </div>
+</div>
+<th:block th:replace="~{updown/footer}"></th:block>
+</body>
+</html>
