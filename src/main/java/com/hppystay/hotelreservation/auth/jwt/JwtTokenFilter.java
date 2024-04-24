@@ -118,7 +118,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             accessToken = accessCookie.getValue();
             if (jwtTokenUtils.validate(accessCookie.getValue())) {
                 String userEmail = jwtTokenUtils.parseClaims(accessToken).getSubject();
-                log.info("email: {}", userEmail);
 
                 if (memberService.userExists(userEmail)) {
                     UserDetails userDetails = memberService.loadUserByUsername(userEmail);

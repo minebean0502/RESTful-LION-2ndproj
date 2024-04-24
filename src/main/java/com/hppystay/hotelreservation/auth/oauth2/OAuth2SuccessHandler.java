@@ -67,13 +67,5 @@ public class OAuth2SuccessHandler
         memberService.issueTokens(member, response);
 
         getRedirectStrategy().sendRedirect(request, response, "http://localhost:8080/main");
-
-        // 방법 2.
-//        String uuid = UUID.randomUUID().toString();
-//        stringRedisTemplate.opsForValue().set(uuid, accessToken, Duration.ofSeconds(60));
-//
-//        String targetUrl = String.format(
-//                "http://localhost:8080/token/callback?uuid=%s", uuid);
-//        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

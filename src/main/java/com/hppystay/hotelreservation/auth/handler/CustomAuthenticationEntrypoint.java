@@ -21,6 +21,8 @@ public class CustomAuthenticationEntrypoint implements AuthenticationEntryPoint 
             HttpServletResponse response,
             AuthenticationException authException
     ) throws IOException, ServletException {
-        response.sendRedirect("/denied");
+        request.setAttribute("SPRING_SECURITY_403_EXCEPTION", authException);
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+        request.getRequestDispatcher("/login").forward(request, response);
     }
 }

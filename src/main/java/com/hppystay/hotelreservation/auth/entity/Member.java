@@ -32,6 +32,7 @@ public class Member extends BaseEntity {
     @Setter
     private String profileImage;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
