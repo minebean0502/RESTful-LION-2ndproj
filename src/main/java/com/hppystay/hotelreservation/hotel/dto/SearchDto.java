@@ -8,6 +8,7 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class SearchDto {
+    private String keyword;
     private LocalDate checkIn;
     private LocalDate checkOut;
 }

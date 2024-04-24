@@ -39,12 +39,12 @@ public class HotelService {
         Member member = facade.getCurrentMember();
 
         // 멤버 권한 확인
-//        if (!member.getRole().equals(MemberRole.ROLE_MANAGER))
-//            throw new GlobalException(GlobalErrorCode.NOT_AUTHORIZED_MEMBER);
+        if (!member.getRole().equals(MemberRole.ROLE_MANAGER))
+            throw new GlobalException(GlobalErrorCode.NOT_AUTHORIZED_MEMBER);
 
         // 멤버가 가진 호텔 확인
-//        if (member.getHotel() != null)
-//            throw new GlobalException(GlobalErrorCode.ALREADY_MANAGER);
+        if (member.getHotel() != null)
+            throw new GlobalException(GlobalErrorCode.ALREADY_MANAGER);
 
         // 호텔 생성
         Hotel hotel = Hotel.builder()
@@ -89,8 +89,8 @@ public class HotelService {
     }
 
     // 예약 가능한 호텔과 방 조회
-    public List<HotelDto> readHotelsReservationPossible(LocalDate checkIn, LocalDate checkOut) {
-        List<Hotel> hotels = hotelRepo.findAll();
+    public List<HotelDto> readHotelsReservationPossible(String keyword, LocalDate checkIn, LocalDate checkOut) {
+        List<Hotel> hotels = hotelRepo.searchByKeyword(keyword);
         List<Long> unavailableRoomIds = reservationRepo.findUnavailableRoomIds(checkIn, checkOut);
 
         return hotels.stream()
