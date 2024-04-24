@@ -57,9 +57,10 @@ public class HotelController {
             @RequestBody
             SearchDto dto
     ) {
+        String keyword = dto.getKeyword();
         LocalDate checkIn = dto.getCheckIn();
         LocalDate checkOut = dto.getCheckOut();
-        return hotelService.readHotelsReservationPossible(checkIn, checkOut);
+        return hotelService.readHotelsReservationPossible(keyword, checkIn, checkOut);
     }
 
     @GetMapping("/api/hotel/{id}")
