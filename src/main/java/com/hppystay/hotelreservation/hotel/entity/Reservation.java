@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -16,7 +18,8 @@ public class Reservation  extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer numberOfPeople;
+    private LocalDate checkIn;
+    private LocalDate checkOut;
 
     // 결제관련
     //    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
