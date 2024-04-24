@@ -39,7 +39,7 @@ public class PermitAllPath {
             // View
             "/login",
             "/sign-up",
-
+            "/password-reset",
 
             "/token/callback",
             "/is-login",
