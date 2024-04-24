@@ -17,17 +17,17 @@ public class HotelController {
     private final ApiService apiService;
     private final HotelService hotelService;
 
-    @GetMapping("/test/areaCode/{area}")
+    @GetMapping("/api/hotel/areaCode/{area}")
     public List<TourInfoApiDto> findHotelByRegion(@PathVariable("area") String area){
         return apiService.callHotelByRegionApi(area);
     }
 
-    @GetMapping("/test/keyword/{keyword}")
+    @GetMapping("/api/hotel/keyword/{keyword}")
     public List<TourInfoApiDto> findHotelByKeyWord(@PathVariable("keyword") String keyword) {
         return apiService.callHotelByKeywordApi(keyword);
     }
 
-    @GetMapping("/test/location/{mapX}/{mapY}")
+    @GetMapping("/api/hotel/location/{mapX}/{mapY}")
     public List<TourInfoApiDto> findSpotByLocation(
             @PathVariable("mapX")
             String mapX,
@@ -37,7 +37,7 @@ public class HotelController {
         return apiService.callSpotByLocationApi(mapX, mapY);
     }
 
-    @PostMapping("/hotel")
+    @PostMapping("/api/hotel")
     public HotelDto createHotel(
             @RequestBody
             HotelDto dto
@@ -45,7 +45,7 @@ public class HotelController {
         return hotelService.createHotel(dto);
     }
 
-    @GetMapping("/hotel/{id}")
+    @GetMapping("/api/hotel/{id}")
     public HotelDto readHotel(
             @PathVariable("id")
             Long id
@@ -53,7 +53,7 @@ public class HotelController {
         return hotelService.readOneHotel(id);
     }
 
-    @PutMapping("/hotel/{id}")
+    @PutMapping("/api/hotel/{id}")
     public HotelDto updateHotel(
             @PathVariable("id")
             Long id,
@@ -63,7 +63,7 @@ public class HotelController {
         return hotelService.updateHotel(id, dto);
     }
 
-    @DeleteMapping("/hotel/{id}")
+    @DeleteMapping("api/hotel/{id}")
     public void deleteHotel(
             @PathVariable("id")
             Long id
@@ -72,7 +72,7 @@ public class HotelController {
     }
 
     // 기존 호텔에 방만 추가하는 경우
-    @PostMapping("/hotel/room/{id}")
+    @PostMapping("/api/hotel/room/{id}")
     public HotelDto addRoom(
             @PathVariable("id")
             Long hotelId,
