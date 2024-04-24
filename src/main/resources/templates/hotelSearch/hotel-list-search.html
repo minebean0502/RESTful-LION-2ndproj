@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>호텔 검색 조회 페이지</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .header { background-color: #f3f3f3; padding: 10px; text-align: center; }
+        .search-container { background-color: #fff; padding: 10px; border-bottom: 1px solid #ccc; }
+        .main-container { display: flex; justify-content: space-between; margin: 20px; }
+        .search-sidebar { border: 1px solid #ccc; padding: 10px; width: 20%; }
+        .hotel-list { width: 75%; }
+        .hotel-card { border: 1px solid #ccc; margin-bottom: 10px; padding: 10px; display: flex; }
+        .hotel-image { width: 30%; }
+        .hotel-details { width: 70%; padding-left: 10px; }
+        .search-bar { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        input, button { padding: 5px; margin-right: 5px; }
+        button { background-color: blue; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<header>
+    <th:block th:replace="~{updown/temp-header}"></th:block>
+</header>
+<!--<div class="header">-->
+<!--    Hotel Booking Project-->
+<!--</div>-->
+
+<div class="search-container">
+    <!--  검색바 여기에 넣기  -->
+    <div class="search-bar">
+        <input type="text" placeholder="Search Keyword">
+        <input type="date">
+        <input type="date">
+        <button>Search</button>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="search-sidebar">
+        <!-- 사이드바 관련해서 여기에 넣기 -->
+        <label>Filter 1</label>
+        <input type="text">
+        <label>Filter 2</label>
+        <input type="text">
+        <button>Search</button>
+    </div>
+
+    <div class="hotel-list">
+        <!-- 여기에 hotel 백엔드 API 가져와서 넣는거임 -->
+        <!-- 만약에 애매하면, 밑에 스크립트로 뽑아서 innerHtml 사용해서 넣을수도 있음  -->
+        <div class="hotel-card">
+            <div class="hotel-image">
+                <!-- 받아온 것 중 ImageUrl 넣기 -->
+                Image Placeholder
+            </div>
+            <div class="hotel-details">
+                <!-- 받아온 JSON에서 address, description, avg_score 등등 넣기 -->
+                <h3>Hotel Title</h3>
+                <p>Hotel Address</p>
+                <p>Description</p>
+                <span>Rating</span>
+            </div>
+        </div>
+    </div>
+</div>
+<th:block th:replace="~{updown/footer}"></th:block>
+</body>
+</html>

@@ -22,7 +22,6 @@ public enum GlobalErrorCode {
     PROFILE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "1009", "프로필 이미지 삭제에 실패했습니다."),
 
 
-
     // 이메일 관련 에러
     EMAIL_SENDING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "2001", "이메일 발송에 실패했습니다."),
     VERIFICATION_CODE_MISMATCH(HttpStatus.BAD_REQUEST, "2002", "인증 번호가 틀렸습니다."),
