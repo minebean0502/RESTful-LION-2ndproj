@@ -29,7 +29,7 @@
 <!--</div>-->
 
 <div class="search-container">
-    <!-- Search Bar Here -->
+    <!--  검색바 여기에 넣기  -->
     <div class="search-bar">
         <input type="text" placeholder="Search Keyword">
         <input type="date">
@@ -40,7 +40,7 @@
 
 <div class="main-container">
     <div class="search-sidebar">
-        <!-- Filters or additional search options here -->
+        <!-- 사이드바 관련해서 여기에 넣기 -->
         <label>Filter 1</label>
         <input type="text">
         <label>Filter 2</label>
@@ -49,21 +49,21 @@
     </div>
 
     <div class="hotel-list">
-        <!-- Hotel List from Backend API Here -->
+        <!-- 여기에 hotel 백엔드 API 가져와서 넣는거임 -->
+        <!-- 만약에 애매하면, 밑에 스크립트로 뽑아서 innerHtml 사용해서 넣을수도 있음  -->
         <div class="hotel-card">
             <div class="hotel-image">
-                <!-- Dynamic Image Here -->
+                <!-- 받아온 것 중 ImageUrl 넣기 -->
                 Image Placeholder
             </div>
             <div class="hotel-details">
-                <!-- Dynamic Hotel Details Here -->
+                <!-- 받아온 JSON에서 address, description, avg_score 등등 넣기 -->
                 <h3>Hotel Title</h3>
                 <p>Hotel Address</p>
                 <p>Description</p>
                 <span>Rating</span>
             </div>
         </div>
-        <!-- Repeat for each hotel -->
     </div>
 </div>
 <th:block th:replace="~{updown/footer}"></th:block>
