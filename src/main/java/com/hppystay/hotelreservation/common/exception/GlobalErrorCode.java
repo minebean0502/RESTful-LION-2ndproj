@@ -32,8 +32,11 @@ public enum GlobalErrorCode {
 
     // 리뷰 관련 에러
     MISMATCH(HttpStatus.BAD_REQUEST, "3001", "일치하지 않습니다."),
-    NOT_FOUND(HttpStatus.NOT_FOUND, "3002", "존재하지 않습니다.");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "3002", "존재하지 않습니다."),
 
+    // 호텔 생성 관련 에러
+    NOT_AUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "4001", "호텔생성 권한이 없습니다."),
+    ALREADY_MANAGER(HttpStatus.CONFLICT,"4002", "이미 호텔 1개를 생성했습니다.");
 
 
     // errorCode는 영역별로 나누기 (EX: 회원 관련 에러는 1000번대)
