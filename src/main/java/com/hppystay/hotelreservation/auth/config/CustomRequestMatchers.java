@@ -4,25 +4,68 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 public class CustomRequestMatchers {
-    // 일반 USER 를 위한 Matcher
-    public static AntPathRequestMatcher[] userMatchers = {
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests")
-    };
+    public static AntPathRequestMatcher[] permitAllMatchers = {
+            // Auth
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/sign-up"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/sign-in"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/sign-up/send-code"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/email/verify"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/password/send-code"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/password/reset"),
 
-    // MANAGER 를 위한 Matcher
-    public static AntPathRequestMatcher[] managerMatchers = {
+            // Hotel
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/areaCode/{area}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/keyword/{keyword}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/location/{mapX}{mapY}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/{id}"),
 
-    };
+            // View
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/login"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/sign-up"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/create-view"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/is-login"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/denied"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/main"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/login"),
 
-    // ADMIN 을 위한 Matcher
-    public static AntPathRequestMatcher[] adminMatchers = {
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/manager-requests"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/approve"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/reject"),
+            // Resources
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/favicon.ico"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/static/**"),
     };
 
     // 인증된 사용자를 위한 Matcher
     public static AntPathRequestMatcher[] authenticatedMatchers = {
-        AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/profile-upload")
+            // Auth
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/password/change"),
+
+            // Hotel
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/profile-upload"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/my"),
+    };
+
+    // 일반 USER 를 위한 Matcher
+    public static AntPathRequestMatcher[] userMatchers = {
+            // Auth
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests"),
+    };
+
+    // MANAGER 를 위한 Matcher
+    public static AntPathRequestMatcher[] managerMatchers = {
+            // Hotel
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/hotel/{id}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/hotel/{id}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/{id}"),
+    };
+
+    // ADMIN 을 위한 Matcher
+    public static AntPathRequestMatcher[] adminMatchers = {
+            // Auth
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/manager-requests"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/approve"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/reject"),
     };
 }
