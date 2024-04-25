@@ -46,8 +46,14 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/my"),
 
+
+            // Like
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/likes/{hotelId}"),
+
+
             // view
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page"),
+
 
     };
 
@@ -60,6 +66,7 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
+
 
     };
 
