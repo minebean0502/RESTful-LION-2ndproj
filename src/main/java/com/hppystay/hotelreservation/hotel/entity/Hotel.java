@@ -38,7 +38,9 @@ public class Hotel extends BaseEntity {
 
     private String description; // 호텔 설명
 
-    private Double avg_score; // 별점
+    private Double avg_score; // 평균 별점
+
+    private Long review_count; //총 리뷰 개수
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Room> rooms = new ArrayList<>();

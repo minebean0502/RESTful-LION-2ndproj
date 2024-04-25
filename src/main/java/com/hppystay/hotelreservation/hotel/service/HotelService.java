@@ -54,6 +54,7 @@ public class HotelService {
                 .description(hotelDto.getDescription())
                 .firstImage(hotelDto.getFirstImage())
                 .avg_score(0.0)
+                .review_count(0L)
                 .mapX(hotelDto.getMapX())
                 .mapY(hotelDto.getMapY())
                 .tel(hotelDto.getTel())
@@ -85,7 +86,17 @@ public class HotelService {
         Hotel hotel = hotelRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        return HotelDto.fromEntity(hotel);
+        //해당 호텔의 평균 별점과 총 리뷰 개수
+        List<Object[]> result = hotelRepo.getHotelWithAll(id);
+
+            Object[] data = result.get(0);
+            Double avgScore = (Double) data[0];
+            Long reviewCount = (Long) data[1];
+
+            hotel.setAvg_score(avgScore);
+            hotel.setReview_count(reviewCount);
+
+            return HotelDto.fromEntity(hotelRepo.save(hotel));
     }
 
     // 예약 가능한 호텔과 방 조회

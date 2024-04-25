@@ -22,10 +22,10 @@ public class HotelDto {
     private String mapY;
 
     private String description; // 사용자가 추가
-    private Double avg_score; // 리뷰 생성 시 갱신
+    private Double avg_score; // 평균 별점 (호텔 개별 조회시 갱신)
+    private Long review_count; //총 리뷰 개수
     @Setter
     private List<RoomDto> rooms; // 사용자가 추가
-    private List<ReviewDto> reviews;
 
     private Long managerId;
 
@@ -42,6 +42,7 @@ public class HotelDto {
                 .description(hotel.getDescription())
                 .firstImage(hotel.getFirstImage())
                 .avg_score(hotel.getAvg_score())
+                .review_count(hotel.getReview_count())
                 .mapX(hotel.getMapX())
                 .mapY(hotel.getMapY())
                 .tel(hotel.getTel())
