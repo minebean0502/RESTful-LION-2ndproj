@@ -407,8 +407,8 @@
             .then(data => {
                 // 비밀번호 재설정 성공 후 로직
                 alert('Password has been reset successfully.: ' + data);
-                const container = document.getElementById('container');
-                container.classList.remove('right-panel-active');
+                // const container = document.getElementById('container');
+                // container.classList.remove('right-panel-active');
                 window.location.href='/login';
             })
             .catch(error => {

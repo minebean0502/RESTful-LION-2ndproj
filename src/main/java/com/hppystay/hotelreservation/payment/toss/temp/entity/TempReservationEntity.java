@@ -27,9 +27,8 @@ public class TempReservationEntity {
     private Long member;
 
     // 표시되지는 않으나 존재함
-    @OneToOne(mappedBy = "reservation", cascade = CascadeType.ALL)
     @Setter
-    private Payment payment;
+    private String payment;
 
 
 //    @Column(name = "payment_id")

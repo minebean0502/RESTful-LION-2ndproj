@@ -51,6 +51,7 @@ public class HotelService {
                 .firstImage(hotelDto.getFirstImage())
                 .avg_score(0.0)
                 .review_count(0L)
+                .like_count(0L)
                 .mapX(hotelDto.getMapX())
                 .mapY(hotelDto.getMapY())
                 .tel(hotelDto.getTel())

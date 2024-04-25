@@ -3,6 +3,7 @@ package com.hppystay.hotelreservation.auth.entity;
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
+import com.hppystay.hotelreservation.hotel.like.Like;
 import com.hppystay.hotelreservation.hotel.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
@@ -43,5 +44,9 @@ public class Member extends BaseEntity {
     private List<Review> reviews= new ArrayList<>();
 
     @OneToOne
+    @Setter
     private Hotel hotel;
+
+    @OneToMany(mappedBy = "member")
+    private List<Like> likeList = new ArrayList<>();
 }

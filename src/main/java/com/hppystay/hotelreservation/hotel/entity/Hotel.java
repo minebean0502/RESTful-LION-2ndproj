@@ -2,10 +2,12 @@ package com.hppystay.hotelreservation.hotel.entity;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
+import com.hppystay.hotelreservation.hotel.like.Like;
 import com.hppystay.hotelreservation.hotel.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +18,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Hotel extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // id
-
     @Setter
     private String title; // 호텔명
     @Setter
@@ -38,9 +38,11 @@ public class Hotel extends BaseEntity {
     @Setter
     private String description; // 호텔 설명
     @Setter
-    private Double avg_score; // 평균 별점
+    private Double avg_score = 0.0; // 평균 별점
     @Setter
-    private Long review_count; //총 리뷰 개수
+    private Long review_count = 0L; //총 리뷰 개수
+    @Setter
+    private Long like_count = 0L; // 총 하트 개수
 
     @Setter
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
@@ -53,6 +55,9 @@ public class Hotel extends BaseEntity {
     @Setter
     @OneToOne
     private Member manager;
+
+    @OneToMany(mappedBy = "hotel")
+    private List<Like> likes = new ArrayList<>();
 
     public Hotel addRoom(Room room) {
         this.getRooms().add(room);

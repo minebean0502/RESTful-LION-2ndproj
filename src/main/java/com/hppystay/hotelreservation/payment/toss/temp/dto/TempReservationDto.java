@@ -21,9 +21,6 @@ public class TempReservationDto {
     private TossPaymentDto payment;
 
     public static TempReservationDto fromEntity(TempReservationEntity reservation){
-        TossPaymentDto paymentDto = reservation.getPayment() != null ?
-                TossPaymentDto.fromEntity((TossPayment) reservation.getPayment()) : null;
-
         return TempReservationDto.builder()
                 .id(reservation.getId())
                 .memberEmail(reservation.getMemberEmail())
@@ -31,7 +28,6 @@ public class TempReservationDto {
                 .numberOfPeople(reservation.getNumberOfPeople())
                 .price(reservation.getPrice())
                 .status(reservation.getStatus())
-                .payment(paymentDto)
 
                 // 나중에 지울곳
                 .imageUrl(reservation.getImageUrl())
