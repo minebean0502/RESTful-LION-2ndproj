@@ -43,5 +43,6 @@ public class Member extends BaseEntity {
     private List<Review> reviews= new ArrayList<>();
 
     @OneToOne
+    @Setter
     private Hotel hotel;
 }
