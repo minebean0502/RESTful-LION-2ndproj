@@ -48,6 +48,7 @@ public class CustomRequestMatchers {
             // Like
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/likes/{hotelId}")
 
+
     };
 
     // 일반 USER 를 위한 Matcher
