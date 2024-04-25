@@ -93,7 +93,7 @@ public class ReviewService {
         return ReviewDto.fromEntity(reviewRepository.save(replyReview));
     }
 
-    // 리뷰 수정
+    // 리뷰 수정 - 리뷰 작성한 본인 혹은 시스템 관리자만 가능
     public ReviewDto updateReview(Long hotelId, Long reviewId, ReviewDto dto) {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(
                 () -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
@@ -111,7 +111,7 @@ public class ReviewService {
 
         //  // 리뷰를 수정하려는 사람이 리뷰 주인과 일치하지 않으면
         if (!review.getMember().getId().equals(member.getId())) {
-            // 시스템 관리자가 아니라면 (시스템 관리자만 수정 가능)
+            // 시스템 관리자가 아니라면
             if (!member.getRole().equals(MemberRole.ROLE_ADMIN)) {
                 throw new GlobalException(GlobalErrorCode.ROLE_MISMATCH);
             }
@@ -123,7 +123,7 @@ public class ReviewService {
         return ReviewDto.fromEntity(reviewRepository.save(review));
     }
 
-    // 리뷰 삭제
+    // 리뷰 삭제 - 리뷰 작성한 본인 혹은 시스템 관리자만 가능
     public void deleteReview(Long reviewId) {
         Review review = reviewRepository.findById(reviewId).orElseThrow(
                 () -> new GlobalException(GlobalErrorCode.REVIEW_NOT_FOUND));
@@ -133,7 +133,7 @@ public class ReviewService {
 
         // 리뷰를 삭제하려는 사람이 리뷰 주인과 일치하지 않으면
         if (!review.getMember().getId().equals(member.getId())) {
-            // 시스템 관리자가 아니라면 (시스템 관리자만 삭제 가능)
+            // 시스템 관리자가 아니라면
             if (!member.getRole().equals(MemberRole.ROLE_ADMIN))
                 throw new GlobalException(GlobalErrorCode.ROLE_MISMATCH);
         }
