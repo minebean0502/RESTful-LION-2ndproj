@@ -1,5 +1,7 @@
 package com.hppystay.hotelreservation.payment.toss.service;
 
+import com.hppystay.hotelreservation.hotel.entity.Reservation;
+import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentDto;
@@ -23,7 +25,7 @@ import java.util.List;
 public class TossService {
     private final TossHttpService tossService;
     private final TossPaymentRepository tossPaymentRepository;
-    private final TempReservationRepository reservationRepository;
+    private final ReservationRepository reservationRepository;
 
     @Transactional
     public Object confirmPayment(TossPaymentConfirmDto dto) {
@@ -32,9 +34,6 @@ public class TossService {
         log.info(tossPaymentObj.toString());
 
         // orderName은 memberId - roomId 의 형태로 이뤄집니다
-        // id = 1 / memberId = 1 / roomId = 500번방 -> orderName = 1-500번방
-        // id = 2 / memberId = 2 / roomId = 1번방 -> orderName = 2-1번방
-        // id = 4 / memberId = 2 / roomId = 10번방 -> orderName = 4-10번방
         String orderNameInfo = ((LinkedHashMap<String, Object>) tossPaymentObj).get("orderName").toString();
         Long reservationId = Long.parseLong(orderNameInfo.split("-")[0]);
         String requestedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("requestedAt").toString();
@@ -43,7 +42,7 @@ public class TossService {
 
         // 해당 PK로 Reservation 정보 추출 (Temp라서 나중에 로직상 사라질 부분입니다)
         // --------------------------------------------------------------------------- //
-        TempReservationEntity reservation = reservationRepository.findById(reservationId)
+        Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
         // --------------------------------------------------------------------------- //
         // 1. 일단 tosspayment에 저장정보 생성
@@ -116,4 +115,9 @@ public class TossService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Payment is already canceled");
         }
     }
+
+
+//    public Object assignConfirmPayment() {
+//
+//    }
 }

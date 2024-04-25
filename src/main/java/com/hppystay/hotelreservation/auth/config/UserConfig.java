@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @RequiredArgsConstructor
-public class AdminConfig {
+public class UserConfig {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -27,16 +27,30 @@ public class AdminConfig {
         }
     }
 
-    // 테스트용 계정 추가
-//    @PostConstruct
-//    public void createUser() {
-//        for(int i = 1; i <= 10; i++) {
-//            memberRepository.save(Member.builder()
-//                    .nickname(String.format("user %d", i))
-//                    .email(String.format("user%d@gmail.com",i))
-//                    .password(passwordEncoder.encode("1234"))
-//                    .role(MemberRole.ROLE_MANAGER)
-//                    .build());
-//        }
-//    }
+    // 채운 수정 04-25~
+    //테스트용 계정 추가
+    // 유저
+    @PostConstruct
+    public void createUser() {
+        for(int i = 1; i <= 10; i++) {
+            memberRepository.save(Member.builder()
+                    .nickname(String.format("user %d", i))
+                    .email(String.format("user%d@gmail.com",i))
+                    .password(passwordEncoder.encode("1234"))
+                    .role(MemberRole.ROLE_USER)
+                    .build());
+        }
+    }
+    // 매니저
+    @PostConstruct
+    public void createManager() {
+        for (int i = 11; i <= 20; i++) {
+            memberRepository.save(Member.builder()
+                    .nickname(String.format("manager %d", i))
+                    .email(String.format("manager%d@gmail.com",i))
+                    .password(passwordEncoder.encode("1234"))
+                    .role(MemberRole.ROLE_MANAGER)
+                    .build());
+        }
+    }
 }
