@@ -98,8 +98,8 @@
     .container {
         background-color: #fff;
         border-radius: 10px;
-        box-shadow: 0 14px 28px rgba(0,0,0,0.25),
-        0 10px 10px rgba(0,0,0,0.22);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+        0 10px 10px rgba(0, 0, 0, 0.22);
         position: relative;
         overflow: hidden;
         width: 768px;
@@ -161,7 +161,7 @@
         z-index: 100;
     }
 
-    .container.right-panel-active .overlay-container{
+    .container.right-panel-active .overlay-container {
         transform: translateX(-100%);
     }
 
@@ -217,10 +217,6 @@
         transform: translateX(20%);
     }
 
-    .social-container {
-        margin: 20px 0;
-    }
-
     .social-container a {
         border: 1px solid #DDDDDD;
         border-radius: 50%;
@@ -258,23 +254,26 @@
     }
 </style>
 <body>
-
+<!-- 비밀번호 찾기 컨테이너  -->
 <div class="container" id="container">
+    <!-- 이메일 인증 컨테이너 -->
     <div class="form-container sign-in-container">
-        <form action="#" id="emailVerificationForm">
-        <!-- 1. 이메일 인증 필요 부분 -->
+        <form>
             <h1>Email verification</h1>
             <span>use your email to verify</span><br>
-            <input type="email" placeholder="Email" id="emailInput"/>
-            <input type="text" placeholder="Verification Code" id="verificationCodeInput"/><br>
-            <button type="button" id="verifyButton">Verify</button>
+            <input type="email" placeholder="Email" id="emailInput"/><br>
             <!-- 인증 코드 전송 버튼 -->
             <button type="button" id="sendCodeButton">Send Code</button>
+
+            <input type="text" placeholder="Verification Code" id="verificationCodeInput"/><br>
+            <!-- verify 버튼 -->
+            <button type="button" id="verifyButton">Verify</button>
+            <a href="/login">wanna go to login?</a>
         </form>
     </div>
+    <!-- 비밀번호 재설정 컨테이너 -->
     <div class="form-container sign-up-container" id="passwordResetForm">
-        <form action="#">
-            <!-- 2. 비밀번호 재설정 부분 -->
+        <form>
             <h1>Reset Password</h1>
             <span>please enter your password to reset</span>
             <br>
@@ -283,26 +282,32 @@
             <button type="button" id="resetPasswordButton">Reset Password</button>
         </form>
     </div>
+
+    <!-- 오버레이 -->
     <div class="overlay-container">
         <div class="overlay">
             <div class="overlay-panel overlay-left">
                 <h1>Welcome Back!</h1>
                 <p>To keep connected with us please login with your personal info</p>
-<!--                <button class="ghost" id="goVerify">Sign In</button>-->
+                <!--                <button class="ghost" id="goVerify">Sign In</button>-->
             </div>
             <div class="overlay-panel overlay-right">
                 <h1>Hello, World</h1>
                 <p>Enter your personal details and start journey with us</p>
-<!--                <button class="ghost" id="goReset">Sign Up</button>-->
+                <!--                <button class="ghost" id="goReset">Sign Up</button>-->
             </div>
         </div>
     </div>
 </div>
 <script>
-    const emailInput = document.getElementById('emailInput');
     const sendCodeButton = document.getElementById('sendCodeButton');
     const verifyButton = document.getElementById('verifyButton');
     const container = document.getElementById('container');
+    const verificationCodeInput = document.getElementById('verificationCodeInput');
+    const newPasswordInput = document.getElementById('newPasswordInput');
+    const resetPasswordButton = document.getElementById('resetPasswordButton')
+    const emailInput = document.getElementById('emailInput')
+
     // 1. 인증 코드 보내기 버튼 이벤트 리스너
     sendCodeButton.addEventListener('click', () => {
         // 여기에 이메일로 인증 코드를 보내는 API 호출 코드를 추가하세요.
@@ -341,7 +346,6 @@
         verifyEmailCode();
     });
 
-    const verificationCodeInput = document.getElementById('verificationCodeInput');
     // 4. 인증 코드 검증 함수
     function verifyEmailCode() {
         const email = emailInput.value;
@@ -361,27 +365,21 @@
                 return response.json();
             })
             .then(data => {
-                // 인증이 성공하면 비밀번호 재설정 폼으로 전환
-                // 1. 좌측에 있었던 sign-in container은 안보이게
-                document.querySelector('.sign-in-container').style.display = 'none';
-                // 2. 그리고 슬라이더를 왼쪽으로
-                document.querySelector('.overlay-container').style.transform = 'translateX(-100%)';
-                // 3. 우측에 있었던 sign-up container은 보이게 그리고 위치 이동
-                document.querySelector('.sign-up-container').style.display = 'flex';
-                document.querySelector('.sign-up-container').style.transform = 'translateX(-100%)';
+                const container = document.getElementById('container');
+                container.classList.add('right-panel-active');
             })
             .catch(error => {
                 // 틀렸을 때의 메세지 // 나중에 메세지는 수정 필요
                 alert('Verification failed: ' + error.message);
             });
     }
+
+    // const resetPasswordButton = document.getElementById('resetPasswordButton');
     // 5. 비밀번호 재설정 버튼 이벤트 리스너
     resetPasswordButton.addEventListener('click', () => {
         resetPassword();
     });
 
-    const newPasswordInput = document.getElementById('newPasswordInput');
-    const resetPasswordButton = document.getElementById('resetPasswordButton');
     // 6. 비밀번호 재설정 함수
     function resetPassword() {
         const email = emailInput.value;
@@ -395,50 +393,37 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                email: email,
-                code: code,
-                newPassword: newPassword
+                email : email,
+                code : code,
+                newPassword : newPassword
             })
         })
             .then(response => {
                 if (!response.ok) {
-                    // 여기서는 HTTP 상태 코드가 200이 아닐 경우에 대한 간단한 처리를 하고 있습니다.
-                    // 실제로는 서버로부터 받은 오류 메시지에 따라 처리를 달리 해야 할 수 있습니다.
-                    throw new Error('Password reset failed.');
+                    throw new Error('Password reset failed. Status code: ' + response.status);
                 }
-                return response.json();
+                return response.text();
             })
             .then(data => {
-                alert('Password has been reset successfully.');
-                // 비밀번호 재설정 성공 후의 추가적인 작업을 여기에 추가하세요.
+                // 비밀번호 재설정 성공 후 로직
+                alert('Password has been reset successfully.: ' + data);
+                const container = document.getElementById('container');
+                container.classList.remove('right-panel-active');
+                window.location.href='/login';
             })
             .catch(error => {
-                alert('Error resetting password: ' + error.message);
-                // 비밀번호 재설정 실패 시의 추가적인 작업을 여기에 추가하세요.
+                // 비밀번호 재설정 실패 시 로직
+                alert('Error resetting password: ' + error);
             });
     }
 
-
-
-    // 초기 상태 설정
-    function initialize() {
-        // 폼을 초기 상태로 설정합니다.
-        passwordResetForm.style.display = 'none';
-    }
-    initialize();
-
-    // 기존 작동
-    // const goVerifyButton = document.getElementById('goVerify');
-    // const goResetButton = document.getElementById('goReset');
-    // const container = document.getElementById('container');
+    // // 초기 상태 설정
+    // function initialize() {
+    //     // 폼을 초기 상태로 설정합니다.
+    //     passwordResetForm.style.display = 'none';
+    // }
     //
-    // goResetButton.addEventListener('click', () => {
-    //     container.classList.add('right-panel-active');
-    // });
-    //
-    // goVerifyButton.addEventListener('click', () => {
-    //     container.classList.remove('right-panel-active');
-    // });
+    // initialize();
 </script>
 
 </body>
