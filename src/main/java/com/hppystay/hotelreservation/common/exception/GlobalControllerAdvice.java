@@ -43,6 +43,8 @@ public class GlobalControllerAdvice {
 //        }
 //        response.put("fields", fieldErrors);
 
+        log.error(response.toString());
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
@@ -54,6 +56,8 @@ public class GlobalControllerAdvice {
 
         response.put("exception", e.getClass().getSimpleName());
         response.put("message", e.getMessage());
+
+        log.error(response.toString());
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
