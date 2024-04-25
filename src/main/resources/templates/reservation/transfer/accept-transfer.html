@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>숙소 양도받기 화면</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        table {
+            width: 80%;
+            max-width: 600px;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff; /* 헤더 배경색 */
+            color: #ffffff; /* 헤더 글씨 색상 */
+        }
+        td {
+            color: #333333; /* 데이터 셀 글씨 색상 */
+        }
+        td:nth-child(odd) {
+            background-color: #f2f2f2; /* "항목" 란의 배경색 */
+        }
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            width: 80%;
+            max-width: 600px;
+        }
+        button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        button.cancel {
+            background-color: #6c757d;
+        }
+    </style>
+
+</head>
+<body>
+<table id="transferInfo">
+    <tr>
+        <th>항목</th>
+        <th>정보</th>
+    </tr>
+    <!-- JavaScript를 통해 여기에 데이터를 동적으로 삽입할 예정 -->
+</table>
+<div class="buttons">
+    <button class="accept">양도받기</button>
+    <button class="cancel">취소</button>
+</div>
+
+<script>
+    // 예시를 위한 데이터. 실제로는 백엔드에서 받아올 데이터를 사용해야 함.
+    const transferData = {
+        '숙박 날짜': '2024-05-01 ~ 2024-05-02',
+        '호텔명': '힐튼 서울',
+        '방 이름': '프리미엄 스위트',
+        '가격': '300,000원',
+        '숙박 인원수': '2명'
+    };
+
+    // 테이블에 데이터 삽입
+    const table = document.getElementById('transferInfo');
+    Object.entries(transferData).forEach(([key, value]) => {
+        const row = table.insertRow();
+        const cell1 = row.insertCell(0);
+        const cell2 = row.insertCell(1);
+        cell1.textContent = key;
+        cell2.textContent = value;
+    });
+
+    document.querySelector('.accept').addEventListener('click', function() {
+        const reservationId = '123'; // 취소하고자 하는 예약의 ID. 실제 값으로 대체 필요.
+        const cancelData = {
+            reason: "예약 양도", // TossPaymentCancelDto에 맞게 필드를 설정
+        };
+        const updateData = {
+            // updateDto에 해당하는 수정 데이터
+        };
+
+        // 결제 취소 요청
+        const cancelPromise = fetch(`/toss/reservation/${reservationId}/cancel`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(cancelData),
+        });
+
+        // 예약 상태 수정 요청
+        const editPromise = fetch(`/?/${reservationId}/?`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updateData),
+        });
+
+        // 두 요청이 완료될 때까지 기다림
+        Promise.all([cancelPromise, editPromise])
+            .then(responses => Promise.all(responses.map(res => res.json())))
+            .then(data => {
+                console.log('모든 요청 완료:', data);
+                // 성공 처리 로직...
+            })
+            .catch(error => {
+                console.error('요청 실패:', error);
+                // 실패 처리 로직...
+            });
+
+    });
+
+</script>
+</body>
+</html>

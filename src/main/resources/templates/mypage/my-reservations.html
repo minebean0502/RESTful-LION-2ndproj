@@ -168,7 +168,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('/api/mypage/myReservations')
+        fetch('/api/hotel/reservation/my')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -187,9 +187,7 @@
                     acceptButton.className = 'accept-btn';
                     acceptButton.textContent = '양도하기';
                     acceptButton.onclick = function() {
-                        if (confirm('양도하시겠습니까?')) {
-                            window.location.href = '/mypage/hotel/reservation/transfer?grantorReservationId=' + reservation.id;
-                        }
+                        openTransferWindow(reservation.id);
                     };
                     let actionCell = row.insertCell(4);
                     actionCell.appendChild(acceptButton);
@@ -197,7 +195,15 @@
             })
             .catch(error => console.error('Error loading the reservations:', error.message));
     });
+
+    function openTransferWindow(reservationId) {
+        var url = '/mypage/hotel/reservation/transfer?grantorReservationId=' + reservationId;
+        var newWindow = window.open(url, 'TransferWindow', 'width=600,height=400');
+        // 새 창이 닫히면 아무런 작업도 수행하지 않음
+    }
 </script>
+
+
 
 </body>
 </html>

@@ -29,26 +29,24 @@ public class ViewController {
         return "is-login";
     }
 
+    /**
+     * 마이페이지 -> 예약현황
+     */
+    @GetMapping("/mypage/reservations")
+    public String myReservations() { return "mypage/my-reservations"; }
 
     /**
-     * 마이페이지에서 '양도하기'버튼을 눌렀을 때,
-     * 양수인 검색 페이지로 이동합니다.
-     * @return transfer-to-member.html 페이지를 반환합니다.
+     * 마이페이지 -> 예약현황 -> 양수인 검색
      */
     @GetMapping("/mypage/hotel/reservation/transfer")
     public String transferToMember() { return "reservation/transfer/transfer-to-member"; }
 
-
     /**
-     * 마이페이지에서 '양도현황' 탭을 클릭하면
-     * 양도받을 수 있는 호텔의 목록을 조회합니다.
-     * @return transfer-status.html 페이지를 반환합니다.
+     * 마이페이지 -> 양도현황
      */
     @GetMapping("/mypage/hotel/reservation/transfer/status")
     public String transferStatus() { return "reservation/transfer/transfer-status"; }
 
-    @GetMapping("/mypage/reservations")
-    public String myReservations() { return "mypage/my-reservations"; }
 
     @GetMapping("/denied")
     public String denied() {
