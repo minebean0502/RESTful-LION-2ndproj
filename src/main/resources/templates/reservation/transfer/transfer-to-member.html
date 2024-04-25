@@ -50,7 +50,7 @@
     document.getElementById('searchInput').addEventListener('input', function() {
         const keyword = this.value;
         if (keyword.length >= 2) {
-            fetch(`/api/mypage/member/search?keyword=${encodeURIComponent(keyword)}`)
+            fetch(`/api/hotel/reservation/transfer/member/search?keyword=${encodeURIComponent(keyword)}`)
                 .then(response => response.json())
                 .then(data => {
                     const resultsContainer = document.getElementById('searchResults');

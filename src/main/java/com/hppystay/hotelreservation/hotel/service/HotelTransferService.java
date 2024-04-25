@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.hotel.service;
 
+import com.hppystay.hotelreservation.auth.dto.MemberDto;
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
@@ -20,7 +21,6 @@ import java.util.stream.Collectors;
 public class HotelTransferService {
     private final HotelTransferRepository hotelTransferRepository;
     private final MemberRepository memberRepository;
-    private final RoomRepository roomRepository;
     private final AssignmentRepository assignmentRepository;
     private final AuthenticationFacade facade;
 
@@ -39,13 +39,12 @@ public class HotelTransferService {
         reservation.setRoom(grantorReservation.getRoom());
         hotelTransferRepository.save(reservation);
 
-        Member fromUser = facade.getCurrentMember();
+        Member fromMember = facade.getCurrentMember();
 
         Assignment assignment = new Assignment();
         assignment.setReservation(grantorReservation);
-        assignment.setFromUser(fromUser);
-        assignment.setToUser(member);
-        assignment.setStatus(AssignmentStatus.PENDING);
+        assignment.setFromMember(fromMember);
+        assignment.setToMember(member);
         assignmentRepository.save(assignment);
 
 
@@ -58,5 +57,10 @@ public class HotelTransferService {
         return reservations.stream()
                 .map(ReservationDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public List<MemberDto> searchByNicknameOrEmail(String keyword) {
+        List<Member> members = memberRepository.findByEmailContainingOrNicknameContaining(keyword, keyword);
+        return members.stream().map(MemberDto::fromEntity).collect(Collectors.toList());
     }
 }

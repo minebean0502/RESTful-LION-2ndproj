@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.hotel.controller;
 
+import com.hppystay.hotelreservation.auth.dto.MemberDto;
 import com.hppystay.hotelreservation.auth.entity.CustomUserDetails;
 import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
 import com.hppystay.hotelreservation.hotel.service.HotelTransferService;
@@ -26,7 +27,6 @@ public class HotelTransferController {
             @RequestBody ReservationDto request,
             @RequestParam Long grantorReservationId
     ) {
-
         ReservationDto newTransferReservation = hotelTransferService.createTransferReservation(request, grantorReservationId);
         return new ResponseEntity<>(newTransferReservation, HttpStatus.CREATED);
     }
@@ -35,6 +35,12 @@ public class HotelTransferController {
     public ResponseEntity<List<ReservationDto>> getPendingReservationsByMember() {
         List<ReservationDto> pendingReservations = hotelTransferService.getPendingReservationsByMember();
         return ResponseEntity.ok(pendingReservations);
+    }
+
+    @GetMapping("/member/search")
+    public ResponseEntity<List<MemberDto>> searchMembers(@RequestParam String keyword) {
+        List<MemberDto> members = hotelTransferService.searchByNicknameOrEmail(keyword);
+        return ResponseEntity.ok(members);
     }
 
 }

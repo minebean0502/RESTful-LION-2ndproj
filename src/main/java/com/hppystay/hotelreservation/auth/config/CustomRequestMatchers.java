@@ -38,18 +38,32 @@ public class CustomRequestMatchers {
     // 인증된 사용자를 위한 Matcher
     public static AntPathRequestMatcher[] authenticatedMatchers = {
             // Auth
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/password/change"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/auth/password/change"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/my-profile"),
 
             // Hotel
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/profile-upload"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/my"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer"),
+
+            // view
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page/**"),
+
+
     };
 
     // 일반 USER 를 위한 Matcher
     public static AntPathRequestMatcher[] userMatchers = {
             // Auth
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests"),
+
+            // Review
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
+
     };
 
     // MANAGER 를 위한 Matcher
@@ -59,6 +73,9 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/{id}"),
+
+            // Review
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
     };
 
     // ADMIN 을 위한 Matcher
@@ -67,5 +84,11 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/manager-requests"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/approve"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/reject"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/{reviewId}/delete"),
+
+            // Review
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
     };
 }

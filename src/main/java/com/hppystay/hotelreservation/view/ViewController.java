@@ -29,25 +29,6 @@ public class ViewController {
         return "is-login";
     }
 
-    /**
-     * 마이페이지 -> 예약현황
-     */
-    @GetMapping("/mypage/reservations")
-    public String myReservations() { return "mypage/my-reservations"; }
-
-    /**
-     * 마이페이지 -> 예약현황 -> 양수인 검색
-     */
-    @GetMapping("/mypage/hotel/reservation/transfer")
-    public String transferToMember() { return "reservation/transfer/transfer-to-member"; }
-
-    /**
-     * 마이페이지 -> 양도현황
-     */
-    @GetMapping("/mypage/hotel/reservation/transfer/status")
-    public String transferStatus() { return "reservation/transfer/transfer-status"; }
-
-
     @GetMapping("/denied")
     public String denied() {
         return "denied";
@@ -67,5 +48,17 @@ public class ViewController {
     public String passwordReset() {
         return "login/pwfind";
     }
+
+    @GetMapping("/my-page")
+    public String myPage() {
+        return "test/mypagetest";
+    }
+
+    @GetMapping("/my-page/reservation/transfer")
+    public String transferToMember() {
+        return "reservation/transfer/transfer-to-member";
+    }
+
+
 }
 
