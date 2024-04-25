@@ -53,7 +53,7 @@ public class HotelController {
         return hotelService.createHotel(dto);
     }
 
-    @GetMapping()
+    @GetMapping
     public List<HotelDto> readAllHotel(
             @RequestBody
             SearchDto dto
