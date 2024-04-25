@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/hotel")
 @RequiredArgsConstructor
 public class HotelController {
 
@@ -23,17 +24,17 @@ public class HotelController {
     private final ReservationService reservationService;
 
     // API 기능
-    @GetMapping("/api/hotel/areaCode/{area}")
+    @GetMapping("/areaCode/{area}")
     public List<TourInfoApiDto> findHotelByRegion(@PathVariable("area") String area){
         return apiService.callHotelByRegionApi(area);
     }
 
-    @GetMapping("/api/hotel/keyword/{keyword}")
+    @GetMapping("/keyword/{keyword}")
     public List<TourInfoApiDto> findHotelByKeyWord(@PathVariable("keyword") String keyword) {
         return apiService.callHotelByKeywordApi(keyword);
     }
 
-    @GetMapping("/api/hotel/location/{mapX}/{mapY}")
+    @GetMapping("/location/{mapX}/{mapY}")
     public List<TourInfoApiDto> findSpotByLocation(
             @PathVariable("mapX")
             String mapX,
@@ -44,7 +45,7 @@ public class HotelController {
     }
 
     // 호텔 기능
-    @PostMapping("/api/hotel")
+    @PostMapping
     public HotelDto createHotel(
             @RequestBody
             HotelDto dto
@@ -52,7 +53,7 @@ public class HotelController {
         return hotelService.createHotel(dto);
     }
 
-    @GetMapping("/api/hotel")
+    @GetMapping
     public List<HotelDto> readAllHotel(
             @RequestBody
             SearchDto dto
@@ -63,7 +64,7 @@ public class HotelController {
         return hotelService.readHotelsReservationPossible(keyword, checkIn, checkOut);
     }
 
-    @GetMapping("/api/hotel/{id}")
+    @GetMapping("/{id}")
     public HotelDto readHotel(
             @PathVariable("id")
             Long id
@@ -71,7 +72,7 @@ public class HotelController {
         return hotelService.readOneHotel(id);
     }
 
-    @PutMapping("/api/hotel/{id}")
+    @PutMapping("/{id}")
     public HotelDto updateHotel(
             @PathVariable("id")
             Long id,
@@ -81,7 +82,7 @@ public class HotelController {
         return hotelService.updateHotel(id, dto);
     }
 
-    @DeleteMapping("api/hotel/{id}")
+    @DeleteMapping("/{id}")
     public void deleteHotel(
             @PathVariable("id")
             Long id
@@ -90,7 +91,7 @@ public class HotelController {
     }
 
     // 기존 호텔에 방만 추가하는 경우
-    @PostMapping("/api/hotel/room/{id}")
+    @PostMapping("/{id}")
     public HotelDto addRoom(
             @PathVariable("id")
             Long hotelId,
@@ -101,11 +102,16 @@ public class HotelController {
     }
 
     // 예약 기능
-    @PostMapping("/api/hotel/reservation")
+    @PostMapping("/reservation")
     public ReservationDto addReservation(
             @RequestBody
             ReservationDto dto
     ) {
         return reservationService.createReservation(dto);
+    }
+
+    @GetMapping("/reservation/my")
+    public List<ReservationDto> readAllMyReservation() {
+        return reservationService.readAllMyReservation();
     }
 }

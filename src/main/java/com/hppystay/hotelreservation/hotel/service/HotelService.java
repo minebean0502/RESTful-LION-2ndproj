@@ -38,10 +38,6 @@ public class HotelService {
         // 현재 멤버 불러오기
         Member member = facade.getCurrentMember();
 
-        // 멤버 권한 확인
-        if (!member.getRole().equals(MemberRole.ROLE_MANAGER))
-            throw new GlobalException(GlobalErrorCode.NOT_AUTHORIZED_MEMBER);
-
         // 멤버가 가진 호텔 확인
         if (member.getHotel() != null)
             throw new GlobalException(GlobalErrorCode.ALREADY_MANAGER);
