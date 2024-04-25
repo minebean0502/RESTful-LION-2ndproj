@@ -24,7 +24,8 @@ public enum GlobalErrorCode {
     DUPLICATE_MANAGER_REQUEST(HttpStatus.BAD_REQUEST, "1011", "이미 매니저 신청이 진행 중입니다."),
     MANAGER_REQUEST_NOT_FOUND(HttpStatus.NOT_FOUND, "1012", "존재하지 않는 매니저 신청입니다."),
     MANAGER_REQUEST_ALREADY_PROCESSED(HttpStatus.BAD_REQUEST, "1013", "이미 처리된 매니저 신청입니다."),
-
+    ROLE_UNAUTHORIZED(HttpStatus.NOT_FOUND, "1014", "권한이 없습니다. 호텔 관리자 혹은 시스템 관리자만 가능합니다."),
+    ROLE_MISMATCH(HttpStatus.BAD_REQUEST, "1015", "권한이 없습니다. 시스템 관리자만 가능합니다."),
 
     // 이메일 관련 에러
     EMAIL_SENDING_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "2001", "이메일 발송에 실패했습니다."),
@@ -34,8 +35,10 @@ public enum GlobalErrorCode {
     VERIFICATION_EXPIRED(HttpStatus.BAD_REQUEST, "2005", "인증 코드가 만료되었습니다."),
 
     // 리뷰 관련 에러
-    MISMATCH(HttpStatus.BAD_REQUEST, "3001", "일치하지 않습니다."),
-    NOT_FOUND(HttpStatus.NOT_FOUND, "3002", "존재하지 않습니다."),
+    HOTEL_MISMATCH(HttpStatus.BAD_REQUEST, "3001", "해당 호텔의 댓글이 아닙니다."),
+    HOTEL_NOT_FOUND(HttpStatus.NOT_FOUND, "3002", "일치하는 호텔이 없습니다."),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "3003", "일치하는 리뷰가 없습니다."),
+
 
     // 호텔 생성 관련 에러
     NOT_AUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "4001", "호텔생성 권한이 없습니다."),
