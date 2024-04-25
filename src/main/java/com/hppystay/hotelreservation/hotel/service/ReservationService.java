@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -41,6 +43,14 @@ public class ReservationService {
                         .status(ReservationStatus.PAYMENT_PENDING) // 예약 생성 시 결제대기
                         .build()
         ));
+    }
+
+    public List<ReservationDto> readAllMyReservation() {
+        Member member = facade.getCurrentMember();
+
+        return reservationRepo.findAllByMember(member).stream()
+                .map(ReservationDto::fromEntity)
+                .toList();
     }
 
 }
