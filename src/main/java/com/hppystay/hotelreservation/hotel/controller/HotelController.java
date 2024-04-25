@@ -34,14 +34,17 @@ public class HotelController {
         return apiService.callHotelByKeywordApi(keyword);
     }
 
-    @GetMapping("/location/{mapX}/{mapY}")
+    @GetMapping("/location/{id}/{pageNum}")
     public List<TourInfoApiDto> findSpotByLocation(
-            @PathVariable("mapX")
-            String mapX,
-            @PathVariable("mapY")
-            String mapY
+            @PathVariable("id")
+            Long id,
+            @PathVariable("pageNum")
+            int pageNum
     ) {
-        return apiService.callSpotByLocationApi(mapX, mapY);
+        HotelDto dto = hotelService.readOneHotel(id);
+        String mapX = dto.getMapX();
+        String mapY = dto.getMapY();
+        return apiService.callSpotByLocationApi(mapX, mapY, pageNum);
     }
 
     // 호텔 기능

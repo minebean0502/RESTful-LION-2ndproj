@@ -10,7 +10,6 @@ import java.time.LocalDate;
 
 @Entity
 @Getter
-@Setter
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,13 +26,16 @@ public class Reservation  extends BaseEntity {
     //    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     //    private Payment payment;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     private Room room;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private ReservationStatus status = ReservationStatus.PAYMENT_PENDING;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 }

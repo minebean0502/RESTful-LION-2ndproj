@@ -13,7 +13,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,15 +22,18 @@ public class Room extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     private String name;
-
+    @Setter
     private String price;
-
+    @Setter
     private String content;
 
+    @Setter
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Reservation> reservationList = new ArrayList<>();
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     private Hotel hotel;
 }
