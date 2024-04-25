@@ -41,5 +41,6 @@ public class Reservation  extends BaseEntity {
     private Member member;
 
     @OneToOne
+    @Setter
     private Payment payment;
 }

@@ -35,12 +35,15 @@ public class GlobalControllerAdvice {
         Map<String, Object> response = new HashMap<>();
 
         response.put("exception", e.getClass().getSimpleName());
+        response.put("message", e.getFieldErrors().get(0).getDefaultMessage());
 
-        Map<String, String> fieldErrors = new HashMap<>();
-        for (FieldError fieldError : e.getFieldErrors()) {
-            fieldErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        response.put("fields", fieldErrors);
+//        Map<String, String> fieldErrors = new HashMap<>();
+//        for (FieldError fieldError : e.getFieldErrors()) {
+//            fieldErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+//        }
+//        response.put("fields", fieldErrors);
+
+        log.error(response.toString());
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -52,9 +55,12 @@ public class GlobalControllerAdvice {
         Map<String, Object> response = new HashMap<>();
 
         response.put("exception", e.getClass().getSimpleName());
+        response.put("message", e.getMessage());
+
+        log.error(response.toString());
 
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
     }
 }
