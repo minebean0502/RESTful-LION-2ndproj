@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        .tabs {
+            overflow: hidden;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .tablink {
+            background-color: #f2f2f2;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: background-color 0.3s;
+        }
+
+        .tablink:hover {
+            background-color: #ddd;
+        }
+
+        .tabcontent {
+            display: none;
+        }
+
+        .tabcontent h2 {
+            margin-top: 0;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 20px;
+        }
+
+        .user-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>마이페이지</h1>
+
+    <!-- 탭 -->
+    <div class="tabs">
+        <button class="tablink" onclick="openTab('UserInfo')">프로필 정보</button>
+        <button class="tablink" onclick="openTab('ChangePassword')">비밀번호 변경</button>
+        <button class="tablink" onclick="openTab('ReservationStatus')">예약 현황</button>
+    </div>
+
+    <!-- 탭 내용 -->
+    <div id="UserInfo" class="tabcontent">
+        <h2>프로필 정보</h2>
+        <div class="user-info">
+            <div class="user-photo">
+                <img src="" alt="">
+            </div>
+            <div class="user-details">
+                <p>닉네임</p>
+                <p>이메일</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="ChangePassword" class="tabcontent">
+        <h2>비밀번호 변경</h2>
+        <form>
+            <label for="current-password">현재 비밀번호</label>
+            <input type="password" id="current-password" name="current-password">
+            <label for="new-password">변경 비밀번호</label>
+            <input type="password" id="new-password" name="new-password">
+            <label for="confirm-password">변경 비밀번호 확인:</label>
+            <input type="password" id="confirm-password" name="confirm-password">
+            <input type="submit" value="비밀번호 변경">
+        </form>
+    </div>
+
+    <div id="ReservationStatus" class="tabcontent">
+        <h2>예약 현황</h2>
+        <!-- 예약현황 추후 수정 -->
+    </div>
+</div>
+
+<script>
+    function openTab(tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        document.getElementById(tabName).style.display = "block";
+    }
+</script>
+</body>
+</html>

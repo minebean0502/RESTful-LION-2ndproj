@@ -64,5 +64,10 @@ public class ViewController {
     public String hotelSearch() {
         return "hotelSearch/hotel-list-search";
     }
+
+    @GetMapping("/password-reset")
+    public String passwordReset() {
+        return "login/pwfind";
+    }
 }
 
