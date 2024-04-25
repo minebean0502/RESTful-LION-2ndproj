@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(CustomRequestMatchers.userMatchers)
                                 .hasRole("USER")
                                 .requestMatchers(CustomRequestMatchers.managerMatchers)
-                                .hasRole("Manager")
+                                .hasRole("MANAGER")
                                 .requestMatchers(CustomRequestMatchers.adminMatchers)
                                 .hasRole("ADMIN")
                 )

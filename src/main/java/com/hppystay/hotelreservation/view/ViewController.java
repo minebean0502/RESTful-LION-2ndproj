@@ -48,4 +48,9 @@ public class ViewController {
     public String passwordReset() {
         return "login/pwfind";
     }
+
+    @GetMapping("/my-page")
+    public String myPage() {
+        return "test/mypagetest";
+    }
 }
