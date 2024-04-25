@@ -10,7 +10,7 @@ public class RoomDto {
     private Long id;
     private Long hotelId;
     private String name;
-    private Integer price;
+    private String price; //TODO: Integer or String
     private String content;
 
     public static RoomDto fromEntity(Room entity) {

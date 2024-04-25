@@ -1,7 +1,9 @@
 package com.hppystay.hotelreservation.auth.entity;
 
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
+import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
+import com.hppystay.hotelreservation.hotel.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -22,13 +24,24 @@ public class Member extends BaseEntity {
     private Long id;
 
     private String nickname;
+    @Column(unique = true)
     private String email;
     @Setter
     private String password;
 
+    @Setter
+    private String profileImage;
+
+    @Setter
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
     @OneToMany(mappedBy = "member")
     private List<Reservation> reservationList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<Review> reviews= new ArrayList<>();
+
+    @OneToOne
+    private Hotel hotel;
 }

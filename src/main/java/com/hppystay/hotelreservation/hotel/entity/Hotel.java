@@ -1,6 +1,8 @@
 package com.hppystay.hotelreservation.hotel.entity;
 
+import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
+import com.hppystay.hotelreservation.hotel.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -41,9 +43,12 @@ public class Hotel extends BaseEntity {
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Room> rooms = new ArrayList<>();
 
-//    @Setter
-//    @OneToMany
-//    Member manager_id;
+    @OneToMany(mappedBy = "hotel")
+    private List<Review> reviews = new ArrayList<>();
+
+    @Setter
+    @OneToOne
+    private Member manager;
 
     public Hotel addRoom(Room room) {
         this.getRooms().add(room);

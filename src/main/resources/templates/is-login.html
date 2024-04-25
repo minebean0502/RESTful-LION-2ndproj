@@ -9,27 +9,18 @@
 
 </div>
 <script>
-    // 쿠키에서 accessToken 가져오는 함수
-    function getAccessToken() {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith('accessToken=')) {
-                return cookie.substring('accessToken='.length);
-            }
-        }
-        return null;
-    }
-
     // 로그인 여부 확인 함수
     function checkLogin() {
         fetch('http://localhost:8080/test/login', {
             method: 'GET',
-        }).then(response => {
+        }).then(async response => {
+            const data = await response.json();
             if (response.ok) {
                 document.getElementById('loginMessage').innerText = '로그인 상태입니다.';
+                console.log(data);
             } else {
                 document.getElementById('loginMessage').innerText = '로그인 되어 있지 않습니다.';
+                console.log(data);
             }
         })
     }

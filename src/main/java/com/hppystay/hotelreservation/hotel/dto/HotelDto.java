@@ -1,8 +1,10 @@
 package com.hppystay.hotelreservation.hotel.dto;
 
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
+import com.hppystay.hotelreservation.hotel.review.ReviewDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -21,7 +23,11 @@ public class HotelDto {
 
     private String description; // 사용자가 추가
     private Double avg_score; // 리뷰 생성 시 갱신
+    @Setter
     private List<RoomDto> rooms; // 사용자가 추가
+    private List<ReviewDto> reviews;
+
+    private Long managerId;
 
     public static HotelDto fromEntity(Hotel hotel) {
         List<RoomDto> roomDtoList = hotel.getRooms().stream()
@@ -40,6 +46,7 @@ public class HotelDto {
                 .mapY(hotel.getMapY())
                 .tel(hotel.getTel())
                 .rooms(roomDtoList)
+                .managerId(hotel.getManager().getId())
                 .build();
     }
 }

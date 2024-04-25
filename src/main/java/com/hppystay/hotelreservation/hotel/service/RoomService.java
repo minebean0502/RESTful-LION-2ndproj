@@ -2,7 +2,6 @@ package com.hppystay.hotelreservation.hotel.service;
 
 import com.hppystay.hotelreservation.hotel.dto.RoomDto;
 import com.hppystay.hotelreservation.hotel.entity.Room;
-import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

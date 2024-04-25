@@ -7,11 +7,10 @@ import lombok.Getter;
 @Getter
 public enum ReservationStatus {
 
-
-    RESERVATION_AVAILABLE("예약가능"),
-    RESERVATION_COMPLETED("예약완료"),
-    RESERVATION_CANCEL("예약취소"),
-    PAYMENT_PENDING("결제대기");
+    PAYMENT_PENDING("결제대기"),
+    RESERVATION_COMPLETED("결제완료"),
+    ASSIGNMENT_PENDING("양도대기"),
+    ASSIGNMENT_COMPLETED("양도완료");
 
     private final String label;
 }

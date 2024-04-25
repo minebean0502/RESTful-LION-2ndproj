@@ -69,11 +69,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
         Cookie accessCookie = null, refreshCookie = null;
         String accessToken, refreshToken;
-        for (Cookie cookie : cookies) {
-            if ("accessToken".equals(cookie.getName())) {
-                accessCookie = cookie;
-            } else if ("refreshToken".equals(cookie.getName())) {
-                refreshCookie = cookie;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("accessToken".equals(cookie.getName())) {
+                    accessCookie = cookie;
+                } else if ("refreshToken".equals(cookie.getName())) {
+                    refreshCookie = cookie;
+                }
             }
         }
 
@@ -116,7 +118,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             accessToken = accessCookie.getValue();
             if (jwtTokenUtils.validate(accessCookie.getValue())) {
                 String userEmail = jwtTokenUtils.parseClaims(accessToken).getSubject();
-                log.info("email: {}", userEmail);
 
                 if (memberService.userExists(userEmail)) {
                     UserDetails userDetails = memberService.loadUserByUsername(userEmail);
