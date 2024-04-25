@@ -31,7 +31,7 @@
             margin-bottom: 20px;
         }
 
-        .tablink {
+        .tab-link {
             background-color: #f2f2f2;
             float: left;
             border: none;
@@ -41,22 +41,22 @@
             transition: background-color 0.3s;
         }
 
-        .tablink:hover {
+        .tab-link:hover {
             background-color: #ddd;
         }
 
-        .tabcontent {
+        .tab-content {
             display: none;
         }
 
-        .tabcontent h2 {
+        .tab-content h2 {
             margin-top: 0;
         }
 
         input[type="text"],
         input[type="email"],
         input[type="password"] {
-            width: 100%;
+            width: 50%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -87,6 +87,7 @@
             border-radius: 50%;
             overflow: hidden;
             margin-right: 20px;
+            position: relative;
         }
 
         .user-photo img {
@@ -95,9 +96,79 @@
             object-fit: cover;
         }
 
+        .user-photo button {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        /* 버튼에 호버 효과를 추가합니다. */
+        .user-photo button:hover {
+            background-color: #0056b3;
+        }
+
         .user-details {
             flex: 1;
         }
+
+        /* 예약 현황 CSS */
+        .reservation {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+        }
+
+        .hotel-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .hotel-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .hotel-details {
+            flex: 1;
+        }
+
+        .hotel-name {
+            font-weight: bold;
+        }
+
+        .reservation-actions {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cancel-btn,
+        .transfer-btn {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 5px;
+        }
+
+        .cancel-btn:hover,
+        .transfer-btn:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
@@ -106,53 +177,173 @@
 
     <!-- 탭 -->
     <div class="tabs">
-        <button class="tablink" onclick="openTab('UserInfo')">프로필 정보</button>
-        <button class="tablink" onclick="openTab('ChangePassword')">비밀번호 변경</button>
-        <button class="tablink" onclick="openTab('ReservationStatus')">예약 현황</button>
+        <button class="tab-link" onclick="openTab('userInfo')">프로필 정보</button>
+        <button class="tab-link" onclick="openTab('changePassword')">비밀번호 변경</button>
+        <button class="tab-link" onclick="openTab('reservationStatus')">예약 현황</button>
     </div>
 
     <!-- 탭 내용 -->
-    <div id="UserInfo" class="tabcontent">
+    <div id="userInfo" class="tab-content">
         <h2>프로필 정보</h2>
         <div class="user-info">
             <div class="user-photo">
-                <img src="" alt="">
+                <img src="/static/socialIcons/empty_profile.png" alt="user_photo" id="userPhoto">
+                <button onclick="editPhoto()">edit</button>
             </div>
             <div class="user-details">
-                <p>닉네임</p>
-                <p>이메일</p>
+                <p>닉네임: <span id="nicknameDisplay"></span></p>
+                <p>이메일: <span id="emailDisplay"></span></p>
             </div>
         </div>
     </div>
 
-    <div id="ChangePassword" class="tabcontent">
+    <div id="changePassword" class="tab-content">
         <h2>비밀번호 변경</h2>
-        <form>
-            <label for="current-password">현재 비밀번호</label>
-            <input type="password" id="current-password" name="current-password">
-            <label for="new-password">변경 비밀번호</label>
-            <input type="password" id="new-password" name="new-password">
-            <label for="confirm-password">변경 비밀번호 확인:</label>
-            <input type="password" id="confirm-password" name="confirm-password">
-            <input type="submit" value="비밀번호 변경">
-        </form>
+        <label for="currentPassword">현재 비밀번호</label><br>
+        <input type="password" id="currentPassword" name="current-password"><br>
+        <label for="newPassword">새로운 비밀번호</label><br>
+        <input type="password" id="newPassword" name="new-password"><br>
+        <label for="confirmPassword">새로운 비밀번호 확인</label><br>
+        <input type="password" id="confirmPassword" name="confirm-password"><br>
+        <input type="submit" value="비밀번호 변경" onclick="changePassword()">
     </div>
 
-    <div id="ReservationStatus" class="tabcontent">
+    <!-- 예약 현황 -->
+    <div id="reservationStatus" class="tab-content">
         <h2>예약 현황</h2>
-        <!-- 예약현황 추후 수정 -->
+        <div id="reservationList">
+            <div class="reservation">
+                <div class="hotel-info">
+                    <img src="/static/tempHotel/h1.jpg" alt="hotel_image" class="hotel-photo">
+                    <div class="hotel-details">
+                        <p class="hotel-name">호텔명: <span>호텔 이름</span></p>
+                        <p>체크인 날짜: <span>2024-05-01</span></p>
+                        <p>체크아웃 날짜: <span>2024-05-05</span></p>
+                        <p>룸 이름: <span>스위트 룸</span></p>
+                    </div>
+                </div>
+                <div class="reservation-actions">
+                    <button class="cancel-btn">예약 취소</button>
+                    <button class="transfer-btn">예약 양도</button>
+                </div>
+            </div>
+            <!-- 다른 예약 정보도 동일한 방식으로 추가 -->
+        </div>
     </div>
 </div>
 
 <script>
     function openTab(tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+        let i, tabContent
+        tabContent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabContent.length; i++) {
+            tabContent[i].style.display = "none";
         }
         document.getElementById(tabName).style.display = "block";
     }
+
+    function editPhoto() {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+
+        fileInput.onchange = async function (event) {
+            const file = event.target.files[0];
+            const formData = new FormData();
+            formData.append('image', file)
+            if (file) {
+                console.log('선택된 파일:', file);
+                // 파일 전송
+                const response = await fetch('/api/auth/profile-upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    // 성공 시 새로고침
+                    location.reload();
+                } else {
+                    const data = await response.json();
+                    alert(data);
+                }
+            } else {
+                alert('파일을 선택하세요.');
+            }
+        };
+
+        fileInput.click();
+    }
+
+    // 프로필 정보 불러오기
+    async function fetchMyProfile() {
+        const response = await fetch('/api/auth/my-profile');
+        const data = await response.json();
+        if (response.ok) {
+            if (data.profileImage != null) {
+                document.getElementById('userPhoto').src = "/static/" + data.profileImage;
+            }
+            document.getElementById('nicknameDisplay').innerText = data.nickname;
+            document.getElementById('emailDisplay').innerText = data.email;
+        } else {
+            console.log(data);
+        }
+    }
+
+    // 비밀번호 변경
+    async function changePassword() {
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (newPassword !== confirmPassword) {
+            alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+            return;
+        }
+
+        const response = await fetch('/api/auth/password/change', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                currentPassword: currentPassword,
+                newPassword: newPassword
+            })
+        });
+
+        if (response.ok) {
+            alert('비밀번호가 변경되었습니다.');
+            location.reload();
+        } else {
+            const data = await response.json();
+            console.log(data);
+            alert(data.message);
+        }
+    }
+
+    async function fetchReservations() {
+        const response = await fetch('/api/hotel/reservation/my');
+        const reservations = await response.json();
+        if (response.ok) {
+            const reservationList = document.getElementById('reservationList');
+            reservationList.innerHTML = ''; // 기존 예약 정보 초기화
+            reservations.forEach(reservation => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `예약 번호: ${reservation.id}, 날짜: ${reservation.date}, 방 번호: ${reservation.roomNumber}`;
+                reservationList.appendChild(listItem);
+            });
+        } else {
+            console.log('예약 정보를 가져오는 데 실패했습니다.');
+        }
+    }
+
+    function initialize() {
+        fetchMyProfile();
+        fetchReservations(); // 예약 정보 가져오기
+        openTab('userInfo');
+    }
+
+    initialize();
+
 </script>
 </body>
 </html>

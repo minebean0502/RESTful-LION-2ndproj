@@ -38,15 +38,21 @@ public class CustomRequestMatchers {
     // 인증된 사용자를 위한 Matcher
     public static AntPathRequestMatcher[] authenticatedMatchers = {
             // Auth
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/password/change"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/auth/password/change"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/my-profile"),
 
             // Hotel
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/profile-upload"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/my"),
 
+
             // Like
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/likes/{hotelId}")
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/likes/{hotelId}"),
+
+
+            // view
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page"),
 
 
     };
