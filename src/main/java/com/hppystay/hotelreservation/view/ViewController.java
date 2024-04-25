@@ -48,7 +48,7 @@ public class ViewController {
     public String transferStatus() { return "reservation/transfer/transfer-status"; }
 
     @GetMapping("/mypage/reservations")
-    public String myReservations() { return "reservation/transfer/my-reservations"; }
+    public String myReservations() { return "mypage/my-reservations"; }
 
     @GetMapping("/denied")
     public String denied() {
