@@ -82,16 +82,6 @@ public class HotelService {
         Hotel hotel = hotelRepo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        //해당 호텔의 평균 별점과 총 리뷰 개수
-        List<Object[]> result = hotelRepo.getHotelWithAll(id);
-
-            Object[] data = result.get(0);
-            Double avgScore = (Double) data[0];
-            Long reviewCount = (Long) data[1];
-
-            hotel.setAvg_score(avgScore);
-            hotel.setReview_count(reviewCount);
-
             return HotelDto.fromEntity(hotelRepo.save(hotel));
     }
 
