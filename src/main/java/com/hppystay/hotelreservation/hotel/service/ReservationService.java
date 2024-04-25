@@ -3,6 +3,7 @@ package com.hppystay.hotelreservation.hotel.service;
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
 import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
+import com.hppystay.hotelreservation.hotel.dto.ReservationInfoDto;
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
 import com.hppystay.hotelreservation.hotel.entity.ReservationStatus;
 import com.hppystay.hotelreservation.hotel.entity.Room;
@@ -45,11 +46,11 @@ public class ReservationService {
         ));
     }
 
-    public List<ReservationDto> readAllMyReservation() {
+    public List<ReservationInfoDto> readAllMyReservation() {
         Member member = facade.getCurrentMember();
 
         return reservationRepo.findAllByMember(member).stream()
-                .map(ReservationDto::fromEntity)
+                .map(ReservationInfoDto::fromEntity)
                 .toList();
     }
 

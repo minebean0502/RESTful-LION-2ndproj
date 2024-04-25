@@ -2,10 +2,7 @@ package com.hppystay.hotelreservation.hotel.controller;
 
 import com.hppystay.hotelreservation.api.KNTO.dto.tourinfo.TourInfoApiDto;
 import com.hppystay.hotelreservation.api.service.ApiService;
-import com.hppystay.hotelreservation.hotel.dto.HotelDto;
-import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
-import com.hppystay.hotelreservation.hotel.dto.RoomDto;
-import com.hppystay.hotelreservation.hotel.dto.SearchDto;
+import com.hppystay.hotelreservation.hotel.dto.*;
 import com.hppystay.hotelreservation.hotel.service.HotelService;
 import com.hppystay.hotelreservation.hotel.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -114,7 +111,7 @@ public class HotelController {
     }
 
     @GetMapping("/reservation/my")
-    public List<ReservationDto> readAllMyReservation() {
+    public List<ReservationInfoDto> readAllMyReservation() {
         return reservationService.readAllMyReservation();
     }
 }
