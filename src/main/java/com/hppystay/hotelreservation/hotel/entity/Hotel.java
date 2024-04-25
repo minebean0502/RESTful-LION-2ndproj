@@ -12,7 +12,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,29 +21,32 @@ public class Hotel extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // id
 
+    @Setter
     private String title; // 호텔명
-
+    @Setter
     private String address;
-
+    @Setter
     private String area;
-
+    @Setter
     private String firstImage; // 대표 이미지 TODO: 사진을 여러개 처리하는 경우 LIST or String Split
-
+    @Setter
     private String tel; // 숙소 연락처
-
+    @Setter
     private String mapX; // 경도
-
+    @Setter
     private String mapY; // 위도
-
+    @Setter
     private String description; // 호텔 설명
-
+    @Setter
     private Double avg_score; // 평균 별점
-
+    @Setter
     private Long review_count; //총 리뷰 개수
 
+    @Setter
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Room> rooms = new ArrayList<>();
 
+    @Setter
     @OneToMany(mappedBy = "hotel")
     private List<Review> reviews = new ArrayList<>();
 

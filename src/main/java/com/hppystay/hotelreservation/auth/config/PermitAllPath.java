@@ -52,7 +52,6 @@ public class PermitAllPath {
             "/static/**",
 
 
-
             // 리뷰
             "/api/{hotelId}/review/**",
     };
