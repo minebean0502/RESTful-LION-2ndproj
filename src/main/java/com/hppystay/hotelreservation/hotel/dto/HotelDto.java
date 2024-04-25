@@ -24,6 +24,7 @@ public class HotelDto {
     private String description; // 사용자가 추가
     private Double avg_score; // 평균 별점 (호텔 개별 조회시 갱신)
     private Long review_count; //총 리뷰 개수
+    private Long like_count; // 총 하트 개수
     @Setter
     private List<RoomDto> rooms; // 사용자가 추가
 

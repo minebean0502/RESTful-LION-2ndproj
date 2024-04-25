@@ -45,6 +45,9 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/my"),
 
+            // Like
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/likes/{hotelId}")
+
     };
 
     // 일반 USER 를 위한 Matcher
@@ -56,6 +59,7 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
+
 
     };
 

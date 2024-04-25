@@ -46,7 +46,7 @@ public class ReviewService {
                 .score(dto.getScore())
                 .depth(0)
                 .build();
-        review = reviewRepository.save(review);
+        reviewRepository.save(review);
 
         // 해당 호텔의 평균 평점과 총 리뷰 개수 가져오기
         List<Object[]> result = hotelRepository.getHotelWithAll(hotelId);
@@ -59,7 +59,7 @@ public class ReviewService {
         hotel.setReview_count(reviewCount);
         hotelRepository.save(hotel);
 
-        return  ReviewDto.fromEntity(review);
+        return ReviewDto.fromEntity(review);
     }
 
     // 작성된 리뷰에 답글 생성(대댓글) - 호텔 관리자 혹은 시스템 관리자만 답글 생성 가능

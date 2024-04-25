@@ -42,7 +42,10 @@ public enum GlobalErrorCode {
 
     // 호텔 생성 관련 에러
     NOT_AUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "4001", "호텔생성 권한이 없습니다."),
-    ALREADY_MANAGER(HttpStatus.CONFLICT,"4002", "이미 호텔 1개를 생성했습니다.");
+    ALREADY_MANAGER(HttpStatus.CONFLICT,"4002", "이미 호텔 1개를 생성했습니다."),
+
+    // 좋아요 관련 에러
+    ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "5001", "이미 좋아요를 생성했습니다.");
 
 
     // errorCode는 영역별로 나누기 (EX: 회원 관련 에러는 1000번대)
