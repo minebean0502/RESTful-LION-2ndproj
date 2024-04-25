@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.payment.toss.entity;
 
+import com.hppystay.hotelreservation.hotel.entity.Reservation;
 import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,5 +24,5 @@ public abstract class Payment {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reservation_id")
-    private TempReservationEntity reservation;
+    private Reservation reservation;
 }

@@ -2,6 +2,7 @@ package com.hppystay.hotelreservation.hotel.entity;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
+import com.hppystay.hotelreservation.payment.toss.entity.Payment;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -36,4 +37,7 @@ public class Reservation  extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    @OneToOne
+    private Payment payment;
 }
