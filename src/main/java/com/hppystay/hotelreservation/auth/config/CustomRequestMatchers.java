@@ -17,18 +17,16 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/areaCode/{area}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/keyword/{keyword}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/location/{mapX}{mapY}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/{id}"),
 
             // View
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/login"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/sign-up"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/create-view"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/is-login"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/denied"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/main"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/login"),
 
             // Resources
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/favicon.ico"),
