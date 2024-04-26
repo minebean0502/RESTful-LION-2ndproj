@@ -58,6 +58,12 @@ public class ViewController {
         return "reservation/transfer/transfer-to-member";
     }
 
+    @GetMapping("/hotel/1/details")
+    public String oneHotelDetails() {
+        return "temphtml/hotelDetails-somin";
+    }
 
+    @GetMapping("/hotel/inquiries/submit")
+    public String submitInquiry() { return "inquiries/submitInquiry"; }
 }
 

@@ -30,7 +30,7 @@ public class PermitAllPath {
             "/api/hotel/reservation",
 
             // 문의사항
-            "/hotel/inquiries/**",
+            "/hotel/**",
             "/api/hotel/inquiries/**",
 
 

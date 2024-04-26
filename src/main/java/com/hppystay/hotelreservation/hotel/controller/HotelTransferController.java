@@ -33,9 +33,8 @@ public class HotelTransferController {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<List<ReservationInfoDto>> getPendingReservationsByMember() {
-        List<ReservationInfoDto> pendingReservations = hotelTransferService.getPendingReservationsByMember();
-        return ResponseEntity.ok(pendingReservations);
+    public List<ReservationInfoDto> getPendingReservationsByMember() {
+        return hotelTransferService.getPendingReservationsByMember();
     }
 
     @GetMapping("/member/search")
