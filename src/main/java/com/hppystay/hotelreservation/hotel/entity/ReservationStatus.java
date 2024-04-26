@@ -10,7 +10,8 @@ public enum ReservationStatus {
     PAYMENT_PENDING("결제대기"),
     RESERVATION_COMPLETED("결제완료"),
     ASSIGNMENT_PENDING("양도대기"),
-    ASSIGNMENT_COMPLETED("양도완료");
+    ASSIGNMENT_COMPLETED("양도완료"),
+    RESERVATION_CANCELED("예약취소");
 
     private final String label;
 }
