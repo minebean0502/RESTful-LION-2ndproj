@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,8 +28,15 @@ public class WebSecurityConfig {
     private final CustomAuthenticationEntrypoint authenticationEntrypoint;
 
 
+    // 정적 파일 무시
     @Bean
-    public SecurityFilterChain securityFilterChai(
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web
+                .ignoring().requestMatchers(CustomRequestMatchers.resourcesMatcher);
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(
             HttpSecurity http
     ) throws Exception {
         http
