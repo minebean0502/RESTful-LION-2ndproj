@@ -47,6 +47,7 @@
 </script>
 <script>
     const clientKey = document.querySelector('meta[name="toss-client-key"]').getAttribute('content');
+    console.log(clientKey);
     const reservationId = 1;
 
     const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS)
@@ -83,12 +84,13 @@
                     }),
                 })
                 if (response.ok) {
-                    location.pathname = '/reservation/success'
+                    window.location.href = '/hotel/test/paymentComplete'
                 }
             });
         } catch (err) {
             if (err.code === 'USER_CANCEL') {
                 alert('사용자 결제 취소')
+                window.location.href = '/hotel/test/paymentFail'
             }
             else alert(err)
         }
@@ -122,6 +124,6 @@
         document.getElementById('item-address').innerText = body.address;
         document.getElementById('item-description').innerText = body.description
 
-        paymentMethodsWidget.updateAmount(body.rooms[1].price);
+        paymentMethodsWidget.updateAmount(body.rooms[0].price);
     })
 </script>
