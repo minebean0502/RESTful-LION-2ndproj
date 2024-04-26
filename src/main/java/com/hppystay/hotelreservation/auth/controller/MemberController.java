@@ -111,8 +111,11 @@ public class MemberController {
     }
 
     @PostMapping("/manager-requests")
-    public ResponseEntity<String> requestManagerRole() {
-        memberService.requestManagerRole();
+    public ResponseEntity<String> requestManagerRole(
+            @RequestParam("business-number")
+            String businessNumber
+    ) {
+        memberService.requestManagerRole(businessNumber);
         return ResponseEntity.ok("{}");
     }
 
