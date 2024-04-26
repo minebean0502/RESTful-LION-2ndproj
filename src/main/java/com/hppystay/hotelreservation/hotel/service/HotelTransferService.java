@@ -5,6 +5,7 @@ import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
 import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
+import com.hppystay.hotelreservation.hotel.dto.ReservationInfoDto;
 import com.hppystay.hotelreservation.hotel.entity.*;
 import com.hppystay.hotelreservation.hotel.repository.AssignmentRepository;
 import com.hppystay.hotelreservation.hotel.repository.HotelTransferRepository;
@@ -51,11 +52,11 @@ public class HotelTransferService {
         return ReservationDto.fromEntity(reservation);
     }
 
-    public List<ReservationDto> getPendingReservationsByMember() {
+    public List<ReservationInfoDto> getPendingReservationsByMember() {
         Long memberId = facade.getCurrentMember().getId();
-        List<Reservation> reservations = hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING);
-        return reservations.stream()
-                .map(ReservationDto::fromEntity)
+        return hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING)
+                .stream()
+                .map(ReservationInfoDto::fromEntity)
                 .collect(Collectors.toList());
     }
 

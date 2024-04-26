@@ -3,6 +3,7 @@ package com.hppystay.hotelreservation.hotel.controller;
 import com.hppystay.hotelreservation.auth.dto.MemberDto;
 import com.hppystay.hotelreservation.auth.entity.CustomUserDetails;
 import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
+import com.hppystay.hotelreservation.hotel.dto.ReservationInfoDto;
 import com.hppystay.hotelreservation.hotel.service.HotelTransferService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,8 +33,8 @@ public class HotelTransferController {
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<List<ReservationDto>> getPendingReservationsByMember() {
-        List<ReservationDto> pendingReservations = hotelTransferService.getPendingReservationsByMember();
+    public ResponseEntity<List<ReservationInfoDto>> getPendingReservationsByMember() {
+        List<ReservationInfoDto> pendingReservations = hotelTransferService.getPendingReservationsByMember();
         return ResponseEntity.ok(pendingReservations);
     }
 
