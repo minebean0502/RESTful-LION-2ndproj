@@ -43,7 +43,7 @@ public class PermitAllPath {
             "/is-login",
             "/main",
             "/denied",
-
+            "/hotel/1/details",
 
             // resources
             "/favicon.ico",
