@@ -1,6 +1,7 @@
 package com.hppystay.hotelreservation.payment.toss.service;
 
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
+import com.hppystay.hotelreservation.hotel.entity.ReservationStatus;
 import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
@@ -61,6 +62,7 @@ public class TossService {
 
         // 2. 그 뒤 reservation에 Payment id 추가하기
         reservation.setPayment(tossPayment);
+        reservation.setStatus(ReservationStatus.RESERVATION_COMPLETED);
         TossPaymentDto tossPaymentDto = TossPaymentDto.fromEntity(tossPayment);
 
         // 3. dto 반환

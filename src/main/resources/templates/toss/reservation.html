@@ -107,7 +107,7 @@
 
     // [순서2] 여기서 /api/hotel/{hotelId}로 요청
     // 해당 호텔에 있는 방의 정보들을 다 불러옴
-    fetch(`/api/hotel/${reservationId}`,).then(async response => {
+    fetch(`/api/hotel/${hotelId}`,).then(async response => {
         if (!response.ok) {
             console.log(response)
             // location.href = '/hotel/reservations/reservation'
