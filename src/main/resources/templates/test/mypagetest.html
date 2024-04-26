@@ -407,6 +407,7 @@
         const response = await fetch('/api/hotel/reservation/transfer/pending');
         if (response.ok) {
             const transfers = await response.json();
+            console.log(transfers);
             const transferList = document.getElementById('transferList');
 
             transfers.forEach(reservation => {

@@ -6,6 +6,7 @@ import com.hppystay.hotelreservation.hotel.inquiry.service.HotelInquiryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -116,7 +117,7 @@ public class HotelInquiryController {
     @GetMapping("/{hotelId}")
     public ResponseEntity<Page<HotelInquiryDto>> getInquiriesByHotelId(
             @PathVariable("hotelId") Integer hotelId,
-            Pageable pageable
+            @PageableDefault(size = 10 ) Pageable pageable
     ) {
         Page<HotelInquiryDto> inquiries = hotelInquiryService.getInquiriesByHotelId(hotelId, pageable);
         return ResponseEntity.ok(inquiries);

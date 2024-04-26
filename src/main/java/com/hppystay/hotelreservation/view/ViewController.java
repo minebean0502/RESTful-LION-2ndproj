@@ -80,5 +80,15 @@ public class ViewController {
     public String tossTestHotelPayFail() {
         return "toss/Fail";
     }
+
+
+    //임시로 만듦
+    @GetMapping("/hotel/1/details/somin")
+    public String hotelDetailsSomin() {
+        return "temphtml/hotelDetails-somin";
+    }
+
+    @GetMapping("/hotel/inquiries/submit")
+    public String submitInquiry() { return "inquiries/submitInquiry"; }
 }
 
