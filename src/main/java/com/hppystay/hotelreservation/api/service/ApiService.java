@@ -83,12 +83,12 @@ public class ApiService {
                     log.info("DTO null");
                     continue;
                 }
-                // 숙소 제외
-                if (dto.getContentTypeId() == 32)
+                // 숙소, 여행코스 제외
+                if (dto.getContentTypeId() == 32 || dto.getContentTypeId() == 25)
                     continue;
-                // 여행코스 제외
-                if (dto.getContentTypeId() == 25)
-                    continue;
+                // 사진 없는 관광지부터 제외
+                if (dto.getFirstImage().isEmpty())
+                    break;
                 spotApiDtos.add(dto);
                 log.info("{}", dto);
             }
@@ -117,9 +117,10 @@ public class ApiService {
 
     private TourInfoApiDto makeLocationDto(JSONObject item) {
         // 가끔 좌표 데이터가 타입이 다른 경우 null 반환
+        // 지역코드는 null은 아니지만, ""인 경우 AreaCode로 변환 시 예외 발생
         if (!(item.get("mapx") instanceof String) || !(item.get("mapy") instanceof String)
-                || item.get("addr1") == null || item.get("firstimage") == null
-                || item.get("areacode") == null || item.get("contenttypeid") == null || item.get("title") == null) {
+                || item.get("addr1") == null || item.get("firstimage") == null || item.get("tel") == null
+                || item.get("areacode") == null || item.get("areacode") == "" || item.get("contenttypeid") == null || item.get("title") == null) {
             return null;
         }
         return TourInfoApiDto.builder()
@@ -151,7 +152,7 @@ public class ApiService {
                     continue;
                 }
                 HotelApiDtos.add(dto);
-                log.info("{}", dto);
+//                log.info("{}", dto);
             }
 
             log.info("fetch 완료");
