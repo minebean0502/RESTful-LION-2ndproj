@@ -107,11 +107,33 @@ public class HotelAndRoomConfig {
                 }
                 hotelRepository.saveAll(hotels);
 
+                // 호텔에 매니저 할당 로직
+                for (int i = 1; i <= 5; i++) {
+                    final int id = i;
+                    memberRepository.findById((long) id).ifPresent(manager -> {
+                        hotelRepository.findById((long) id).ifPresent(hotel -> {
+                            hotel.setManager(manager);
+                            hotelRepository.save(hotel);
+                        });
+                    });
+                }
+                for (int i = 1; i <= 5 ; i++) {
+                    final int id = i;
+                    hotelRepository.findById((long) id).ifPresent(hotel -> {
+                        memberRepository.findById((long) id).ifPresent(member -> {
+                            member.setHotel(hotel);
+                            memberRepository.save(member);
+                        });
+                    });
+                }
+
                 createRoomsForHotel(1L, 3);
                 createRoomsForHotel(2L, 2);
                 createRoomsForHotel(3L, 1);
                 createRoomsForHotel(4L, 1);
                 createRoomsForHotel(5L, 1);
+
+
             }
         };
     }

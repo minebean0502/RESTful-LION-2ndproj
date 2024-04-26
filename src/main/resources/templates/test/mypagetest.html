@@ -179,7 +179,8 @@
     <div class="tabs">
         <button class="tab-link" onclick="openTab('userInfo')">프로필 정보</button>
         <button class="tab-link" onclick="openTab('changePassword')">비밀번호 변경</button>
-        <button class="tab-link" onclick="openTab('reservationStatus')">예약 현황</button>
+        <button class="tab-link" onclick="fetchReservations(); openTab('reservationStatus');">예약 현황</button>
+        <button class="tab-link" onclick="fetchReservations(); openTab('transferStatus');">양도 현황</button>
     </div>
 
     <!-- 탭 내용 -->
@@ -229,6 +230,29 @@
 <!--                </div>-->
 <!--            </div>-->
 <!--            &lt;!&ndash; 다른 예약 정보도 동일한 방식으로 추가 &ndash;&gt;-->
+        </div>
+    </div>
+
+    <!-- 양도 현황 -->
+    <div id="transferStatus" class="tab-content">
+        <h2>양도 현황</h2>
+        <div id="transferList">
+            <div class="reservation">
+                <div class="hotel-info">
+                    <img src="/static/tempHotel/h1.jpg" alt="hotel_image" class="hotel-photo">
+                    <div class="hotel-details">
+                        <p class="hotel-name">호텔명: <span>호텔 이름</span></p>
+                        <p>체크인 날짜: <span>2024-05-01</span></p>
+                        <p>체크아웃 날짜: <span>2024-05-05</span></p>
+                        <p>룸 이름: <span>스위트 룸</span></p>
+                    </div>
+                </div>
+                <div class="reservation-actions">
+                    <button class="cancel-btn">예약 취소</button>
+                    <button class="transfer-btn">예약 양도</button>
+                </div>
+            </div>
+            <!-- 다른 예약 정보도 동일한 방식으로 추가 -->
         </div>
     </div>
 </div>
@@ -376,6 +400,9 @@
 
                 const transferBtn = document.createElement('button');
                 transferBtn.textContent = '예약 양도';
+                transferBtn.onclick = function () {
+                    openTransferWindow(reservation.id);
+                }
                 transferBtn.classList.add('transfer-btn');
 
                 reservationActionsDiv.appendChild(cancelBtn);
@@ -385,16 +412,46 @@
                 reservationDiv.appendChild(reservationActionsDiv);
 
                 reservationList.appendChild(reservationDiv);
+
             });
         } else {
             console.log('예약 정보를 가져오는 데 실패했습니다.');
         }
     }
 
+    async function fetchTransfer() {
+        const response = await fetch('/api/hotel/reservation/transfer/pending');
+        const transfers = await response.json();
+        if (response.ok) {
+            const transferList = document.getElementById('transferList');
+            transferList.innerHTML = '';
+            transfers.forEach(reservation => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `예약 번호: ${reservation.id}, 날짜: ${reservation.date}, 방 번호: ${reservation.roomId}`;
+
+                const transferButton = document.createElement('button');
+                transferButton.textContent = '양도받기';
+                transferButton.onclick = function () {
+                    // 결제 기능
+                }
+                listItem.appendChild(transferButton);
+                transferList.appendChild(listItem);
+            });
+        } else {
+            console.log('양도 정보를 가져오는 데 실패했습니다.');
+        }
+    }
+
     function initialize() {
         fetchMyProfile();
         fetchReservations(); // 예약 정보 가져오기
+        fetchTransfer();
         openTab('userInfo');
+    }
+
+    function openTransferWindow(reservationId) {
+        var url = '/my-page/reservation/transfer?grantorReservationId=' + reservationId;
+        window.open(url, 'TransferWindow', 'width=600,height=400');
     }
 
     initialize();

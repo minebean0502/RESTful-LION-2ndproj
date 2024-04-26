@@ -20,8 +20,6 @@ public class PermitAllPath {
             // toss API 관련 (이하 삭제 금지)
             "/api/reservations/**",
 
-
-
             // 숙소
             "/hotel/create-view",
             "/api/hotel/keyword/**",
@@ -54,5 +52,6 @@ public class PermitAllPath {
 
             // 리뷰
             "/api/{hotelId}/review/**",
+
     };
 }

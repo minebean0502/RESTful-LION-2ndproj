@@ -10,7 +10,8 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     @Query("SELECT DISTINCT r.room.id FROM Reservation r " +
-            "WHERE r.checkIn < :checkOut AND r.checkOut > :checkIn")
+            "WHERE r.checkIn < :checkOut AND r.checkOut > :checkIn " +
+            "AND r.status <> 'RESERVATION_CANCELED'")
     List<Long> findUnavailableRoomIds(LocalDate checkIn, LocalDate checkOut);
 
     List<Reservation> findAllByMember(Member member);
