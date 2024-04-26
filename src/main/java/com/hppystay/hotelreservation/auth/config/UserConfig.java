@@ -17,6 +17,11 @@ public class UserConfig {
     private final PasswordEncoder passwordEncoder;
     private final HotelRepository hotelRepository;
 
+    @PostConstruct
+    public void createTestUsers() {
+
+    }
+
     //관리자 생성
     @PostConstruct
     public void createAdmin() {

@@ -55,6 +55,7 @@ public class TossService {
                 .requestedAt(requestedAt)
                 .approvedAt(approvedAt)
                 .lastTransactionKey(lastTransactionKey)
+                .category("Toss")
                 .status("DONE")
                 .build());
 

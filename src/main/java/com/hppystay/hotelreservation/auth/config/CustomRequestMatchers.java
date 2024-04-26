@@ -60,6 +60,17 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
+            // Toss
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/toss/confirm-payment"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/toss/reservations"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/toss/reservations/{id}/payment"),
+
+            // View
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentComplete"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentFail"),
+            // 끝나면 삭제할것
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test"),
+
     };
 
     // MANAGER 를 위한 Matcher
