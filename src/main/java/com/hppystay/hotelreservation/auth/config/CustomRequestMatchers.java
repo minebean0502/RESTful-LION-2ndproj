@@ -50,7 +50,6 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/pending"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer/pending"),
 
             // 호텔 문의
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/submit/{hotelId}"),
@@ -79,6 +78,10 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/member/search/**"),
+            // 고민 부분 (어디까지 허용할지)
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer/create"),
+
             // Toss
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/toss/confirm-payment"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/toss/reservations"),
@@ -87,6 +90,7 @@ public class CustomRequestMatchers {
             // View
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentComplete"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentFail"),
+
             // 끝나면 삭제할것
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test"),
 

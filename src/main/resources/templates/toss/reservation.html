@@ -16,15 +16,15 @@
     <div class="row">
         <div class="col-lg-6 p-3">
             <div id="item-wrapper">
-                <!--  이름 표시  -->
+                <!--  호텔의 이름 표시  -->
                 <h1 class="mb-3">Name: <span id="item-name"></span></h1>
-                <!--  주소 표시 -->
+                <!--  호텔의 주소 표시 -->
                 <p class="mb-3">Address : <span id="item-address"></span></p>
-                <!--  주소 표시 -->
+                <!--  호텔의 설명 표시 -->
                 <p class="mb-3">Description : <span id="item-description"></span></p>
                 <p> -----------------절취선----------------- </p>
 
-                <!-- 방 정보 나열 -->
+                <!-- 호텔의 [방 정보 나열] -->
                 <div id ="rooms-list"></div>
 
                 <a href="/reservations">목록으로</a>
@@ -46,10 +46,13 @@
 
 </script>
 <script>
+    // [순서1 : 처음에 위젯 전처리 및 세팅] -> 그 뒤 데이터 정보 받아옴 [순서2로]
     const clientKey = document.querySelector('meta[name="toss-client-key"]').getAttribute('content');
-    console.log(clientKey);
-    const reservationId = 1;
+    // 사실 hotelId도 타고 올 때 결정되기는 하는데
+    // 일단은 1번 hotel이라 가정해서 hotelId를 설정
+    const hotelId = 1;
 
+    // 여기부터 건들건 없음
     const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS)
     const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
         '#payment-method',
@@ -65,12 +68,17 @@
         { variantKey: 'AGREEMENT' }
     )
 
+    // [순서4] 업데이트된 정보를 가지고 토스 로직 실행
+    // 백엔드 -> toss서버 -> paymentKey 발급되고 그것을 가지고 -> 백엔드 서버 -> 다시 /api/toss/confirm-paymnet로 결제 진행
     const paymentRequestButton = document.getElementById('payment-request-button');
     paymentRequestButton.addEventListener('click', () => {
         try {
             paymentWidget.requestPayment({
+                // orderId는 상관없음
                 orderId: crypto.randomUUID().replaceAll('-', ''),
-                orderName: `${reservationId}-${document.getElementById('item-name').innerText}`,
+                // orderName은 저장되는 item의 name인데 여기서는
+                // room을 저장하기 때문에
+                orderName: `${hotelId}-${document.getElementById('item-name').innerText}`,
             }).then(async data => {
                 const response = await fetch('/api/toss/confirm-payment', {
                     method: 'post',
@@ -95,27 +103,31 @@
             else alert(err)
         }
     });
+    // 여기 위까지 건들건 없음
 
-    fetch(`/api/hotel/${reservationId}`,).then(async response => {
+    // [순서2] 여기서 /api/hotel/{hotelId}로 요청
+    // 해당 호텔에 있는 방의 정보들을 다 불러옴
+    fetch(`/api/hotel/${hotelId}`,).then(async response => {
         if (!response.ok) {
             console.log(response)
             // location.href = '/hotel/reservations/reservation'
             return;
         }
+        // [순서2-1] response를 받아오면 그 response는 해당 호텔에 있는 rooms들에 대한 정보가 json형태로 올 것이고
         const body = await response.json();
+        // <!-- 호텔의 [방 정보 나열]
+        // <div id ="rooms-list"></div> --> 부분에 표시해주기 위해 roomList 만들어줌
         const roomsList = document.getElementById('rooms-list');
-
-        // console.log("전처리입니다")
-        // console.log(body)
-        // console.log(body.rooms)
-        // console.log(body.rooms[0])
-        // console.log(body.rooms[0].price)
+        // 순회를 돌면서 room에 대한 정보를 가져와줌
         body.rooms.forEach(room => {
             const roomElement = document.createElement('div');
             roomElement.innerHTML = `
                 <h3>Name: ${room.name}</h3>
                 <p>Price: ${room.price}</p>
                 <p>Description: ${room.content}</p>
+                <!-- [순서2-2]여기에 button 부분을 추가해서, 해당 버튼을 누르면  -->
+                <!-- 맨 밑에 paymentMethodsWidget.updateAmount( >> body.rooms[이부분].price << )-->
+                <!-- 저 부분이 업데이트가 되어야함 (room의 price를 바꾸게) -->
             `;
             roomsList.appendChild(roomElement);
         });
@@ -124,6 +136,10 @@
         document.getElementById('item-address').innerText = body.address;
         document.getElementById('item-description').innerText = body.description
 
+        // [순서3 tosswidget에 결제할 가격 업데이트]
+        // 사용자가 주문한 방의 가격과 일치해야함
+        // 그 결제해야 할 amount를 payment위젯에다 입력 (업데이트 시켜줌)
         paymentMethodsWidget.updateAmount(body.rooms[0].price);
+        // 따라서 나중에 예약할 room의 버튼을 누르면 ↑ 업데이트 시켜줄 로직 필요
     })
 </script>
