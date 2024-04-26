@@ -344,7 +344,7 @@
                 hotelInfoDiv.classList.add('hotel-info');
 
                 const hotelPhoto = document.createElement('img');
-                hotelPhoto.src = `/static/${reservation.hotelImage}`;
+                hotelPhoto.src = `${reservation.hotelImage}`;
                 hotelPhoto.alt = 'hotel_image';
                 hotelPhoto.classList.add('hotel-photo');
 
@@ -385,7 +385,7 @@
                 const transferBtn = document.createElement('button');
                 transferBtn.textContent = '예약 양도';
                 transferBtn.onclick = function () {
-                    openTransferWindow(reservation.id);
+                    openTransferWindow(reservation.reservationId);
                 }
                 transferBtn.classList.add('transfer-btn');
 
@@ -407,7 +407,6 @@
         const response = await fetch('/api/hotel/reservation/transfer/pending');
         if (response.ok) {
             const transfers = await response.json();
-            console.log(transfers);
             const transferList = document.getElementById('transferList');
 
             transfers.forEach(reservation => {
@@ -438,7 +437,7 @@
                 checkoutDateP.innerHTML = `체크아웃 날짜: <span>${reservation.checkOut}</span>`;
 
                 const statusP = document.createElement('p');
-                statusP.innerHTML = '`상태: <span>${reservation.status}</span>`';
+                statusP.innerHTML = '상태: <span>${reservation.status}</span>';
 
                 hotelDetailsDiv.appendChild(hotelNameP);
                 hotelDetailsDiv.appendChild(roomNameP);
