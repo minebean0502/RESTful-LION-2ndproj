@@ -237,22 +237,6 @@
     <div id="transferStatus" class="tab-content">
         <h2>양도 현황</h2>
         <div id="transferList">
-            <div class="reservation">
-                <div class="hotel-info">
-                    <img src="/static/tempHotel/h1.jpg" alt="hotel_image" class="hotel-photo">
-                    <div class="hotel-details">
-                        <p class="hotel-name">호텔명: <span>호텔 이름</span></p>
-                        <p>체크인 날짜: <span>2024-05-01</span></p>
-                        <p>체크아웃 날짜: <span>2024-05-05</span></p>
-                        <p>룸 이름: <span>스위트 룸</span></p>
-                    </div>
-                </div>
-                <div class="reservation-actions">
-                    <button class="cancel-btn">예약 취소</button>
-                    <button class="transfer-btn">예약 양도</button>
-                </div>
-            </div>
-            <!-- 다른 예약 정보도 동일한 방식으로 추가 -->
         </div>
     </div>
 </div>
@@ -421,21 +405,62 @@
 
     async function fetchTransfer() {
         const response = await fetch('/api/hotel/reservation/transfer/pending');
-        const transfers = await response.json();
         if (response.ok) {
+            const transfers = await response.json();
             const transferList = document.getElementById('transferList');
-            transferList.innerHTML = '';
-            transfers.forEach(reservation => {
-                const listItem = document.createElement('li');
-                listItem.textContent = `예약 번호: ${reservation.id}, 날짜: ${reservation.date}, 방 번호: ${reservation.roomId}`;
 
-                const transferButton = document.createElement('button');
-                transferButton.textContent = '양도받기';
-                transferButton.onclick = function () {
-                    // 결제 기능
+            transfers.forEach(reservation => {
+                const reservationDiv = document.createElement('div');
+                reservationDiv.classList.add('reservation');
+
+                const hotelInfoDiv = document.createElement('div');
+                hotelInfoDiv.classList.add('hotel-info');
+
+                const hotelPhoto = document.createElement('img');
+                hotelPhoto.src = `/static/${reservation.hotelImage}`;
+                hotelPhoto.alt = 'hotel_image';
+                hotelPhoto.classList.add('hotel-photo');
+
+                const hotelDetailsDiv = document.createElement('div');
+                hotelDetailsDiv.classList.add('hotel-details');
+
+                const hotelNameP = document.createElement('p');
+                hotelNameP.innerHTML = `호텔명: <span>${reservation.hotelName}</span>`;
+
+                const roomNameP = document.createElement('p');
+                roomNameP.innerHTML = `룸 이름: <span>${reservation.roomName}</span>`;
+
+                const checkinDateP = document.createElement('p');
+                checkinDateP.innerHTML = `체크인 날짜: <span>${reservation.checkIn}</span>`;
+
+                const checkoutDateP = document.createElement('p');
+                checkoutDateP.innerHTML = `체크아웃 날짜: <span>${reservation.checkOut}</span>`;
+
+                const statusP = document.createElement('p');
+                statusP.innerHTML = '`상태: <span>${reservation.status}</span>`';
+
+                hotelDetailsDiv.appendChild(hotelNameP);
+                hotelDetailsDiv.appendChild(roomNameP);
+                hotelDetailsDiv.appendChild(checkinDateP);
+                hotelDetailsDiv.appendChild(checkoutDateP);
+                hotelDetailsDiv.appendChild(statusP);
+
+                hotelInfoDiv.appendChild(hotelPhoto);
+                hotelInfoDiv.appendChild(hotelDetailsDiv);
+
+                const reservationActionsDiv = document.createElement('div');
+                reservationActionsDiv.classList.add('reservation-actions');
+
+                const transferBtn = document.createElement('button');
+                transferBtn.textContent = '양도 받기';
+                transferBtn.onclick = function () {
+                    //결제 기능
                 }
-                listItem.appendChild(transferButton);
-                transferList.appendChild(listItem);
+                transferBtn.classList.add('transfer-btn');
+
+                reservationActionsDiv.appendChild(transferBtn);
+                reservationDiv.appendChild(reservationActionsDiv);
+                transferList.appendChild(reservationDiv);
             });
         } else {
             console.log('양도 정보를 가져오는 데 실패했습니다.');
@@ -451,7 +476,7 @@
 
     function openTransferWindow(reservationId) {
         var url = '/my-page/reservation/transfer?grantorReservationId=' + reservationId;
-        window.open(url, 'TransferWindow', 'width=600,height=400');
+        window.open(url, 'TransferWindow', 'width=600,height=800');
     }
 
     initialize();
