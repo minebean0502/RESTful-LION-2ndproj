@@ -12,11 +12,6 @@ public class ViewController {
         return "login/login";
     }
 
-    @GetMapping("/sign-up")
-    public String signUp() {
-        return "login/signup";
-    }
-
     // 호텔 생성 view 테스트
     @GetMapping("/hotel/create-view")
     public String hotelCreate() {
