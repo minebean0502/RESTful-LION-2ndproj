@@ -45,7 +45,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(mappedBy = "manager")
     @Setter
     private Hotel hotel;
 
