@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ViewController {
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "login/login";
     }
 
     @GetMapping("/sign-up")
     public String signUp() {
-        return "sign-up";
+        return "login/signup";
     }
 
     // 호텔 생성 view 테스트
