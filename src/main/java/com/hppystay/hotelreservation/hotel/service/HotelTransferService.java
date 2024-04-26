@@ -12,11 +12,13 @@ import com.hppystay.hotelreservation.hotel.repository.HotelTransferRepository;
 import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HotelTransferService {
@@ -54,6 +56,8 @@ public class HotelTransferService {
 
     public List<ReservationInfoDto> getPendingReservationsByMember() {
         Long memberId = facade.getCurrentMember().getId();
+        log.info("service: "+ memberId);
+        log.info("service: " + hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING));
         return hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING)
                 .stream()
                 .map(ReservationInfoDto::fromEntity)

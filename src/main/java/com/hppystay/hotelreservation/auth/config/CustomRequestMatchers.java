@@ -17,22 +17,16 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/areaCode/{area}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/keyword/{keyword}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/location/{mapX}{mapY}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/{id}"),
 
             // View
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/login"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/sign-up"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/create-view"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/is-login"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/denied"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/main"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/login"),
-
-            // Resources
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/favicon.ico"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/static/**"),
     };
 
     // 인증된 사용자를 위한 Matcher
@@ -47,16 +41,14 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/my"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer"),
-
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/pending"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer/pending"),
 
             // Like
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/likes/{hotelId}"),
 
-
             // view
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page/**"),
-
-
 
     };
 
@@ -70,6 +62,16 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
+            // Toss
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/toss/confirm-payment"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/toss/reservations"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/toss/reservations/{id}/payment"),
+
+            // View
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentComplete"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentFail"),
+            // 끝나면 삭제할것
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test"),
 
     };
 
@@ -97,5 +99,12 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
+    };
+
+    // 정적 자원을 위한 Matcher (인증을 요구하지 않도록 필터링)
+    public static AntPathRequestMatcher[] resourcesMatcher = {
+            // Resources
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/favicon.ico"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/static/**"),
     };
 }
