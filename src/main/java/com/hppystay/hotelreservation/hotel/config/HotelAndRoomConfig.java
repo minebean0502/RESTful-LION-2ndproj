@@ -145,7 +145,7 @@ public class HotelAndRoomConfig {
             for (int i = 1; i <= roomCount; i++) {
                 Room room = Room.builder()
                         .name(hotelId + "번 호텔의 " + i + "번 룸")
-                        .price("가격" + (i * 10000)) // 각 룸마다 고유의 가격을 설정, 예시입니다.
+                        .price(String.valueOf((i * 10000)))
                         .content(hotelId + "번 호텔의 " + i + "번 룸 설명")
                         .hotel(hotel)
                         .build();
