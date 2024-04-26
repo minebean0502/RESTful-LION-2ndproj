@@ -20,6 +20,11 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/{id}"),
 
+            // 호텔 문의
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/list"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/{hotelId}"),
+
+
             // View
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/login"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/create-view"),
@@ -27,6 +32,9 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/denied"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/main"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search"),
+
+
+
     };
 
     // 인증된 사용자를 위한 Matcher
@@ -43,6 +51,15 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/pending"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer/pending"),
+
+            // 호텔 문의
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/submit/{hotelId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/update/{hotelId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/delete/{hotelId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/submit/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/update/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/delete/{inquiryId}"),
+
 
             // Like
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/likes/{hotelId}"),
