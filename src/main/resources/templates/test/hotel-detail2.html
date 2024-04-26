@@ -1,0 +1,347 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="ko"  xml:lang="ko">
+<meta http-equiv="Content-Type" Content="text/html; charset=utf-8" /><div id="spStrap" sp-contents class="initialize" spstrap>
+    <style>
+        /*!
+         * spStrap font
+         */
+        @import url("https://fonts.googleapis.com/css2?&family=Roboto:wght@300%3B700&display=swap");
+        @import url("https://fonts.googleapis.com/css2?&family=Noto+Sans+KR:wght@300%3B500&display=swap");
+        #spStrap[sp-contents],
+        #spStrap [sp-contents] { font-family:Roboto,Noto Sans KR,'Apple SD Gothic Neo', 'arial', 'sans-serif', 'serif', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji'; }
+        #spStrap [sp-fontfamily="main"] { font-family:Roboto, 'Apple SD Gothic Neo', 'arial', 'sans-serif', 'serif', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji'; }
+        #spStrap [sp-fontfamily="sub"] { font-family:Noto Sans KR, 'Apple SD Gothic Neo', 'arial', 'sans-serif', 'serif', 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji'; }
+
+        /*!
+         * Mocanvas
+         * @license https://www.mocanvas.com
+         * @min-width : Samsung Galaxy S, Apple iPhone 5 (5c, 5s)
+         */
+
+        /*!
+         * Container Buildup
+         */
+        #spStrap *:not(i) { font-family:inherit; }
+
+        [spStrap] { min-width:320px; color:#333; line-height:1.4; position:relative; overflow:hidden; }
+        [spStrap], [spStrap] * { -webkit-box-sizing : border-box !important; -khtml-box-sizing : border-box !important; -moz-box-sizing : border-box !important; -ms-box-sizing : border-box !important; -o-box-sizing : border-box !important; box-sizing : border-box !important; }
+        [spStrap] [sp-trans],
+        [spStrap] [sp-trans]:before,
+        [spStrap] [sp-trans]:after {
+            -webkit-perspective : 1000; -moz-perspective : 1000; -o-perspective : 1000; perspective : 1000;
+            -webkit-backface-visibility : hidden; -khtml-backface-visibility : hidden; -moz-backface-visibility : hidden; -ms-backface-visibility : hidden; -o-backface-visibility : hidden; backface-visibility : hidden;
+            -webkit-transition : all 300ms ease; -khtml-transition : all 300ms ease; -moz-transition : all 300ms ease; -ms-transition : all 300ms ease; -o-transition : all 300ms ease; transition : all 300ms ease;
+        }
+
+        [spStrap] * { line-height:inherit; }
+        [spStrap] [sp-size] { width:1000px; min-width:320px; position:relative; margin-left:auto; margin-right:auto; }
+        [spStrap] ol, [spStrap] li, [spStrap] ul { padding:0; margin:0; list-style:none; }
+        /*!
+         * Element Reset
+         */
+        [spStrap] a, [spStrap] img, [spStrap] table, [spStrap] div:not([sp-overbox]), [spStrap] span, [spStrap] iframe, [spStrap] ul, [spStrap] li { max-width:100%; }
+        [spStrap] [sp-resize] { font-size:0; } [spStrap] [sp-resize] img { width:100%; } [spStrap] div[sp-resize] { margin:0 auto; }
+        [spStrap] [sp-resize] { display:inline-block; display:inline-flex; vertical-align:middle; }
+        [spStrap] [sp-edit] { position:relative; } [spStrap] span[sp-edit] { display:inline-block; }
+        [spStrap] div[sp-edit]:not([sp-line])::after { clear:both; content:' '; display:block; font-size:0; height:0; line-height:0; visibility:hidden; }
+        [spStrap] [sp-edit="text"] { cursor:auto; word-break:break-all; }
+        [spStrap] [sp-edit] > span { display:inline-block; vertical-align:middle; }
+        [spStrap] [sp-scroll] { overflow:auto; }
+        [spStrap] a[sp-edit], [spStrap] a { position:relative; display:inline-block; display:inline-flex; vertical-align:middle; }
+        [spStrap] a, [spStrap] a { color:inherit; text-decoration:none; }
+        [spStrap] [sp-clear]:after { content:' '; clear:both; display:block; font-size:0; height:0; line-height:0; visibility:hidden; }
+        [spStrap] [sp-inlinebox], [spStrap] [sp-edit$="_button"] { font-size:0; }
+        [spStrap] table, [spStrap] thead, [spStrap] tbody, [spStrap] tfoot, [spStrap] tr, [spStrap] th, [spStrap] td {
+            border-collapse: inherit;
+            border-spacing: 0;
+            border-color: inherit;
+            vertical-align: inherit;
+            text-align: left;
+            font-weight: inherit;
+            -webkit-border-horizontal-spacing: 0;
+            -webkit-border-vertical-spacing: 0;
+        }
+
+        [spStrap] img[sp-edit] { display:inline-block; vertical-align:middle; vertical-align:super; }
+        [spStrap] [sp-line] { position:relative; text-indent:-9999px; line-height:0 !important; }
+        [spStrap] [sp-line]:before { content:'.'; }
+        [spStrap] [sp-line]:after { content:''; z-index:1; position:absolute; top:-5px; right:0; bottom:-5px; left:0; }
+        [spStrap] [sp-table-editor] { width:100%; border-collapse:collapse; border-spacing:0; margin:0 auto; }
+        [spStrap] [sp-table-editor] td { min-width:15px; word-break: break-all; position:relative; }
+
+        /* Video PC, Mobile Ratio Buildup */
+        [spStrap] [sp-videoframe] { position: relative; padding-bottom:56.25%; /* 16:9 비율인 경우 */ height:0; }
+        [spStrap] [sp-videoframe="4:3"] { padding-bottom:75%; }
+        [spStrap] [sp-videoframe] iframe { position: absolute; top:0; left:0; width:100%; height:100%; }
+        [spStrap] [sp-ratio] { position:relative; }
+        [spStrap] [sp-ratio="1:1"] { padding-bottom:100%; }
+        [spStrap] [sp-ratio="1:2"] { padding-bottom:200%; }
+        [spStrap] [sp-ratio="2:1"] { padding-bottom:50%; }
+
+        /*!
+         * Set Font Attribute
+         */
+        [spStrap] [sp-font="7"]  { font-size:0.7rem; }
+        [spStrap] [sp-font="8"]  { font-size:0.8rem; }
+        [spStrap] [sp-font="9"]  { font-size:0.9rem; }
+        [spStrap] [sp-font="10"] { font-size:1.0rem; }
+        [spStrap] [sp-font="11"] { font-size:1.1rem; }
+        [spStrap] [sp-font="12"] { font-size:1.2rem; }
+        [spStrap] [sp-font="13"] { font-size:1.3rem; }
+        [spStrap] [sp-font="14"] { font-size:1.4rem; }
+        [spStrap] [sp-font="15"] { font-size:1.5rem; }
+        [spStrap] [sp-font="16"] { font-size:1.6rem; }
+        [spStrap] [sp-font="17"] { font-size:1.7rem; }
+        [spStrap] [sp-font="18"] { font-size:1.8rem; }
+        [spStrap] [sp-font="19"] { font-size:1.9rem; }
+        [spStrap] [sp-font="20"] { font-size:2.0rem; }
+        [spStrap] [sp-font="25"] { font-size:2.5rem; }
+        [spStrap] [sp-font="30"] { font-size:3.0rem; }
+        [spStrap] [sp-font="35"] { font-size:3.5rem; }
+        [spStrap] [sp-font="40"] { font-size:4.0rem; }
+        [spStrap] [sp-font="45"] { font-size:4.5rem; }
+        [spStrap] [sp-font="50"] { font-size:5.0rem; }
+        [spStrap] [sp-font="55"] { font-size:5.5rem; }
+        [spStrap] [sp-font="60"] { font-size:6.0rem; }
+        [spStrap] [sp-less="pc"] { display:none; }
+        [spStrap] [sp-only="tablet"], [spStrap] [sp-only="mobile"] { display:none; }
+
+        /*!
+         * Responsive Tablet, Mobile Size
+         */
+        @media screen and ( min-width:601px ) and ( max-width:1024px ){
+
+            [spStrap] { line-height:1.3; }
+            [spStrap] [sp-size]		  { width:auto; }
+            [spStrap] [sp-font="7"]   { font-size:0.70rem }
+            [spStrap] [sp-font="8"]   { font-size:0.80rem }
+            [spStrap] [sp-font="9"]   { font-size:0.89rem }
+            [spStrap] [sp-font="10"]  { font-size:0.99rem }
+            [spStrap] [sp-font="11"]  { font-size:1.08rem }
+            [spStrap] [sp-font="12"]  { font-size:1.17rem }
+            [spStrap] [sp-font="13"]  { font-size:1.26rem }
+            [spStrap] [sp-font="14"]  { font-size:1.35rem }
+            [spStrap] [sp-font="15"]  { font-size:1.44rem }
+            [spStrap] [sp-font="16"]  { font-size:1.53rem }
+            [spStrap] [sp-font="17"]  { font-size:1.62rem }
+            [spStrap] [sp-font="18"]  { font-size:1.70rem }
+            [spStrap] [sp-font="19"]  { font-size:1.79rem }
+            [spStrap] [sp-font="20"]  { font-size:1.87rem }
+            [spStrap] [sp-font="25"]  { font-size:2.33rem }
+            [spStrap] [sp-font="30"]  { font-size:2.78rem }
+            [spStrap] [sp-font="35"]  { font-size:3.22rem }
+            [spStrap] [sp-font="40"]  { font-size:3.66rem }
+            [spStrap] [sp-font="45"]  { font-size:4.10rem }
+            [spStrap] [sp-font="50"]  { font-size:4.53rem }
+            [spStrap] [sp-font="55"]  { font-size:4.95rem }
+            [spStrap] [sp-font="60"]  { font-size:5.37rem }
+            [spStrap] [sp-tab="20"] { display:inline-block !important; width:20% !important; }
+            [spStrap] [sp-tab="25"] { display:inline-block !important; width:25% !important; }
+            [spStrap] [sp-tab="33"] { display:inline-block !important; width:33.333% !important; }
+            [spStrap] [sp-tab="50"] { display:inline-block !important; width:50% !important; }
+            [spStrap] [sp-tab="100"] { display:block !important; width:initial !important; }
+            [spStrap] [sp-less="tablet"] { display:none; }
+            [spStrap] [sp-only="pc"], [spStrap] [sp-only="mobile"] { display:none; }
+            [spStrap] [sp-table-editor] { width:100% !important; min-width:unset !important; }
+
+        }
+        @media screen and ( min-width:1px ) and ( max-width:601px ){
+
+            [spStrap] { line-height:1.2; }
+            [spStrap] [sp-size]		  { width:auto; }
+            [spStrap] [sp-font="7"]   { font-size:0.70rem }
+            [spStrap] [sp-font="8"]   { font-size:0.79rem }
+            [spStrap] [sp-font="9"]   { font-size:0.88rem }
+            [spStrap] [sp-font="10"]  { font-size:0.97rem }
+            [spStrap] [sp-font="11"]  { font-size:1.06rem }
+            [spStrap] [sp-font="12"]  { font-size:1.14rem }
+            [spStrap] [sp-font="13"]  { font-size:1.22rem }
+            [spStrap] [sp-font="14"]  { font-size:1.30rem }
+            [spStrap] [sp-font="15"]  { font-size:1.38rem }
+            [spStrap] [sp-font="16"]  { font-size:1.46rem }
+            [spStrap] [sp-font="17"]  { font-size:1.53rem }
+            [spStrap] [sp-font="18"]  { font-size:1.61rem }
+            [spStrap] [sp-font="19"]  { font-size:1.68rem }
+            [spStrap] [sp-font="20"]  { font-size:1.75rem }
+            [spStrap] [sp-font="25"]  { font-size:2.16rem }
+            [spStrap] [sp-font="30"]  { font-size:2.57rem }
+            [spStrap] [sp-font="35"]  { font-size:2.96rem }
+            [spStrap] [sp-font="40"]  { font-size:3.35rem }
+            [spStrap] [sp-font="45"]  { font-size:3.73rem }
+            [spStrap] [sp-font="50"]  { font-size:4.10rem }
+            [spStrap] [sp-font="55"]  { font-size:4.46rem }
+            [spStrap] [sp-font="60"]  { font-size:4.81rem }
+            [spStrap] [sp-mob="20"] { display:inline-block !important; width:20% !important; }
+            [spStrap] [sp-mob="25"] { display:inline-block !important; width:25% !important; }
+            [spStrap] [sp-mob="33"] { display:inline-block !important; width:33.333% !important; }
+            [spStrap] [sp-mob="50"] { display:inline-block !important; width:50% !important; }
+            [spStrap] [sp-mob="100"] { display:block !important; width:initial !important; position:initial !important; }
+            [spStrap] [sp-less="mobile"] { display:none; }
+            [spStrap] [sp-only="pc"], [spStrap] [sp-only="tablet"] { display:none; }
+            [spStrap] [sp-scale^="mob"] {
+                -webkit-transform : scale(.9);
+                -moz-transform : scale(.9);
+                -ms-transform : scale(.9);
+                -o-transform : scale(.9);
+                transform : scale(.9);
+            }
+            [spStrap] [sp-scale*="-tl"] { transform-origin:top left; }
+            [spStrap] [sp-scale*="-tc"] { transform-origin:top center; }
+            [spStrap] [sp-scale*="-tr"] { transform-origin:top right; }
+            [spStrap] [sp-scale*="-ml"] { transform-origin:center left; }
+            [spStrap] [sp-scale*="-mc"] { transform-origin:center center; }
+            [spStrap] [sp-scale*="-mr"] { transform-origin:center right; }
+            [spStrap] [sp-scale*="-bl"] { transform-origin:bottom left; }
+            [spStrap] [sp-scale*="-bc"] { transform-origin:bottom center; }
+            [spStrap] [sp-scale*="-br"] { transform-origin:bottom right; }
+            [spStrap] [sp-table-editor] { width:100% !important; min-width:unset !important; }
+
+        }
+
+
+        [spStrap] [sp-size] { width:1000px; }
+
+
+        /*-------------------------------------------------------------------------
+        |   Code : 3CEEFC0203
+        |-------------------------------------------------------------------------*/
+        [spStrap] .mo-3CEEFC0203 {  }
+        [spStrap] .mo-3CEEFC0203--box {  }
+        [spStrap] .mo-3CEEFC0203--box > ul { width:100%; display:table; table-layout:fixed; }
+        [spStrap] .mo-3CEEFC0203--box > ul > li { display:table-cell; vertical-align:top; position:relative; }
+        [spStrap] .mo-3CEEFC0203--box-badge { z-index:3; position:absolute; }
+        [spStrap] .mo-3CEEFC0203-line { display:inline-block; min-width:21px; }
+        [spStrap] .mo-3CEEFC0203--table td { vertical-align:middle; }
+        /*
+            Responsive
+        */
+        [spStrap][device="mobile"] .mo-3CEEFC0203--box > ul > li[style*="width:50%;"],
+        [spStrap][device="mobile"] .mo-3CEEFC0203--box > ul > li[style*="width: 50%;"] { width:initial !important; display:block !important; padding:0 !important; margin-bottom:1.5rem !important; }
+        @media screen and ( min-width:1px ) and ( max-width:600px ){
+
+            [spStrap] .mo-3CEEFC0203--box > ul > li[style*="width:50%;"],
+            [spStrap] .mo-3CEEFC0203--box > ul > li[style*="width: 50%;"] { width:initial !important; display:block !important; padding:0 !important; margin-bottom:1.5rem !important; }
+
+        }
+    </style>
+
+
+
+
+    <style sp-stylesheet="mo-C913D07C23">
+        /*-------------------------------------------------------------------------
+        |   Code : C913D07C23
+        |-------------------------------------------------------------------------*/
+        [spStrap] .mo-C913D07C23 {  }
+        [spStrap] .mo-C913D07C23--box { z-index:3; font-size:0; position:relative; display:table; table-layout:fixed; width:100%; }
+        [spStrap] .mo-C913D07C23--inner { font-size:1rem; display:table-cell; vertical-align:top; }
+    </style>
+
+
+
+
+    <div class="mo-3CEEFC0203 initialize" sp-edit="box" style="padding:1rem;" area="before">
+        <div sp-edit="box" sp-size class="initialize">
+            <div sp-edit="box" class="mo-3CEEFC0203--box initialize">
+                <ul sp-edit class="initialize">
+                    <li sp-edit="box" sp-sort-nodrop="fixed" style="width:50%;" class="initialize" area="before">
+
+                        <div style="text-align: center;">
+                        <a href="#!" sp-edit="image_button" sp-resize style="width:60%;" class="initialize" area="after"><img src="다운로드.jpeg" sp-edit="image" style="width:100%;" class="initialize"></a>
+                        </div>
+                    </li>
+                    <li sp-edit="box" style="width:50%;padding:1.5rem 2.5rem;" class="initialize">
+
+
+                        <div sp-edit="text" class="initialize" area="before"><br></div>
+
+                        <div sp-edit="text" style="padding:.4rem 0 .5rem 0;" class="initialize" area="before"><span style="font-size: 27.2px;"><b>hotel name</b></span><br></div>
+
+                        <div sp-edit="box" sp-sort-nodrop="fixed" style="padding:1rem 0 .5rem 0;text-align:left;" class="initialize" area="before">
+                            <div class="mo-3CEEFC0203-line initialize" sp-edit="box" sp-line style="width:1.1%;border-top:.25rem solid rgba(0,0,0,0.8);">‧</div>
+                        </div>
+
+                        <div class="mo-3CEEFC0203--table initialize" sp-edit="table" sp-table-cover area="before">
+                            <table sp-table-editor class="JColResizer" id="vfzl68zih2">
+                                <tbody><tr>
+                                    <td sp-edit="td" style="width:100px;" class="initialize" area="before">address</td>
+                                    <td sp-edit="td" class="initialize" style="width: 320px;" area="after"><span style="font-size: 15px;"><b>address information</b></span></td>
+                                </tr>
+                                <tr>
+                                    <td sp-edit="td" class="initialize" area="before">tel</td>
+                                    <td sp-edit="td" class="initialize" area="after"><span style="font-size: 15px;"><b>phone number</b></span></td>
+                                </tr>
+                                </tbody></table>
+                        </div>
+
+                        <div sp-edit="box" sp-inlinebox style="padding:1.5rem 0 0 0; margin-top: 12rem;" class="initialize" area="after">
+                            <a href="#!" sp-edit="button" sp-sortable-inline style="background:#f43142;padding:1.0rem 2rem;" class="initialize"><span sp-font="10" style="color:#fff;">details</span></a>
+                        </div>
+
+                    </li>
+                </ul>
+                <div class="mo-05355EFCC1 initialize" sp-edit="box" sp-sort-nodrop="fixed" style="padding:0.1rem 0;text-align:center;">
+                    <div class="mo-05355EFCC1-line initialize" sp-edit="box" sp-line style="margin:1rem 0; border-top:0.01rem solid rgba(0, 0, 0, 0.07);">‧</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div sp-edit="box" sp-size class="initialize">
+        <div sp-edit="box" class="mo-3CEEFC0203--box initialize">
+            <ul sp-edit class="initialize">
+                <li sp-edit="box" sp-sort-nodrop="fixed" style="width:50%;" class="initialize" area="before">
+
+                    <div style="text-align: center;">
+                        <a href="#!" sp-edit="image_button" sp-resize style="width:60%;" class="initialize" area="after"><img src="다운로드.jpeg" sp-edit="image" style="width:100%;" class="initialize"></a>
+                    </div>
+                </li>
+                <li sp-edit="box" style="width:50%;padding:1.5rem 2.5rem;" class="initialize">
+
+
+                    <div sp-edit="text" class="initialize" area="before"><br></div>
+
+                    <div sp-edit="text" style="padding:.4rem 0 .5rem 0;" class="initialize" area="before"><span style="font-size: 27.2px;"><b>room name</b></span><br></div>
+
+                    <div sp-edit="box" sp-sort-nodrop="fixed" style="padding:1rem 0 .5rem 0;text-align:left;" class="initialize" area="before">
+                        <div class="mo-3CEEFC0203-line initialize" sp-edit="box" sp-line style="width:1.1%;border-top:.25rem solid rgba(0,0,0,0.8);">‧</div>
+                    </div>
+
+                    <div class="mo-3CEEFC0203--table initialize" sp-edit="table" sp-table-cover area="before">
+                        <table sp-table-editor class="JColResizer" id="vfzl68zih2">
+                            <tbody><tr>
+                                <td sp-edit="td" style="width:100px;" class="initialize" area="before">room description</td>
+                            </tr>
+                            </tbody></table>
+                </li>
+            </ul>
+            <div class="mo-05355EFCC1 initialize" sp-edit="box" sp-sort-nodrop="fixed" style="padding:0.1rem 0;text-align:center;">
+                <div class="mo-05355EFCC1-line initialize" sp-edit="box" sp-line style="margin:1rem 0; border-top:0.01rem solid rgba(0, 0, 0, 0.07);">‧</div>
+            </div>
+
+        </div>
+    </div>
+    <div sp-edit="box" style="width:50%;padding:1.5rem 2.5rem; text-align:center;" class="initialize">
+        <div sp-edit="text" class="initialize"><br></div>
+        <div sp-edit="text" style="padding:.4rem 0 .5rem 0;text-align:right;" class="initialize">
+            <span style="font-size: 27.2px;"><b>Location</b></span><br>
+        </div>
+        <div class="mo-3CEEFC0203--table initialize" sp-edit="table" sp-table-cover>
+            <table sp-table-editor class="JColResizer" style="margin:auto;">
+                <tbody>
+                <tr>
+                    <td sp-edit="td" style="text-align:right;padding-right:0px;" class="initialize">Location information</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div sp-edit="box" sp-sort-nodrop="fixed" style="padding:1rem 0 .5rem 0;text-align:center;" class="initialize">
+         </div>
+    </div>
+    <div sp-edit="box" sp-inlinebox style="padding:1.5rem 0 0 0; margin-top: 2rem;text-align:center;" class="initialize">
+        <a href="#!" sp-edit="button" sp-sortable-inline style="background:#f43142;padding:1.0rem 2rem; margin-right: 1rem;" class="initialize"><span sp-font="10" style="color:#fff;">Reviews</span></a>
+        <a href="#!" sp-edit="button" sp-sortable-inline style="background:#f43142;padding:1.0rem 2rem;" class="initialize"><span sp-font="10" style="color:#fff;">Contact</span></a>
+    </div>
+</div>
+</div>
