@@ -58,6 +58,9 @@ public class ViewController {
         return "reservation/transfer/transfer-to-member";
     }
 
-
+    @GetMapping("/hotel/1/details")
+    public String oneHotelDetails() {
+        return "temphtml/hotelDetails";
+    }
 }
 
