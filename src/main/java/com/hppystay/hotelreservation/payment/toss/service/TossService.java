@@ -119,8 +119,6 @@ public class TossService {
         }
     }
 
+    // 이제 여기서부터 A->B 양도받았을 때 B 결제하고 B 결제 끝나면 A 환불하는 로직 만들것
 
-//    public Object assignConfirmPayment() {
-//
-//    }
 }
