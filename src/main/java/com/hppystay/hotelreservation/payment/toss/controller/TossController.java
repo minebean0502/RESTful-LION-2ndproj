@@ -69,6 +69,6 @@ public class TossController {
 
     @PostMapping("/reservation/assign/confirm")
     public void assignConfirm() {
-        return;
+        // return;
     }
 }
