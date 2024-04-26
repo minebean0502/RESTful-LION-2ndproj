@@ -53,4 +53,12 @@ public class ViewController {
     public String myPage() {
         return "test/mypagetest";
     }
+
+    @GetMapping("/my-page/reservation/transfer")
+    public String transferToMember() {
+        return "reservation/transfer/transfer-to-member";
+    }
+
+
 }
+

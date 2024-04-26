@@ -45,6 +45,8 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/profile-upload"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/my"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer"),
 
 
             // Like
@@ -52,7 +54,8 @@ public class CustomRequestMatchers {
 
 
             // view
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page/**"),
+
 
 
     };

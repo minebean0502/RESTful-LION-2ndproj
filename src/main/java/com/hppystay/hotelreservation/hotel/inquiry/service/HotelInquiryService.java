@@ -11,4 +11,5 @@ public interface HotelInquiryService {
     void createInquiry(HotelInquiryDto hotelInquiryDto, String writerId, Integer hotelId);
     void updateInquiry(Integer id, HotelInquiryDto hotelInquiryDto, String currentUsername);
     void deleteInquiry(Integer id, String currentUsername);
+    Page<HotelInquiryDto> getInquiriesByHotelId(Integer hotelId, Pageable pageable);
 }

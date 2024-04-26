@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HotelInquiryRepository extends JpaRepository<HotelInquiry, Integer> {
     Page<HotelInquiry> findAllByOrderByCreatedAtDesc(Pageable pageable);
+    Page<HotelInquiry> findAllByHotelIdOrderByCreatedAtDesc(Integer hotelId, Pageable pageable);
+
 }
