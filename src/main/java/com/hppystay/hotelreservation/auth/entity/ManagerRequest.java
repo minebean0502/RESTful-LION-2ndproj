@@ -21,6 +21,8 @@ public class ManagerRequest extends BaseEntity {
     @ManyToOne
     private Member member;
 
+    private String businessNumber;
+
     @Setter
     @Enumerated(EnumType.STRING)
     private ManagerRequestStatus status;
