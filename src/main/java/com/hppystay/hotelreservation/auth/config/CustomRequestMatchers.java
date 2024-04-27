@@ -30,9 +30,12 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/login"),
 
+
             // Resources
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/favicon.ico"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/static/**"),
+
+
     };
 
     // 인증된 사용자를 위한 Matcher
@@ -55,6 +58,8 @@ public class CustomRequestMatchers {
 
             // view
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page/**"),
+            // Admin (테스트 위해 잠시-> 테스트 끝나면 ADMIN쪽으로 옮기기)
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/admin"),
 
 
 
@@ -97,5 +102,7 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
+
+
     };
 }

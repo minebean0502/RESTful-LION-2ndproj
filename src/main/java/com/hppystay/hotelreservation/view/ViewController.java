@@ -59,6 +59,7 @@ public class ViewController {
         return "reservation/transfer/transfer-to-member";
     }
 
-
+    @GetMapping("/admin")
+    public String admin() { return "/admin"; }
 }
 
