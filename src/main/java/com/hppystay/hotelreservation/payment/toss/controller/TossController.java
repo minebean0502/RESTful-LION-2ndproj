@@ -27,6 +27,14 @@ public class TossController {
         return service.confirmPayment(dto);
     }
 
+    // 양도받고, 양수자가 결제를 진행한 뒤, 양도자(A)의 환불을 진행하는 API
+    // B의 reservationId를 가지고 뭔가 할 수 있나?
+    @PostMapping("/payment/cancel-from-user}")
+    public Object assignConfirm(
+            @RequestBody
+            TossPaymentCancelDto dto) {
+        return service.cancelPaymentBeforeUser(dto);
+    }
 
     // 임시로 Reservation Controller 사용
     @GetMapping("/reservations")
@@ -61,14 +69,5 @@ public class TossController {
             TossPaymentCancelDto dto
     ) {
         return service.cancelPayment(id, dto);
-    }
-
-    // B가 양도 승인 눌렀을 때
-    // B는 결제를 시작합니다
-    // 결제에 받을 정보는
-
-    @PostMapping("/reservation/assign/confirm")
-    public void assignConfirm() {
-        // return;
     }
 }

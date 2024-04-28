@@ -2,6 +2,7 @@ package com.hppystay.hotelreservation.hotel.controller;
 
 import com.hppystay.hotelreservation.auth.dto.MemberDto;
 import com.hppystay.hotelreservation.auth.entity.CustomUserDetails;
+import com.hppystay.hotelreservation.hotel.dto.AssignmentDto;
 import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
 import com.hppystay.hotelreservation.hotel.dto.ReservationInfoDto;
 import com.hppystay.hotelreservation.hotel.service.HotelTransferService;
@@ -32,7 +33,10 @@ public class HotelTransferController {
         return new ResponseEntity<>(newTransferReservation, HttpStatus.CREATED);
     }
 
-    // 3. 양수자가 받은 Reservation을 찾고, 양도에 관련된 로직을 진행하는 부분
+    // 4. 양수자가 받은 Reservation을 찾고, 양도에 관련된 로직을 진행하는 부분 (가져오는거?)
+    // 이거 아직 작성 안함 ㅇㅇ;
+    // TODO 이거 필요없어 보이는데 어떻게 진행될지 모르겠음
+    // 해당 기능은 (4)/pending -> (3)/assignment 으로 이전했습니다.
     @GetMapping("/pending")
     public List<ReservationInfoDto> getPendingReservationsByMember() {
         log.info("컨트롤러: "+ hotelTransferService.getPendingReservationsByMember());
@@ -46,4 +50,10 @@ public class HotelTransferController {
         return ResponseEntity.ok(members);
     }
 
+    // 3. assignment에서 필요한 정보들을 가져와야 하는 부분
+    @GetMapping("/assignment")
+    public ResponseEntity<AssignmentDto> getAssignment(@RequestParam Long reservationId) {
+        AssignmentDto assignmentDto = hotelTransferService.readAssignment(reservationId);
+        return ResponseEntity.ok(assignmentDto);
+    }
 }
