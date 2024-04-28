@@ -20,12 +20,12 @@ public class Assignment {
     @Setter
     @ManyToOne
     @JoinColumn(name = "from_member_id")
-    private Member fromMember;
+    private Member fromMember;  // A가 될거임
 
     @Setter
     @ManyToOne
     @JoinColumn(name = "to_member_id")
-    private Member toMember;
+    private Member toMember;    // B가 될거임
 
     @Setter
     @OneToOne
@@ -33,8 +33,11 @@ public class Assignment {
     private Reservation reservation;
 
     // 양도할 데이터 필드
+    @Setter
     private String price; // 결제 금액
+    @Setter
     private String tossOrderId; // Toss 결제의 주문 ID
+    @Setter
     private String itemName; // 예약된 상품명 (Room의 이름)
 
     // 추가적으로 양도 시점의 정보 기록이 필요하다면

@@ -110,8 +110,15 @@ public class HotelController {
         return reservationService.createReservation(dto);
     }
 
+    // 예약에 대해 조회
     @GetMapping("/reservation/my")
     public List<ReservationInfoDto> readAllMyReservation() {
         return reservationService.readAllMyReservation();
+    }
+
+    // 양도에 대해 조회
+    @GetMapping("/reservation/pending")
+    public List<ReservationInfoDto> readAllPendingReservation() {
+        return reservationService.readAllPendingReservation();
     }
 }

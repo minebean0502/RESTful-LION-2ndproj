@@ -4,6 +4,7 @@ import com.hppystay.hotelreservation.auth.dto.MemberDto;
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.auth.repository.MemberRepository;
 import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
+import com.hppystay.hotelreservation.hotel.dto.AssignmentDto;
 import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
 import com.hppystay.hotelreservation.hotel.dto.ReservationInfoDto;
 import com.hppystay.hotelreservation.hotel.entity.*;
@@ -11,6 +12,9 @@ import com.hppystay.hotelreservation.hotel.repository.AssignmentRepository;
 import com.hppystay.hotelreservation.hotel.repository.HotelTransferRepository;
 import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
+import com.hppystay.hotelreservation.payment.toss.entity.Payment;
+import com.hppystay.hotelreservation.payment.toss.entity.TossPayment;
+import com.hppystay.hotelreservation.payment.toss.repository.TossPaymentRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,15 +32,33 @@ public class HotelTransferService {
     private final AssignmentRepository assignmentRepository;
     private final AuthenticationFacade facade;
     private final ReservationRepository reservationRepository;
+    private final TossPaymentRepository tossPaymentRepository;
+    private final RoomRepository roomRepository;
 
     @Transactional
     public ReservationDto createTransferReservation(ReservationDto request, Long grantorReservationId) {
+        log.info("현재의 전달받은 request의 정보는 다음과 같습니다");
+        log.info(request.toString());
+
+        // [1] 양도 전에 필요한 정보들
         // 양도자(A)의 id를 검색
+        // TODO reservationID 검색 뿐만 아니라, 결제가 완료된 건에 대해서만 진행한다고 가정할 것이므로
+        // TODO ReservationStatus.RESERVATION_COMPLETED 인 것 만 찾아야함
         Reservation grantorReservation = hotelTransferRepository.findById(grantorReservationId)
                 .orElseThrow(() -> new RuntimeException("Reservation not found"));
         // 해당 사용자의 예약 상태를 DONE -> 양도 진행중으로 변경
         grantorReservation.setStatus(ReservationStatus.ASSIGNMENT_PENDING);
         hotelTransferRepository.save(grantorReservation);
+
+        // A의 reservation에서 tossPayment의 정보 가져와야함
+        TossPayment tossPayment = (TossPayment) grantorReservation.getPayment();
+        // 필요한 정보들인 (1)PaymentKey, (2)itemName, (3)toss_order_id(안씀), (4)트랜젝션키(옵션)
+        String paymentKey = tossPayment.getTossPaymentKey();
+        // String toss_order_id = tossPayment.getTossOrderId();
+        // String last_transcation_key = tossPayment.getLastTransactionKey();
+        Room room = roomRepository.findById(grantorReservation.getRoom().getId())
+                .orElseThrow(() -> new RuntimeException("룸을 찾지 못했습니다."));
+        String roomName = room.getName();
 
         // 양도받을 멤버(B) 확인
         Member member = memberRepository.findById(request.getMemberId())
@@ -64,33 +86,43 @@ public class HotelTransferService {
         assignment.setReservation(grantorReservation);
         assignment.setFromMember(fromMember);
         assignment.setToMember(member);
+        // A의 reservation에서
+        // 가격, A의 tossPaymentKey, itemName 가져와야함
+        assignment.setPrice(paymentKey);
+        assignment.setItemName(roomName);
         assignmentRepository.save(assignment);
-
 
         return ReservationDto.fromEntity(reservation);
     }
 
-    // 3. 양도 관련 로직 진행
+    // 4. 양도 관련 로직 진행
     public List<ReservationInfoDto> getPendingReservationsByMember() {
         // 현재 로그인 되어 있는 사용자의 정보로부터 시작
         Long memberId = facade.getCurrentMember().getId();
 
-        // 예약 정보를 어떻게 찾을까?
+        // 예약 정보를 어떻게 찾을까? 이건 안쓸듯?
         Reservation reservation = reservationRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("member not found"));
 
-
-
         log.info("service: "+ memberId);
         log.info("service: " + hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING));
+        // 현재 로그인 된 사용자의 ID로, reservation이 PAYMENT_PENDING인 reservation 정보들을 찾음
         return hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING)
                 .stream()
                 .map(ReservationInfoDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
+    // 1. 닉네임이라 이메일로 찾는 서비스 로직
     public List<MemberDto> searchByNicknameOrEmail(String keyword) {
         List<Member> members = memberRepository.findByEmailContainingOrNicknameContaining(keyword, keyword);
         return members.stream().map(MemberDto::fromEntity).collect(Collectors.toList());
+    }
+
+    // 3. 해당 reservationId로 Assignment 정보 찾아서 일단 다 반환하기
+    public AssignmentDto readAssignment(Long reservationId) {
+        return assignmentRepository.findById(reservationId)
+                .map(AssignmentDto::fromEntity)
+                .orElseThrow(() -> new RuntimeException("해당 예약 Id로 양도 데이터를 찾을 수 없습니다"));
     }
 }
