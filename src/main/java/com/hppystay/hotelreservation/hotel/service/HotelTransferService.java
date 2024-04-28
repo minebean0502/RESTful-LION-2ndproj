@@ -56,8 +56,6 @@ public class HotelTransferService {
 
     public List<ReservationInfoDto> getPendingReservationsByMember() {
         Long memberId = facade.getCurrentMember().getId();
-        log.info("service: "+ memberId);
-        log.info("service: " + hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING));
         return hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING)
                 .stream()
                 .map(ReservationInfoDto::fromEntity)

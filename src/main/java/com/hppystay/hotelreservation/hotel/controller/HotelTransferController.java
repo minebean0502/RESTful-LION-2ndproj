@@ -34,7 +34,6 @@ public class HotelTransferController {
 
     @GetMapping("/pending")
     public List<ReservationInfoDto> getPendingReservationsByMember() {
-        log.info("컨트롤러: "+ hotelTransferService.getPendingReservationsByMember());
         return hotelTransferService.getPendingReservationsByMember();
     }
 
