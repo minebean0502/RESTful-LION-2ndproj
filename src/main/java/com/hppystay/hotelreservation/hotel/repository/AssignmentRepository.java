@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     // toUser(B)로 assignment의 정보를 찾는 부분
-    List<Assignment> findByToUser(Member toUser);
+    Assignment findByToUser(Member toUser);
 }
