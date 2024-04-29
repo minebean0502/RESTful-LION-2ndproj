@@ -33,9 +33,9 @@ public class UserConfig {
 //                .build());
 //    }
 //
-////     채운 수정 04-25~
-////    테스트용 계정 추가
-////     유저
+//    // 채운 수정 04-25~
+//    //테스트용 계정 추가
+//    // 유저
 //    @PostConstruct
 //    public void createUser() {
 //        for (int i = 1; i <= 10; i++) {

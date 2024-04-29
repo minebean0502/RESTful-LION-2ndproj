@@ -1,178 +1,178 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <style>
-        #inquiries table {
-            border-collapse: collapse;
-            border-spacing: 0;
-        }
-        section.inquiries {
-            padding: 80px 0;
-        }
-        #inquiries .page-title {
-            margin-bottom: 60px;
-        }
-        #inquiries .page-title h3 {
-            font-size: 28px;
-            color: #333333;
-            font-weight: 400;
-            text-align: center;
-        }
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+      #inquiries table {
+          border-collapse: collapse;
+          border-spacing: 0;
+      }
+      section.inquiries {
+          padding: 80px 0;
+      }
+      #inquiries .page-title {
+          margin-bottom: 60px;
+      }
+      #inquiries .page-title h3 {
+          font-size: 28px;
+          color: #333333;
+          font-weight: 400;
+          text-align: center;
+      }
 
-        #board-search .search-window {
-            padding: 15px 0;
-            position: relative;
-        }
-        #board-search .search-window .search-wrap {
-            position: absolute;
-            left: 0;
-            top: 0;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-        }
+      #board-search .search-window {
+          padding: 15px 0;
+          position: relative;
+      }
+      #board-search .search-window .search-wrap {
+          position: absolute;
+          left: 0;
+          top: 0;
+          padding: 0;
+          margin: 0;
+          width: 100%;
+      }
 
-        #inquiries .board-table {
-            font-size: 13px;
-            width: 100%;
-            border-top: 1px solid #ccc;
-            border-bottom: 1px solid #ccc;
-        }
-        #inquiries .board-table th {
-            text-align: center;
-        }
-        #inquiries .board-table .th-num {
-            width: 100px;
-            text-align: center;
-        }
-        #inquiries .board-table .th-date {
-            width: 200px;
-        }
-        #inquiries .board-table th, .board-table td {
-            padding: 14px 0;
-        }
-        #inquiries .board-table tbody td {
-            border-top: 1px solid #e7e7e7;
-            text-align: center;
-        }
-        #inquiries .board-table tbody th {
-            padding-left: 28px;
-            padding-right: 14px;
-            border-top: 1px solid #e7e7e7;
-            text-align: left;
-        }
-        #inquiries .btn {
-            display: inline-block;
-            padding: 0 30px;
-            font-size: 15px;
-            font-weight: 400;
-            background: transparent;
-            text-align: center;
-            vertical-align: middle;
-            cursor: pointer;
-            border: 1px solid transparent;
-            text-transform: uppercase;
-            transition: all 0.3s;
-        }
+      #inquiries .board-table {
+          font-size: 13px;
+          width: 100%;
+          border-top: 1px solid #ccc;
+          border-bottom: 1px solid #ccc;
+      }
+      #inquiries .board-table th {
+          text-align: center;
+      }
+      #inquiries .board-table .th-num {
+          width: 100px;
+          text-align: center;
+      }
+      #inquiries .board-table .th-date {
+          width: 200px;
+      }
+      #inquiries .board-table th, .board-table td {
+          padding: 14px 0;
+      }
+      #inquiries .board-table tbody td {
+          border-top: 1px solid #e7e7e7;
+          text-align: center;
+      }
+      #inquiries .board-table tbody th {
+          padding-left: 28px;
+          padding-right: 14px;
+          border-top: 1px solid #e7e7e7;
+          text-align: left;
+      }
+      #inquiries .btn {
+          display: inline-block;
+          padding: 0 30px;
+          font-size: 15px;
+          font-weight: 400;
+          background: transparent;
+          text-align: center;
+          vertical-align: middle;
+          cursor: pointer;
+          border: 1px solid transparent;
+          text-transform: uppercase;
+          transition: all 0.3s;
+      }
 
-        #inquiries .btn-dark {
-            background: #555;
-            color: #fff;
-        }
+      #inquiries .btn-dark {
+          background: #555;
+          color: #fff;
+      }
 
-        #inquiries .btn-dark:hover, .btn-dark:focus {
-            background: #373737;
-            border-color: #373737;
-            color: #fff;
-        }
+      #inquiries .btn-dark:hover, .btn-dark:focus {
+          background: #373737;
+          border-color: #373737;
+          color: #fff;
+      }
 
-        .hidden-content {
-            display: none;
-            background-color: #f9f9f9;
-            padding: 10px;
-            font-size: 12px;
-        }
-        .divider {
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border-top: 1px dashed #ccc;
-        }
-        /* reset */
-        * {
-            list-style: none;
-            text-decoration: none;
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
-        .container {
-            width: 1100px;
-            margin: 0 auto;
-        }
-    </style>
+      .hidden-content {
+          display: none;
+          background-color: #f9f9f9;
+          padding: 10px;
+          font-size: 12px;
+      }
+      .divider {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          border-top: 1px dashed #ccc;
+      }
+      /* reset */
+      * {
+          list-style: none;
+          text-decoration: none;
+          padding: 0;
+          margin: 0;
+          box-sizing: border-box;
+      }
+      .container {
+          width: 1100px;
+          margin: 0 auto;
+      }
+  </style>
 </head>
 <body>
 <main>
-    <!-- 각자 맡은 section 부분에 대해 적당히 div 등의 container 만들어서 진행하면 될 것 같습니다 -->
-    <section class = "main-page" id="main-page">
+  <!-- 각자 맡은 section 부분에 대해 적당히 div 등의 container 만들어서 진행하면 될 것 같습니다 -->
+  <section class = "main-page" id="main-page">
 
-    </section>
-    <section class= "room-page" id="room-page">
+  </section>
+  <section class= "room-page" id="room-page">
 
-    </section>
-    <section class="location" id="location">
+  </section>
+  <section class="location" id="location">
 
-    </section>
-    <section class =review id="review">
+  </section>
+  <section class =review id="review">
 
-    </section>
-    <section class="inquiries" id="inquiries">
+  </section>
+  <section class="inquiries" id="inquiries">
 
-        <div class="page-title">
-            <div class="container">
-                <h3>문의사항</h3>
-            </div>
+    <div class="page-title">
+      <div class="container">
+        <h3>문의사항</h3>
+      </div>
+    </div>
+
+    <!--Submit Question button area-->
+    <div id="board-search">
+      <div class="container">
+        <div class="search-window">
+          <div class="search-wrap">
+            <button type="submit" class="btn btn-dark" onclick="openSubmitForm()">질문등록</button>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <!--Submit Question button area-->
-        <div id="board-search">
-            <div class="container">
-                <div class="search-window">
-                    <div class="search-wrap">
-                        <button type="submit" class="btn btn-dark" onclick="openSubmitForm()">질문등록</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- board list area-->
+    <div id="board-list">
+      <div class="container">
+        <table class="board-table">
+          <thead>
+          <tr>
+            <th scope="col" class="th-num">답변상태</th>
+            <th scope="col" class="th-title">제목</th>
+            <th scope="col" class="th-date">등록일</th>
+          </tr>
+          </thead>
+          <tbody>
 
-        <!-- board list area-->
-        <div id="board-list">
-            <div class="container">
-                <table class="board-table">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="th-num">답변상태</th>
-                        <th scope="col" class="th-title">제목</th>
-                        <th scope="col" class="th-date">등록일</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <!-- pagenation-->
+    <div id="pagination">
+      <button onclick="previousPage()">이전</button>
+      <span id="currentPage">1</span> / <span id="totalPages">?</span>
+      <button onclick="nextPage()">다음</button>
+    </div>
 
-        <!-- pagenation-->
-        <div id="pagination">
-            <button onclick="previousPage()">이전</button>
-            <span id="currentPage">1</span> / <span id="totalPages">?</span>
-            <button onclick="nextPage()">다음</button>
-        </div>
-
-    </section>
+  </section>
 </main>
 </body>
 <script>

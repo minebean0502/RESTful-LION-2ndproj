@@ -12,8 +12,10 @@ import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -44,6 +46,7 @@ public class ReviewService {
         Review review = Review.customBuilder()
                 .hotel(hotel)
                 .member(member)
+                .hotel(hotel)
                 .content(dto.getContent())
                 .score(dto.getScore())
                 .depth(0)
@@ -103,7 +106,6 @@ public class ReviewService {
                 .map(ReviewDto::fromEntity)
                 .toList();
     }
-
 
     // 리뷰 수정 - 리뷰 작성한 본인 혹은 시스템 관리자만 가능
     public ReviewDto updateReview(Long hotelId, Long reviewId, ReviewDto dto) {
