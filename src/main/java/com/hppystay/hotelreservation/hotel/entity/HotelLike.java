@@ -2,9 +2,7 @@ package com.hppystay.hotelreservation.hotel.entity;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
-import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Entity(name = "likes")
 @SuperBuilder
 @NoArgsConstructor
-public class Like extends BaseEntity {
+public class HotelLike extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +25,7 @@ public class Like extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Hotel hotel;
 
-    public Like(Member member, Hotel hotel) {
+    public HotelLike(Member member, Hotel hotel) {
         this.member = member;
         this.hotel = hotel;
     }

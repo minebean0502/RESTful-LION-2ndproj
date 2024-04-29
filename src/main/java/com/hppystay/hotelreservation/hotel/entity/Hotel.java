@@ -55,7 +55,7 @@ public class Hotel extends BaseEntity {
     private Member manager;
 
     @OneToMany(mappedBy = "hotel")
-    private List<Like> likes = new ArrayList<>();
+    private List<HotelLike> hotelLikes = new ArrayList<>();
 
     public Hotel addRoom(Room room) {
         this.getRooms().add(room);
