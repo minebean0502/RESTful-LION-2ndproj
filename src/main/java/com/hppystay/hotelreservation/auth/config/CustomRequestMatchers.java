@@ -74,11 +74,10 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page/**"),
 
 
-            // Admin (테스트 위해 잠시-> 테스트 끝나면 ADMIN쪽으로 옮기기)
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/manager-requests/list"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/admin"),
+//            // Admin (테스트 위해 잠시-> 테스트 끝나면 ADMIN쪽으로 옮기기)
+//            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/admin"),
 
-//            // Review
+           // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/list"),
 
@@ -138,19 +137,19 @@ public class CustomRequestMatchers {
     // ADMIN 을 위한 Matcher
     public static AntPathRequestMatcher[] adminMatchers = {
             // Auth
-
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/manager-requests/list"),
-
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/manager-requests"),
-
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/approve"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/reject"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/{reviewId}/delete"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/admin"),
 
             // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
+
+
     };
 
     // 정적 자원을 위한 Matcher (인증을 요구하지 않도록 필터링)
