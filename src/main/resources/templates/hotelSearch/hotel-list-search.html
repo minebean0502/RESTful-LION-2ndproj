@@ -33,9 +33,6 @@
 <header>
     <th:block th:replace="~{updown/temp-header}"></th:block>
 </header>
-<!--<div class="header">-->
-<!--    Hotel Booking Project-->
-<!--</div>-->
 
 <aside class="search-container">
     <!--  검색바 여기에 넣기  -->
@@ -79,6 +76,7 @@
 </body>
 <script>
     async function fetchHotels() {
+        // 나중에는 checkIn, checkOut, KeyWord 추출해서 api에 보내는 식으로 하면 될듯?
         const checkIn = '2024-05-01';       // 날짜 형식은 'YYYY-MM-DD' 형식임
         const checkOut = '2024-05-05';      // 임의로 2024.05.01 ~ 05.05까지 예약이 없는 호텔들을 조회하겠음
         // 예약 가능한 호텔 조회 부분 (dto 넣어서 보내줘야함)

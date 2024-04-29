@@ -19,4 +19,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     // 멤버의 id와, status로 찾는 메서드
     List<Reservation> findByMemberIdAndStatus(Long memberId, ReservationStatus status);
+
+    Reservation findByMember(Member member);
 }

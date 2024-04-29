@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
@@ -22,6 +23,14 @@ public class ViewController {
     @GetMapping("/hotel/create-view")
     public String hotelCreate() {
         return "create-hotel";
+    }
+
+    @GetMapping("/hotel/update-view/{id}")
+    public String hotelUpdate(
+            @PathVariable("id")
+            Long id
+    ) {
+        return "update-hotel";
     }
 
     @GetMapping("/is-login")
@@ -61,7 +70,7 @@ public class ViewController {
 
     @GetMapping("/my-page/reservation/transfered")
     public String transferedAndDoPay() {
-        return "reservation/transfer/transferd-by-member";
+        return "reservation/transfer/transfered-by-member";
     }
 
     @GetMapping("/hotel/1/details")

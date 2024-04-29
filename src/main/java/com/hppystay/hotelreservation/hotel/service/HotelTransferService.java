@@ -18,7 +18,9 @@ import com.hppystay.hotelreservation.payment.toss.repository.TossPaymentReposito
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -86,9 +88,11 @@ public class HotelTransferService {
         assignment.setReservation(grantorReservation);
         assignment.setFromMember(fromMember);
         assignment.setToMember(member);
+        assignment.setPrice(tossPayment.getTotalAmount());
         // A의 reservation에서
         // 가격, A의 tossPaymentKey, itemName 가져와야함
-        assignment.setPrice(paymentKey);
+        // TODO 사실 여기 orderId가 아니라 PaymentKey가 들어가서 이것저것 조금 달라짐
+        assignment.setTossOrderId(paymentKey);
         assignment.setItemName(roomName);
         assignmentRepository.save(assignment);
 
@@ -124,8 +128,18 @@ public class HotelTransferService {
 
     // 3. 해당 reservationId로 Assignment 정보 찾아서 일단 다 반환하기
     public AssignmentDto readAssignment(Long reservationId) {
-        return assignmentRepository.findById(reservationId)
-                .map(AssignmentDto::fromEntity)
-                .orElseThrow(() -> new RuntimeException("해당 예약 Id로 양도 데이터를 찾을 수 없습니다"));
+        // B의 reservationId로 해당 reservation 찾기
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 reservationId로 Reservation을 찾을 수 없습니다"));
+
+        // TODO 사실 facade로 찾을 수 있지않나?
+        Member toMember = memberRepository.findById(reservation.getMember().getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "to Member의 정보를 찾을 수 없습니다"));
+        log.info(String.valueOf(toMember.getId()));
+        Assignment assignment = assignmentRepository.findByToMember(toMember)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "reservation은 찾았으나, assignment를 찾을 수 없습니다"));
+        AssignmentDto assignmentDto = AssignmentDto.fromEntity(assignment);
+        log.info(String.valueOf(assignmentDto));
+        return assignmentDto;
     }
 }
