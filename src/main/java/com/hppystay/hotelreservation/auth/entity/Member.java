@@ -3,7 +3,7 @@ package com.hppystay.hotelreservation.auth.entity;
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
-import com.hppystay.hotelreservation.hotel.like.Like;
+import com.hppystay.hotelreservation.hotel.entity.Like;
 import com.hppystay.hotelreservation.hotel.review.Review;
 import jakarta.persistence.*;
 import lombok.*;

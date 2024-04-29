@@ -1,4 +1,4 @@
-package com.hppystay.hotelreservation.hotel.like;
+package com.hppystay.hotelreservation.hotel.entity;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
@@ -30,6 +30,5 @@ public class Like extends BaseEntity {
     public Like(Member member, Hotel hotel) {
         this.member = member;
         this.hotel = hotel;
-
     }
 }
