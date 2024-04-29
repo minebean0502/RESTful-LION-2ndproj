@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Role Requests</title>
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+          padding: 0;
+          background-color: #f4f4f4;
+      }
+
+      table {
+          width: 100%;
+          border-collapse: collapse;
+      }
+
+      th, td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: left;
+      }
+
+      th {
+          background-color: #4CAF50;
+          color: white;
+      }
+
+      tr:nth-child(even) {
+          background-color: #f2f2f2;
+      }
+
+      button {
+          cursor: pointer;
+      }
+  </style>
+</head>
+<body>
+<h1>관리자 페이지</h1>
+<table id="requestsTable">
+  <thead>
+  <tr>
+    <th>Index</th>
+    <th>Nickname</th>
+    <th>Email</th>
+    <th>Business Number</th>
+    <th>Status</th>
+    <th>Approve</th>
+    <th>Reject</th>
+
+  </tr>
+  </thead>점
+  <tbody>
+  <!-- Requests will be loaded here -->
+  </tbody>
+</table>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchManagerRequests();
+
+        async function fetchManagerRequests() {
+            const response = await fetch('/api/auth/manager-requests/list');
+            const requests = await response.json();
+            const tableBody = document.getElementById('requestsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            requests.forEach(request => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = request.id;
+                row.insertCell(1).textContent = request.nickname;
+                row.insertCell(2).textContent = request.email;
+                row.insertCell(3).textContent = request.businessNumber;
+                row.insertCell(4).textContent = request.status;
+                const approveButton = row.insertCell(5).appendChild(document.createElement('button'));
+                approveButton.textContent = 'Approve';
+                approveButton.onclick = () => handleApproval(request.id);
+
+                const rejectButton = row.insertCell(6).appendChild(document.createElement('button'));
+                rejectButton.textContent = 'Reject';
+                rejectButton.onclick = () => handleRejection(request.id);
+            });
+        }
+
+        async function handleApproval(requestId) {
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/approve`, { method: 'POST' });
+            if (response.ok) {
+                alert('Request Approved');
+                await fetchManagerRequests();
+            }
+        }
+
+        async function handleRejection(requestId) {
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/reject`, { method: 'POST' });
+            if (response.ok) {
+                alert('Request Rejected');
+                await fetchManagerRequests();
+            }
+        }
+    });
+</script>
+</body>
+</html>

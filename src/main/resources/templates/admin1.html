@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>관리자 페이지</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+  <style>
+      /* 테이블 스타일 */
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          border-spacing: 0;
+      }
+
+      /* 테이블 헤더 스타일 */
+      th {
+          background-color: #f2f2f2;
+          text-align: left;
+          padding: 8px;
+      }
+
+      /* 테이블 셀 스타일 */
+      td {
+          border-bottom: 1px solid #ddd;
+          padding: 8px;
+      }
+
+      /* 짝수 행 배경색 */
+      tr:nth-child(even) {
+          background-color: #f2f2f2;
+      }
+
+      /* 버튼 스타일 */
+      button {
+          background-color: #4CAF50; /* 초록색 */
+          color: white;
+          padding: 6px 10px;
+          border: none;
+          border-radius: 3px;
+          cursor: pointer;
+          margin-right: 5px;
+      }
+
+      /* 버튼 호버 스타일 */
+      button:hover {
+          background-color: #45a049; /* 진한 초록색 */
+      }
+  </style>
+</head>
+<body>
+<h1>관리자 페이지</h1>
+<table id="managerRequestsTable">
+  <thead>
+  <tr>
+    <th>닉네임</th>
+    <th>호텔</th>
+    <th>상태</th>
+    <th>작성 시간</th>
+    <th>승인/비승인</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- 여기에 관리자 요청 정보가 동적으로 추가될 것입니다. -->
+  </tbody>
+</table>
+
+<script>
+    // 페이지가 로드될 때 실행되는 함수
+    window.onload = function() {
+        // 서버에서 모든 관리자 신청 정보를 가져와서 테이블에 표시하는 함수 호출
+        fetchManagerRequests();
+    };
+
+    // 서버에서 모든 관리자 신청 정보를 가져와서 테이블에 표시하는 함수
+    function fetchManagerRequests() {
+        fetch('/api/manager-requests')
+            .then(response => {
+                // 응답을 JSON 형식으로 변환
+                return response.json();
+            })
+            .then(data => {
+                // 가져온 데이터를 displayManagerRequests 함수에 전달하여 테이블에 표시
+                displayManagerRequests(data);
+            })
+            .catch(error => {
+                // 오류가 발생한 경우 콘솔에 오류 메시지 출력
+                console.error('Error fetching manager requests:', error);
+            });
+    }
+
+    // 관리자 신청 정보를 테이블에 표시하는 함수
+    function displayManagerRequests(requests) {
+        const tableBody = document.querySelector('#managerRequestsTable tbody');
+
+        // 기존에 표시된 내용 삭제
+        tableBody.innerHTML = '';
+
+        // 각 관리자 신청 정보를 테이블에 추가
+        requests.forEach(request => {
+            const row = document.createElement('tr');
+
+            // 각 열에 데이터 추가
+            row.innerHTML = `
+                    <td>${request.nickname}</td>
+                    <td>${request.hotel}</td>
+                    <td>${request.status}</td>
+                    <td>${request.createdAt}</td>
+                    <td>
+                        <button onclick="approveRequest(${request.id})">승인</button>
+                        <button onclick="rejectRequest(${request.id})">비승인</button>
+                    </td>
+                `;
+
+            // 테이블에 행 추가
+            tableBody.appendChild(row);
+        });
+    }
+
+    // 관리자 요청을 승인하는 함수
+    function approveRequest(requestId) {
+        // 여기에 승인 요청을 서버로 보내는 코드 작성
+        console.log('Request approved:', requestId);
+    }
+
+    // 관리자 요청을 비승인하는 함수
+    function rejectRequest(requestId) {
+        // 여기에 비승인 요청을 서버로 보내는 코드 작성
+        console.log('Request rejected:', requestId);
+    }
+</script>
+</body>
+</html>
