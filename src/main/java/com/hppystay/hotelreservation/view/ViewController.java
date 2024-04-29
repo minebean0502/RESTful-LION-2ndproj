@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
@@ -71,7 +72,7 @@ public class ViewController {
 
     // 호텔 예약 완료(가정) 후 toss 결제용 view
     @GetMapping("/hotel/test")
-    public String tossTestHotel1Room1to3(Model model){
+    public String tossTestHotel1Room1to3(Model model) {
         model.addAttribute("clientKey", clientKey);
         return "toss/reservation";
     }
@@ -81,6 +82,7 @@ public class ViewController {
     public String tossTestHotelPaySuccess() {
         return "toss/success";
     }
+
     // 결제 실패 후 toss redirect view
     @GetMapping("/hotel/test/paymentFail")
     public String tossTestHotelPayFail() {
@@ -95,15 +97,28 @@ public class ViewController {
     }
 
     @GetMapping("/hotel/inquiries/submit")
-    public String submitInquiry() { return "inquiries/submitInquiry"; }
+    public String submitInquiry() {
+        return "inquiries/submitInquiry";
+    }
 
     //임시
     @GetMapping("/hotel/37/details/m")
     public String hotelDetailsm() {
         return "temphtml/hotelDetails-m1";
     }
+
     @GetMapping("/admin")
     public String admin() {
         return "admin";
+    }
+
+    @GetMapping("/hotel/{hotelId}")
+    public String hotelDetailView(
+            @PathVariable("hotelId")
+            Long hotelId,
+            Model model
+    ) {
+        model.addAttribute("hotelId", hotelId);
+        return "hotel-detail-test";
     }
 }
