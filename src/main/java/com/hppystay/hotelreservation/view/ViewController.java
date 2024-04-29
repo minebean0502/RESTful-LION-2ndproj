@@ -63,6 +63,11 @@ public class ViewController {
         return "test/mypagetest";
     }
 
+    @GetMapping("/my-page/submit-businessNum")
+    public String submitPage() {
+        return "test/submit-business-num";
+    }
+
     @GetMapping("/my-page/reservation/transfer")
     public String transferToMember() {
         return "reservation/transfer/transfer-to-member";
