@@ -2,12 +2,10 @@ package com.hppystay.hotelreservation.hotel.entity;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.entity.BaseEntity;
-import com.hppystay.hotelreservation.hotel.like.Like;
 import com.hppystay.hotelreservation.hotel.review.Review;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;

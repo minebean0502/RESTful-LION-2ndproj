@@ -9,15 +9,15 @@ import com.hppystay.hotelreservation.hotel.dto.HotelDto;
 import com.hppystay.hotelreservation.hotel.dto.RoomDto;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.entity.Room;
+import com.hppystay.hotelreservation.hotel.entity.Like;
+import com.hppystay.hotelreservation.hotel.repository.LikeRepository;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -30,6 +30,7 @@ public class HotelService {
     private final HotelRepository hotelRepo;
     private final RoomRepository roomRepo;
     private final ReservationRepository reservationRepo;
+    private final LikeRepository likeRepo;
     private final AuthenticationFacade facade;
 
     @Transactional
@@ -175,6 +176,24 @@ public class HotelService {
                 .build());
 
         return HotelDto.fromEntity(hotelRepo.save(hotel.addRoom(room)));
+    }
+
+    public void toggleLike(Long hotelId) {
+        Member member = facade.getCurrentMember();
+
+        Hotel hotel = hotelRepo.findById(hotelId).orElseThrow(
+                () -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
+
+        if (!likeRepo.existsByMemberAndHotel(member, hotel)) {
+            // 호텔의 like_count 증가
+            hotel.setLike_count(hotel.getLike_count() + 1);
+            likeRepo.save(new Like(member, hotel));
+
+        } else {
+            // 좋아요가 있는 상태에서 한번 더 좋아요 하면 좋아요 취소
+            hotel.setLike_count(hotel.getLike_count() - 1);
+            likeRepo.deleteByMemberAndHotel(member, hotel);
+        }
     }
 
     public boolean checkRegion(String regionName) {
