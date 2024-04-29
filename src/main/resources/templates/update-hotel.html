@@ -104,7 +104,6 @@
         }
 
         #hotelInfoForm {
-            /*display: none;*/
             margin: 20px auto auto auto;
             text-align: center;
         }
@@ -125,17 +124,6 @@
             height: 100px;
             resize: vertical;
         }
-
-        /*#hotelInfoForm button, input[type="submit"] {*/
-        /*    width: 100%;*/
-        /*    padding: 15px; !* 크기 조정 *!*/
-        /*    border: none;*/
-        /*    border-radius: 5px;*/
-        /*    background-color: #007bff;*/
-        /*    color: #fff;*/
-        /*    cursor: pointer;*/
-        /*    margin-top: 20px; !* 구분을 위한 간격 추가 *!*/
-        /*}*/
 
         .addRoomButton {
             width: 30%;
@@ -282,6 +270,7 @@
         document.getElementById('hotelTel').value = hotel.tel;
         document.getElementById('hotelMapX').value = hotel.mapX;
         document.getElementById('hotelMapY').value = hotel.mapY;
+        document.getElementById('hotelDescription').value = hotel.description;
     }
 
     // 기존 방 정보 채우기
@@ -295,14 +284,6 @@
             const roomName = room.name;
             const roomPrice = room.price;
             const roomContent = room.content;
-
-            // roomDtoList 채우기
-            // roomList.push({
-            //     id: roomId,
-            //     name: roomName,
-            //     price: roomPrice,
-            //     content: roomContent
-            // });
 
             roomElement.innerHTML = `
                 <div id="roomInfoForm${roomNumber}" data-room-id="${roomId || ''}" data-room-number="${roomNumber}">
@@ -447,22 +428,22 @@
         const jsonString = JSON.stringify(jsonData);
         console.log(jsonString);
 
-        // fetch(`/api/hotel/${id}`, {
-        //     method: 'PUT',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: jsonString
-        // })
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         console.log('hotel updated:', data);
-        //         // Handle success, such as displaying a success message to the user
-        //     })
-        //     .catch(error => {
-        //         console.error('Error updating hotel:', error);
-        //         // Handle error, such as displaying an error message to the user
-        //     });
+        fetch(`/api/hotel/${hotelId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonString
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('hotel updated:', data);
+                // Handle success, such as displaying a success message to the user
+            })
+            .catch(error => {
+                console.error('Error updating hotel:', error);
+                // Handle error, such as displaying an error message to the user
+            });
     });
 
     function searchHotels() {
