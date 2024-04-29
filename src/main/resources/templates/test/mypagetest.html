@@ -180,12 +180,12 @@
 
     <!-- 탭 -->
     <div class="tabs">
-        <button class="tablink" onclick="openTab('userInfo')">프로필 정보</button>
-        <button class="tablink" onclick="openTab('changePassword')">비밀번호 변경</button>
-        <button class="tablink" onclick="openTab('reservationStatus')">예약 현황</button>
-          <button class="tablink" onclick="openTab('transferStatus');">양도 현황</button>
+        <button class="tab-link" onclick="openTab('userInfo')">프로필 정보</button>
+        <button class="tab-link" onclick="openTab('changePassword')">비밀번호 변경</button>
+        <button class="tab-link" onclick="openTab('reservationStatus')">예약 현황</button>
+        <button class="tab-link" onclick="openTab('transferStatus');">양도 현황</button>
         <!-- 관리자 전환 버튼 onclick 내부 수정 필요-->
-        <button class="tablink" onclick="">호텔 관리자 전환 신청</button>
+        <button class="tab-link" onclick="submitBusinessNum()">호텔 관리자 전환 신청</button>
     </div>
 
     <!-- 탭 내용 -->
@@ -582,6 +582,10 @@
     function openTransferWindow(reservationId) {
         var url = '/my-page/reservation/transfer?grantorReservationId=' + reservationId;
         window.open(url, 'TransferWindow', 'width=600,height=800');
+    }
+    function submitBusinessNum() {
+        var url = '/my-page/submit-businessNum'
+        window.open(url, 'SubmitWindow', 'width=600, height=800');
     }
 
     // 사실 reservationId만 받아와줘도 되기는 함

@@ -87,7 +87,7 @@ public class CustomRequestMatchers {
     // 일반 USER 를 위한 Matcher
     public static AntPathRequestMatcher[] userMatchers = {
             // Auth
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/**"),
 
             // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
