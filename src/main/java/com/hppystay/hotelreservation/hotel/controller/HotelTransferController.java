@@ -39,7 +39,6 @@ public class HotelTransferController {
     // 해당 기능은 (4)/pending -> (3)/assignment 으로 이전했습니다.
     @GetMapping("/pending")
     public List<ReservationInfoDto> getPendingReservationsByMember() {
-        log.info("컨트롤러: "+ hotelTransferService.getPendingReservationsByMember());
         return hotelTransferService.getPendingReservationsByMember();
     }
 

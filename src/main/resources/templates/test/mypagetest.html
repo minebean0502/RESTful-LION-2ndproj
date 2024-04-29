@@ -505,16 +505,16 @@
         if (response.ok) {
             const transfers = await response.json();
             const transferList = document.getElementById('transferList');
-
-            transfers.forEach(reservation => {
-                const reservationDiv = document.createElement('div');
-                reservationDiv.classList.add('reservation');
+            console.log(transfers);
+            transfers.forEach(transfer => {
+                const transferDiv = document.createElement('div');
+                transferDiv.classList.add('reservation');
 
                 const hotelInfoDiv = document.createElement('div');
                 hotelInfoDiv.classList.add('hotel-info');
 
                 const hotelPhoto = document.createElement('img');
-                hotelPhoto.src = `/static/${reservation.hotelImage}`;
+                hotelPhoto.src = `${transfer.hotelImage}`;
                 hotelPhoto.alt = 'hotel_image';
                 hotelPhoto.classList.add('hotel-photo');
 
@@ -522,19 +522,19 @@
                 hotelDetailsDiv.classList.add('hotel-details');
 
                 const hotelNameP = document.createElement('p');
-                hotelNameP.innerHTML = `호텔명: <span>${reservation.hotelName}</span>`;
+                hotelNameP.innerHTML = `호텔명: <span>${transfer.hotelName}</span>`;
 
                 const roomNameP = document.createElement('p');
-                roomNameP.innerHTML = `룸 이름: <span>${reservation.roomName}</span>`;
+                roomNameP.innerHTML = `룸 이름: <span>${transfer.roomName}</span>`;
 
                 const checkinDateP = document.createElement('p');
-                checkinDateP.innerHTML = `체크인 날짜: <span>${reservation.checkIn}</span>`;
+                checkinDateP.innerHTML = `체크인 날짜: <span>${transfer.checkIn}</span>`;
 
                 const checkoutDateP = document.createElement('p');
-                checkoutDateP.innerHTML = `체크아웃 날짜: <span>${reservation.checkOut}</span>`;
+                checkoutDateP.innerHTML = `체크아웃 날짜: <span>${transfer.checkOut}</span>`;
 
                 const statusP = document.createElement('p');
-                statusP.innerHTML = `상태: <span>${reservation.status}</span>`;
+                statusP.innerHTML = `상태: <span>${transfer.status}</span>`;
 
                 hotelDetailsDiv.appendChild(hotelNameP);
                 hotelDetailsDiv.appendChild(roomNameP);
@@ -545,20 +545,22 @@
                 hotelInfoDiv.appendChild(hotelPhoto);
                 hotelInfoDiv.appendChild(hotelDetailsDiv);
 
-                const reservationActionsDiv = document.createElement('div');
-                reservationActionsDiv.classList.add('reservation-actions');
+                const transferActionsDiv = document.createElement('div');
+                transferActionsDiv.classList.add('reservation-actions');
 
                 const transferBtn = document.createElement('button');
                 transferBtn.textContent = '양도 받기';
+                transferBtn.classList.add('transfer-btn');
                 transferBtn.onclick = function () {
                     openTransferWindow()
                     //결제 기능
                 }
-                transferBtn.classList.add('transfer-btn');
 
-                reservationActionsDiv.appendChild(transferBtn);
-                reservationDiv.appendChild(reservationActionsDiv);
-                transferList.appendChild(reservationDiv);
+                transferActionsDiv.appendChild(transferBtn);
+
+                transferDiv.appendChild(hotelInfoDiv);
+                transferDiv.appendChild(transferActionsDiv);
+                transferList.appendChild(transferDiv);
             });
         } else {
             console.log('양도 정보를 가져오는 데 실패했습니다.');

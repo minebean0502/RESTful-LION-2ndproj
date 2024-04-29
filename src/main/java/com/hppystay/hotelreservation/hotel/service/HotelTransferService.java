@@ -100,6 +100,7 @@ public class HotelTransferService {
         // 현재 로그인 되어 있는 사용자의 정보로부터 시작
         Long memberId = facade.getCurrentMember().getId();
 
+        /*
         // 예약 정보를 어떻게 찾을까? 이건 안쓸듯?
         Reservation reservation = reservationRepository.findById(memberId)
                 .orElseThrow(() -> new RuntimeException("member not found"));
@@ -107,6 +108,8 @@ public class HotelTransferService {
         log.info("service: "+ memberId);
         log.info("service: " + hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING));
         // 현재 로그인 된 사용자의 ID로, reservation이 PAYMENT_PENDING인 reservation 정보들을 찾음
+        */
+
         return hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING)
                 .stream()
                 .map(ReservationInfoDto::fromEntity)
