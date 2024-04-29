@@ -91,7 +91,6 @@ public class CustomRequestMatchers {
 
             // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
-
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
