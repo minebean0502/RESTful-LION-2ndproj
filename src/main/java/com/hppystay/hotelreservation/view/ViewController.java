@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
@@ -12,7 +13,7 @@ public class ViewController {
     @Value("${TOSS_CLIENT_KEY}")
     private String clientKey;
 
-    @GetMapping("/login")
+    @RequestMapping("/login")
     public String login() {
         return "login/login";
     }
@@ -28,7 +29,7 @@ public class ViewController {
         return "is-login";
     }
 
-    @GetMapping("/denied")
+    @RequestMapping("/denied")
     public String denied() {
         return "denied";
     }

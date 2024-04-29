@@ -9,8 +9,8 @@ import com.hppystay.hotelreservation.hotel.dto.HotelDto;
 import com.hppystay.hotelreservation.hotel.dto.RoomDto;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.entity.Room;
-import com.hppystay.hotelreservation.hotel.entity.Like;
-import com.hppystay.hotelreservation.hotel.repository.LikeRepository;
+import com.hppystay.hotelreservation.hotel.entity.HotelLike;
+import com.hppystay.hotelreservation.hotel.repository.HotelLikeRepository;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
@@ -30,7 +30,7 @@ public class HotelService {
     private final HotelRepository hotelRepo;
     private final RoomRepository roomRepo;
     private final ReservationRepository reservationRepo;
-    private final LikeRepository likeRepo;
+    private final HotelLikeRepository hotelLikeRepo;
     private final AuthenticationFacade facade;
 
     @Transactional
@@ -184,15 +184,15 @@ public class HotelService {
         Hotel hotel = hotelRepo.findById(hotelId).orElseThrow(
                 () -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
 
-        if (!likeRepo.existsByMemberAndHotel(member, hotel)) {
+        if (!hotelLikeRepo.existsByMemberAndHotel(member, hotel)) {
             // 호텔의 like_count 증가
             hotel.setLike_count(hotel.getLike_count() + 1);
-            likeRepo.save(new Like(member, hotel));
+            hotelLikeRepo.save(new HotelLike(member, hotel));
 
         } else {
             // 좋아요가 있는 상태에서 한번 더 좋아요 하면 좋아요 취소
             hotel.setLike_count(hotel.getLike_count() - 1);
-            likeRepo.deleteByMemberAndHotel(member, hotel);
+            hotelLikeRepo.deleteByMemberAndHotel(member, hotel);
         }
     }
 
