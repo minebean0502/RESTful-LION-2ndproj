@@ -12,7 +12,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/toss")
+@RequestMapping("/api/toss")
 @RequiredArgsConstructor
 public class TossController {
     private final TossService service;
@@ -27,6 +27,14 @@ public class TossController {
         return service.confirmPayment(dto);
     }
 
+    // 양도받고, 양수자가 결제를 진행한 뒤, 양도자(A)의 환불을 진행하는 API
+    // B의 reservationId를 가지고 뭔가 할 수 있나?
+    @PostMapping("/payment/cancel-from-user")
+    public Object assignConfirm(
+            @RequestBody
+            TossPaymentCancelDto dto) {
+        return service.cancelPaymentBeforeUser(dto);
+    }
 
     // 임시로 Reservation Controller 사용
     @GetMapping("/reservations")

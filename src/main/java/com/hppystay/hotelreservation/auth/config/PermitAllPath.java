@@ -16,11 +16,10 @@ public class PermitAllPath {
             "/payments/**",
             "/reservations/**",
             "/reservation/**",
+            "/api/toss/**",
 
             // toss API 관련 (이하 삭제 금지)
             "/api/reservations/**",
-
-
 
             // 숙소
             "/hotel/create-view",
@@ -45,15 +44,16 @@ public class PermitAllPath {
             "/is-login",
             "/main",
             "/denied",
-
+            "/hotel/1/details",
+            "/hotel/**",
 
             // resources
             "/favicon.ico",
             "/static/**",
 
 
-
             // 리뷰
             "/api/{hotelId}/review/**",
+
     };
 }

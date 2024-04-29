@@ -2,10 +2,7 @@ package com.hppystay.hotelreservation.hotel.controller;
 
 import com.hppystay.hotelreservation.api.KNTO.dto.tourinfo.TourInfoApiDto;
 import com.hppystay.hotelreservation.api.service.ApiService;
-import com.hppystay.hotelreservation.hotel.dto.HotelDto;
-import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
-import com.hppystay.hotelreservation.hotel.dto.RoomDto;
-import com.hppystay.hotelreservation.hotel.dto.SearchDto;
+import com.hppystay.hotelreservation.hotel.dto.*;
 import com.hppystay.hotelreservation.hotel.service.HotelService;
 import com.hppystay.hotelreservation.hotel.service.ReservationService;
 import lombok.RequiredArgsConstructor;
@@ -34,14 +31,17 @@ public class HotelController {
         return apiService.callHotelByKeywordApi(keyword);
     }
 
-    @GetMapping("/location/{mapX}/{mapY}")
+    @GetMapping("/location/{id}/{pageNum}")
     public List<TourInfoApiDto> findSpotByLocation(
-            @PathVariable("mapX")
-            String mapX,
-            @PathVariable("mapY")
-            String mapY
+            @PathVariable("id")
+            Long id,
+            @PathVariable("pageNum")
+            int pageNum
     ) {
-        return apiService.callSpotByLocationApi(mapX, mapY);
+        HotelDto dto = hotelService.readOneHotel(id);
+        String mapX = dto.getMapX();
+        String mapY = dto.getMapY();
+        return apiService.callSpotByLocationApi(mapX, mapY, pageNum);
     }
 
     // 호텔 기능
@@ -110,8 +110,15 @@ public class HotelController {
         return reservationService.createReservation(dto);
     }
 
+    // 예약에 대해 조회
     @GetMapping("/reservation/my")
-    public List<ReservationDto> readAllMyReservation() {
+    public List<ReservationInfoDto> readAllMyReservation() {
         return reservationService.readAllMyReservation();
+    }
+
+    // 양도에 대해 조회
+    @GetMapping("/reservation/pending")
+    public List<ReservationInfoDto> readAllPendingReservation() {
+        return reservationService.readAllPendingReservation();
     }
 }

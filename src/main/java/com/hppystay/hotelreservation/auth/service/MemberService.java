@@ -260,24 +260,17 @@ public class MemberService implements UserDetailsService {
     // 비밀번호 변경 메서드
     @Transactional
     public ResponseEntity<String> changePassword(PasswordDto dto) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUser = authentication.getName();
-        log.info(currentUser);
+        Member member = facade.getCurrentMember();
 
-        Optional<Member> optionalMember = memberRepository.findMemberByEmail(currentUser);
-        if (optionalMember.isPresent()) {
-            Member member = optionalMember.get();
-
-            //비밀번호 일치 여부 확인
-            if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())) {
-                throw new GlobalException(GlobalErrorCode.PASSWORD_MISMATCH);
-            }
-
-            member.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-            memberRepository.save(member);
-            log.info(member.getEmail());
+        //비밀번호 일치 여부 확인
+        if (!passwordEncoder.matches(dto.getCurrentPassword(), member.getPassword())) {
+            throw new GlobalException(GlobalErrorCode.PASSWORD_MISMATCH);
         }
-        return ResponseEntity.ok("New password");
+
+        member.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        memberRepository.save(member);
+
+        return ResponseEntity.ok("{}");
     }
 
     public void uploadProfileImage(MultipartFile image) {
@@ -299,7 +292,12 @@ public class MemberService implements UserDetailsService {
         memberRepository.save(member);
     }
 
-    public void requestManagerRole() {
+    public MemberProfileDto getMyProfile() {
+        Member member = facade.getCurrentMember();
+        return MemberProfileDto.fromEntity(member);
+    }
+
+    public void requestManagerRole(String businessNumber) {
         Member member = facade.getCurrentMember();
 
         // 진행 중인 신청이 있을 경우 예외 처리
@@ -311,6 +309,7 @@ public class MemberService implements UserDetailsService {
         // 새로운 요청 생성
         ManagerRequest request = ManagerRequest.builder()
                 .member(member)
+                .businessNumber(businessNumber)
                 .status(ManagerRequestStatus.PENDING)
                 .build();
 

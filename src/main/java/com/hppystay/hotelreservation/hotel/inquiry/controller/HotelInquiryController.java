@@ -6,6 +6,7 @@ import com.hppystay.hotelreservation.hotel.inquiry.service.HotelInquiryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -33,19 +34,20 @@ public class HotelInquiryController {
      * 새로운 호텔 문의사항을 제출합니다.
      * 사용자가 제출한 문의사항은 데이터베이스에 저장됩니다.
      *
+     * @param hotelId 문의사항이 제출될 호텔의 고유 ID입니다. URL 경로를 통해 전달됩니다.
+     *                이 ID를 통해 문의사항이 특정 호텔에 연결됩니다.
      * @param userDetails 현재 로그인한 사용자의 정보
      * @param hotelInquiryDto 문의사항 내용을 담은 DTO
      * @return 성공 시 "Inquiry created successfully" 메시지와 함께 OK 응답을 반환
      */
-    @PostMapping("/submit")
+    @PostMapping("/submit/{hotelId}")
     public ResponseEntity<?> submitInquiry(
+            @PathVariable("hotelId") Integer hotelId,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody
             HotelInquiryDto hotelInquiryDto
     ) {
         String writerId = userDetails.getUsername();
-        //TODO hotelId 받아오기
-        Integer hotelId = 107;  // 임시로 정적 설정.
         hotelInquiryService.createInquiry(hotelInquiryDto, writerId, hotelId);
         return ResponseEntity.ok().body("Inquiry created successfully");
     }
@@ -100,6 +102,24 @@ public class HotelInquiryController {
     @GetMapping("/list")
     public ResponseEntity<Page<HotelInquiryDto>> listInquiries(Pageable pageable) {
         Page<HotelInquiryDto> inquiries = hotelInquiryService.getAllInquiries(pageable);
+        return ResponseEntity.ok(inquiries);
+    }
+
+    /**
+     * 특정 호텔 ID에 관한 문의사항을 페이지네이션하여 조회합니다.
+     * 최신 문의사항부터 표시되도록 생성 날짜 내림차순으로 정렬됩니다.
+     *
+     * @param hotelId 조회할 호텔의 ID
+     * @param pageable 페이지네이션 정보 (페이지 번호, 페이지 크기 등)
+     * @return 지정된 호텔에 대한 문의사항 목록을 담은 Page 객체
+     */
+
+    @GetMapping("/{hotelId}")
+    public ResponseEntity<Page<HotelInquiryDto>> getInquiriesByHotelId(
+            @PathVariable("hotelId") Integer hotelId,
+            @PageableDefault(size = 10 ) Pageable pageable
+    ) {
+        Page<HotelInquiryDto> inquiries = hotelInquiryService.getInquiriesByHotelId(hotelId, pageable);
         return ResponseEntity.ok(inquiries);
     }
 

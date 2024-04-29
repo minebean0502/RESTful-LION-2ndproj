@@ -74,4 +74,10 @@ public class HotelInquiryServiceImpl implements HotelInquiryService {
         }
     }
 
+    @Override
+    public Page<HotelInquiryDto> getInquiriesByHotelId(Integer hotelId, Pageable pageable) {
+        Page<HotelInquiry> inquiryPage = hotelInquiryRepository.findAllByHotelIdOrderByCreatedAtDesc(hotelId, pageable);
+        return inquiryPage.map(HotelInquiryMapper::toDto);
+    }
+
 }

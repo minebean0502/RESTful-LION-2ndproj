@@ -252,6 +252,16 @@
         color: #3c97bf;
         text-decoration: none;
     }
+
+    .verification-container {
+        display: flex;
+    }
+
+    .verification-container button {
+        margin: 5px;
+        padding: 0 0;
+        width: 100px;
+    }
 </style>
 <body>
 <!-- 비밀번호 찾기 컨테이너  -->
@@ -261,14 +271,18 @@
         <form>
             <h1>Email verification</h1>
             <span>use your email to verify</span><br>
-            <input type="email" placeholder="Email" id="emailInput"/><br>
-            <!-- 인증 코드 전송 버튼 -->
-            <button type="button" id="sendCodeButton">Send Code</button>
-
-            <input type="text" placeholder="Verification Code" id="verificationCodeInput"/><br>
-            <!-- verify 버튼 -->
-            <button type="button" id="verifyButton">Verify</button>
+            <div class="verification-container">
+                <input type="email" placeholder="Email" id="emailInput"/>
+                <!-- 인증 코드 전송 버튼 -->
+                <button type="button" id="sendCodeButton">Send Code</button>
+            </div>
+            <div class="verification-container">
+                <input type="text" placeholder="Verification Code" id="verificationCodeInput"/>
+                <!-- verify 버튼 -->
+                <button type="button" id="verifyButton">Verify</button>
+            </div>
             <a href="/login">wanna go to login?</a>
+
         </form>
     </div>
     <!-- 비밀번호 재설정 컨테이너 -->
@@ -311,34 +325,28 @@
     // 1. 인증 코드 보내기 버튼 이벤트 리스너
     sendCodeButton.addEventListener('click', () => {
         // 여기에 이메일로 인증 코드를 보내는 API 호출 코드를 추가하세요.
-        alert('Verification code sent to ' + emailInput.value);
         sendEmailCode();
     });
 
     // 2. 이메일로 인증 코드 전송하는 함수
-    function sendEmailCode() {
+    async function sendEmailCode() {
         const email = emailInput.value;
         // fetch를 이용해 이메일 인증 코드 전송 API 호출
-        fetch('api/auth/password/send-code', {
+        const response = await fetch('/api/auth/password/send-code', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: `email=${encodeURIComponent(email)}`
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                alert('Verification code sent to ' + email);
-                // 다른 처리가 필요하다면 여기에 코드를 추가하세요.
-            })
-            .catch(error => {
-                alert('Error sending verification code: ' + error.message);
-            });
+        });
+
+        if (response.ok) {
+            alert('이메일이 전송되었습니다.');
+        } else {
+            const data = await response.json();
+            console.log(data);
+            alert(data.message);
+        }
     }
 
     // 3. 인증 확인 버튼 이벤트 리스너
@@ -347,31 +355,27 @@
     });
 
     // 4. 인증 코드 검증 함수
-    function verifyEmailCode() {
+    async function verifyEmailCode() {
         const email = emailInput.value;
         const code = verificationCodeInput.value;
         // 1. fetch를 이용해 이메일 인증 코드 검증 API 호출
-        fetch('api/auth/email/verify', {
+        const response = await fetch('/api/auth/email/verify', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
             body: `email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok or verification failed.');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const container = document.getElementById('container');
-                container.classList.add('right-panel-active');
-            })
-            .catch(error => {
-                // 틀렸을 때의 메세지 // 나중에 메세지는 수정 필요
-                alert('Verification failed: ' + error.message);
-            });
+        });
+
+        if (response.ok) {
+            alert('인증이 완료되었습니다.');
+            const container = document.getElementById('container');
+            container.classList.add('right-panel-active');
+        } else {
+            const data = await response.json();
+            console.log(data);
+            alert(data.message);
+        }
     }
 
     // const resetPasswordButton = document.getElementById('resetPasswordButton');
@@ -381,40 +385,32 @@
     });
 
     // 6. 비밀번호 재설정 함수
-    function resetPassword() {
+    async function resetPassword() {
         const email = emailInput.value;
         const code = verificationCodeInput.value;
         const newPassword = newPasswordInput.value;
 
         // fetch를 이용해 비밀번호 재설정 API 호출
-        fetch('api/auth/password/reset', {
+        const response = await fetch('/api/auth/password/reset', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                email : email,
-                code : code,
-                newPassword : newPassword
+                email: email,
+                code: code,
+                newPassword: newPassword
             })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Password reset failed. Status code: ' + response.status);
-                }
-                return response.text();
-            })
-            .then(data => {
-                // 비밀번호 재설정 성공 후 로직
-                alert('Password has been reset successfully.: ' + data);
-                const container = document.getElementById('container');
-                container.classList.remove('right-panel-active');
-                window.location.href='/login';
-            })
-            .catch(error => {
-                // 비밀번호 재설정 실패 시 로직
-                alert('Error resetting password: ' + error);
-            });
+        });
+
+        if (response.ok) {
+            alert('비밀번호가 변경되었습니다.');
+            window.location.href = '/login';
+        } else {
+            const data = await response.json();
+            console.log(data);
+            alert(data.message);
+        }
     }
 
     // // 초기 상태 설정

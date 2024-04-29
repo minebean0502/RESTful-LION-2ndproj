@@ -79,6 +79,7 @@ public class MemberController {
     // 비밀번호 재발급
     @PostMapping("/password/reset")
     public ResponseEntity<String> resetPassword(
+            @Valid
             @RequestBody
             PasswordChangeRequestDto requestDto
     ) {
@@ -88,6 +89,7 @@ public class MemberController {
     // 비밀번호 변경
     @PutMapping("/password/change")
     public ResponseEntity<String> changePassword(
+            @Valid
             @RequestBody
             PasswordDto dto
     ) {
@@ -103,9 +105,17 @@ public class MemberController {
         return ResponseEntity.ok("{}");
     }
 
+    @GetMapping("/my-profile")
+    public MemberProfileDto getMyProfile() {
+        return memberService.getMyProfile();
+    }
+
     @PostMapping("/manager-requests")
-    public ResponseEntity<String> requestManagerRole() {
-        memberService.requestManagerRole();
+    public ResponseEntity<String> requestManagerRole(
+            @RequestParam("business-number")
+            String businessNumber
+    ) {
+        memberService.requestManagerRole(businessNumber);
         return ResponseEntity.ok("{}");
     }
 
