@@ -250,8 +250,9 @@
         }
     }
 
+    // 리뷰 목록 로딩 및 답글 버튼 추가
     async function fetchReviews() {
-        const response = await fetch(`/api/${hotelId}/review`);
+        const response = await fetch(`/api/${hotelId}/review/list`);
         if (response.ok) {
             const reviews = await response.json();
             const tableBody = document.getElementById('reviewsTable').getElementsByTagName('tbody')[0];
@@ -262,14 +263,43 @@
                 row.insertCell(0).textContent = review.nickname;
                 row.insertCell(1).textContent = review.content;
                 row.insertCell(2).textContent = review.score;
+                const replyCell = row.insertCell(3);
+                const replyButton = document.createElement('button');
+                replyButton.textContent = '답글 달기';
+                replyButton.onclick = () => replyToReview(review.id);
+                replyCell.appendChild(replyButton);
             });
         } else {
             console.error('리뷰 데이터를 불러오는데 실패했습니다.');
         }
     }
 
+    // 리뷰에 대한 답글 작성 함수
+    function replyToReview(reviewId) {
+        const replyContent = prompt('답글 내용을 입력하세요:');
+        if (replyContent) {
+            fetch(`/api/${hotelId}/review/${reviewId}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({content: replyContent})
+            })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('답글이 성공적으로 등록되었습니다.');
+                            fetchReviews(); // 리뷰 목록 새로 고침
+                        } else {
+                            alert('답글 등록에 실패했습니다.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('답글 등록에 실패했습니다:', error);
+                        alert('답글 등록에 실패했습니다.');
+                    });
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
-        fetchReviews(); // Initial fetch of the reviews when the page loads
+        fetchReviews(); // 페이지 로딩 시 리뷰 목록 로딩
     });
 </script>
 <script>
