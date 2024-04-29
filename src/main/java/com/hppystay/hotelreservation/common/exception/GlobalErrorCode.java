@@ -41,10 +41,12 @@ public enum GlobalErrorCode {
 
     // 호텔 관련 에러
     NOT_AUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "4001", "호텔 생성 권한이 없습니다."),
+    NOT_AUTHORIZED_MANAGER(HttpStatus.UNAUTHORIZED, "4001", "호텔 수정 권한이 없습니다"),
     HOTEL_ALREADY_CREATED(HttpStatus.CONFLICT,"4002", "이미 호텔 1개를 생성했습니다."),
     HOTEL_NOT_CREATED(HttpStatus.CONFLICT,"4002", "이미 호텔 1개를 생성했습니다."),
     HOTEL_NOT_FOUND(HttpStatus.NOT_FOUND, "4003", "일치하는 호텔이 없습니다."),
     HOTEL_ROOM_MISMATCH(HttpStatus.BAD_REQUEST,"4004", "요청하신 호텔과 방이 일치하지 않습니다."),
+
 
 
     // 좋아요 관련 에러
