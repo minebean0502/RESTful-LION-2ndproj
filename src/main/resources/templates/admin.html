@@ -3,133 +3,103 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>관리자 페이지</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
+  <title>Manager Role Requests</title>
   <style>
-      /* 테이블 스타일 */
+      body {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+          padding: 0;
+          background-color: #f4f4f4;
+      }
+
       table {
           width: 100%;
           border-collapse: collapse;
-          border-spacing: 0;
       }
 
-      /* 테이블 헤더 스타일 */
-      th {
-          background-color: #f2f2f2;
+      th, td {
+          border: 1px solid #ddd;
+          padding: 8px;
           text-align: left;
-          padding: 8px;
       }
 
-      /* 테이블 셀 스타일 */
-      td {
-          border-bottom: 1px solid #ddd;
-          padding: 8px;
+      th {
+          background-color: #4CAF50;
+          color: white;
       }
 
-      /* 짝수 행 배경색 */
       tr:nth-child(even) {
           background-color: #f2f2f2;
       }
 
-      /* 버튼 스타일 */
       button {
-          background-color: #4CAF50; /* 초록색 */
-          color: white;
-          padding: 6px 10px;
-          border: none;
-          border-radius: 3px;
           cursor: pointer;
-          margin-right: 5px;
-      }
-
-      /* 버튼 호버 스타일 */
-      button:hover {
-          background-color: #45a049; /* 진한 초록색 */
       }
   </style>
 </head>
 <body>
 <h1>관리자 페이지</h1>
-<table id="managerRequestsTable">
+<table id="requestsTable">
   <thead>
   <tr>
-    <th>닉네임</th>
-    <th>호텔</th>
-    <th>상태</th>
-    <th>작성 시간</th>
-    <th>승인/비승인</th>
+    <th>Index</th>
+    <th>Nickname</th>
+    <th>Email</th>
+    <th>Business Number</th>
+    <th>Status</th>
+    <th>Approve</th>
+    <th>Reject</th>
+
   </tr>
-  </thead>
+  </thead>점
   <tbody>
-  <!-- 여기에 관리자 요청 정보가 동적으로 추가될 것입니다. -->
+  <!-- Requests will be loaded here -->
   </tbody>
 </table>
 
 <script>
-    // 페이지가 로드될 때 실행되는 함수
-    window.onload = function() {
-        // 서버에서 모든 관리자 신청 정보를 가져와서 테이블에 표시하는 함수 호출
+    document.addEventListener('DOMContentLoaded', function() {
         fetchManagerRequests();
-    };
 
-    // 서버에서 모든 관리자 신청 정보를 가져와서 테이블에 표시하는 함수
-    function fetchManagerRequests() {
-        fetch('/api/manager-requests')
-            .then(response => {
-                // 응답을 JSON 형식으로 변환
-                return response.json();
-            })
-            .then(data => {
-                // 가져온 데이터를 displayManagerRequests 함수에 전달하여 테이블에 표시
-                displayManagerRequests(data);
-            })
-            .catch(error => {
-                // 오류가 발생한 경우 콘솔에 오류 메시지 출력
-                console.error('Error fetching manager requests:', error);
+        async function fetchManagerRequests() {
+            const response = await fetch('/api/auth/manager-requests/list');
+            const requests = await response.json();
+            const tableBody = document.getElementById('requestsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            requests.forEach(request => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = request.id;
+                row.insertCell(1).textContent = request.nickname;
+                row.insertCell(2).textContent = request.email;
+                row.insertCell(3).textContent = request.businessNumber;
+                row.insertCell(4).textContent = request.status;
+                const approveButton = row.insertCell(5).appendChild(document.createElement('button'));
+                approveButton.textContent = 'Approve';
+                approveButton.onclick = () => handleApproval(request.id);
+
+                const rejectButton = row.insertCell(6).appendChild(document.createElement('button'));
+                rejectButton.textContent = 'Reject';
+                rejectButton.onclick = () => handleRejection(request.id);
             });
-    }
+        }
 
-    // 관리자 신청 정보를 테이블에 표시하는 함수
-    function displayManagerRequests(requests) {
-        const tableBody = document.querySelector('#managerRequestsTable tbody');
+        async function handleApproval(requestId) {
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/approve`, { method: 'POST' });
+            if (response.ok) {
+                alert('Request Approved');
+                await fetchManagerRequests();
+            }
+        }
 
-        // 기존에 표시된 내용 삭제
-        tableBody.innerHTML = '';
-
-        // 각 관리자 신청 정보를 테이블에 추가
-        requests.forEach(request => {
-            const row = document.createElement('tr');
-
-            // 각 열에 데이터 추가
-            row.innerHTML = `
-                    <td>${request.nickname}</td>
-                    <td>${request.hotel}</td>
-                    <td>${request.status}</td>
-                    <td>${request.createdAt}</td>
-                    <td>
-                        <button onclick="approveRequest(${request.id})">승인</button>
-                        <button onclick="rejectRequest(${request.id})">비승인</button>
-                    </td>
-                `;
-
-            // 테이블에 행 추가
-            tableBody.appendChild(row);
-        });
-    }
-
-    // 관리자 요청을 승인하는 함수
-    function approveRequest(requestId) {
-        // 여기에 승인 요청을 서버로 보내는 코드 작성
-        console.log('Request approved:', requestId);
-    }
-
-    // 관리자 요청을 비승인하는 함수
-    function rejectRequest(requestId) {
-        // 여기에 비승인 요청을 서버로 보내는 코드 작성
-        console.log('Request rejected:', requestId);
-    }
+        async function handleRejection(requestId) {
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/reject`, { method: 'POST' });
+            if (response.ok) {
+                alert('Request Rejected');
+                await fetchManagerRequests();
+            }
+        }
+    });
 </script>
 </body>
 </html>

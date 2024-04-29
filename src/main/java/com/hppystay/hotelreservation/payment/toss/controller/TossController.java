@@ -63,13 +63,12 @@ public class TossController {
         return service.cancelPayment(id, dto);
     }
 
-    // TODO A가 B에게 양도를 시작합니다
     // B가 양도 승인 눌렀을 때
     // B는 결제를 시작합니다
     // 결제에 받을 정보는
 
-//    @PostMapping("/reservation/assign/confirm")
-//    public Object assignConfirm() {
-//        return
-//    }
+    @PostMapping("/reservation/assign/confirm")
+    public void assignConfirm() {
+        // return;
+    }
 }

@@ -297,7 +297,7 @@ public class MemberService implements UserDetailsService {
         return MemberProfileDto.fromEntity(member);
     }
 
-    public void requestManagerRole() {
+    public void requestManagerRole(String businessNumber) {
         Member member = facade.getCurrentMember();
 
         // 진행 중인 신청이 있을 경우 예외 처리
@@ -309,6 +309,7 @@ public class MemberService implements UserDetailsService {
         // 새로운 요청 생성
         ManagerRequest request = ManagerRequest.builder()
                 .member(member)
+                .businessNumber(businessNumber)
                 .status(ManagerRequestStatus.PENDING)
                 .build();
 
@@ -359,3 +360,4 @@ public class MemberService implements UserDetailsService {
                 .build();
     }
 }
+

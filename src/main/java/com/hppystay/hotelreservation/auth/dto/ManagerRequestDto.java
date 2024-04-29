@@ -14,12 +14,18 @@ import lombok.NoArgsConstructor;
 public class ManagerRequestDto {
     private Long id;
     private Long memberId;
+    private String nickname;
+    private String email;
+    private String businessNumber;
     private ManagerRequestStatus status;
 
     public static ManagerRequestDto fromEntity(ManagerRequest request) {
         return ManagerRequestDto.builder()
                 .id(request.getId())
                 .memberId(request.getMember().getId())
+                .nickname(request.getMember().getNickname())
+                .email(request.getMember().getEmail())
+                .businessNumber(request.getBusinessNumber())
                 .status(request.getStatus())
                 .build();
     }

@@ -37,13 +37,15 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
+    private String businessNumber;
+
     @OneToMany(mappedBy = "member")
     private List<Reservation> reservationList = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<Review> reviews= new ArrayList<>();
+    private List<Review> reviews = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(mappedBy = "manager")
     @Setter
     private Hotel hotel;
 

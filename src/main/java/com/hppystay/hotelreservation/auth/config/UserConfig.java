@@ -17,18 +17,21 @@ public class UserConfig {
     private final PasswordEncoder passwordEncoder;
     private final HotelRepository hotelRepository;
 
-    //관리자 생성
     @PostConstruct
-    public void createAdmin() {
-        if (memberRepository.count() == 0) {
-            memberRepository.save(Member.builder()
-                    .nickname("admin")
-                    .email("admin@gmail.com")
-                    .password(passwordEncoder.encode("1234"))
-                    .role(MemberRole.ROLE_ADMIN)
-                    .build());
-        }
+    public void createTestUsers() {
+
     }
+
+//    //관리자 생성
+//    @PostConstruct
+//    public void createAdmin() {
+//        memberRepository.save(Member.builder()
+//                .nickname("admin")
+//                .email("admin@gmail.com")
+//                .password(passwordEncoder.encode("1234"))
+//                .role(MemberRole.ROLE_ADMIN)
+//                .build());
+//    }
 
     // 채운 수정 04-25~
     //테스트용 계정 추가

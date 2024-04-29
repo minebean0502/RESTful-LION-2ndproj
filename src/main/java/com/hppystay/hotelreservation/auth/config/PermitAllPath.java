@@ -16,6 +16,7 @@ public class PermitAllPath {
             "/payments/**",
             "/reservations/**",
             "/reservation/**",
+            "/api/toss/**",
 
             // toss API 관련 (이하 삭제 금지)
             "/api/reservations/**",
@@ -43,7 +44,8 @@ public class PermitAllPath {
             "/is-login",
             "/main",
             "/denied",
-
+            "/hotel/1/details",
+            "/hotel/**",
 
             // resources
             "/favicon.ico",

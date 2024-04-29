@@ -179,8 +179,8 @@
     <div class="tabs">
         <button class="tab-link" onclick="openTab('userInfo')">프로필 정보</button>
         <button class="tab-link" onclick="openTab('changePassword')">비밀번호 변경</button>
-        <button class="tab-link" onclick="fetchReservations(); openTab('reservationStatus');">예약 현황</button>
-        <button class="tab-link" onclick="fetchReservations(); openTab('transferStatus');">양도 현황</button>
+        <button class="tab-link" onclick="openTab('reservationStatus');">예약 현황</button>
+        <button class="tab-link" onclick="openTab('transferStatus');">양도 현황</button>
     </div>
 
     <!-- 탭 내용 -->
@@ -334,7 +334,7 @@
         if (response.ok) {
             const reservations = await response.json();
             const reservationList = document.getElementById('reservationList');
-
+            console.log(reservations)
             reservations.forEach(reservation => {
                 // 예약 정보를 표시할 요소들을 생성합니다.
                 const reservationDiv = document.createElement('div');
@@ -344,7 +344,7 @@
                 hotelInfoDiv.classList.add('hotel-info');
 
                 const hotelPhoto = document.createElement('img');
-                hotelPhoto.src = `/static/${reservation.hotelImage}`;
+                hotelPhoto.src = `${reservation.hotelImage}`;
                 hotelPhoto.alt = 'hotel_image';
                 hotelPhoto.classList.add('hotel-photo');
 
@@ -364,7 +364,7 @@
                 checkoutDateP.innerHTML = `체크아웃 날짜: <span>${reservation.checkOut}</span>`;
 
                 const statusP = document.createElement('p');
-                statusP.innerHTML = '`상태: <span>${reservation.status}</span>`';
+                statusP.innerHTML = `상태: <span>${reservation.status}</span>`;
 
                 hotelDetailsDiv.appendChild(hotelNameP);
                 hotelDetailsDiv.appendChild(roomNameP);
@@ -385,7 +385,7 @@
                 const transferBtn = document.createElement('button');
                 transferBtn.textContent = '예약 양도';
                 transferBtn.onclick = function () {
-                    openTransferWindow(reservation.id);
+                    openTransferWindow(reservation.reservationId);
                 }
                 transferBtn.classList.add('transfer-btn');
 
@@ -437,7 +437,7 @@
                 checkoutDateP.innerHTML = `체크아웃 날짜: <span>${reservation.checkOut}</span>`;
 
                 const statusP = document.createElement('p');
-                statusP.innerHTML = '`상태: <span>${reservation.status}</span>`';
+                statusP.innerHTML = `상태: <span>${reservation.status}</span>`;
 
                 hotelDetailsDiv.appendChild(hotelNameP);
                 hotelDetailsDiv.appendChild(roomNameP);

@@ -1,6 +1,7 @@
 package com.hppystay.hotelreservation.payment.toss.service;
 
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
+import com.hppystay.hotelreservation.hotel.entity.ReservationStatus;
 import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
@@ -55,11 +56,13 @@ public class TossService {
                 .requestedAt(requestedAt)
                 .approvedAt(approvedAt)
                 .lastTransactionKey(lastTransactionKey)
+                .category("Toss")
                 .status("DONE")
                 .build());
 
         // 2. 그 뒤 reservation에 Payment id 추가하기
         reservation.setPayment(tossPayment);
+        reservation.setStatus(ReservationStatus.RESERVATION_COMPLETED);
         TossPaymentDto tossPaymentDto = TossPaymentDto.fromEntity(tossPayment);
 
         // 3. dto 반환
@@ -116,8 +119,6 @@ public class TossService {
         }
     }
 
+    // 이제 여기서부터 A->B 양도받았을 때 B 결제하고 B 결제 끝나면 A 환불하는 로직 만들것
 
-//    public Object assignConfirmPayment() {
-//
-//    }
 }
