@@ -31,14 +31,14 @@
           color: white;
       }
 
-      tr:nth-child(even) {
-          background-color: #f2f2f2;
-      }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
-      button {
-          cursor: pointer;
-      }
-  </style>
+        button {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <h3>관리자 페이지</h3>
@@ -53,16 +53,15 @@
     <th>상태</th>
     <th>승인</th>
     <th>거절</th>
-
   </tr>
   </thead>
-  <tbody>
-
-  </tbody>
+    <tbody>
+    <!-- Requests will be loaded here -->
+    </tbody>
 </table>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         fetchManagerRequests();
 
         async function fetchManagerRequests() {
@@ -93,18 +92,24 @@
         }
 
         async function handleApproval(requestId) {
-            const response = await fetch(`/api/auth/manager-requests/${requestId}/approve`, { method: 'POST' });
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/approve`, {method: 'POST'});
             if (response.ok) {
                 alert('Request Approved');
                 await fetchManagerRequests();
+            } else {
+                const data = await response.json();
+                alert(data.message);
             }
         }
 
         async function handleRejection(requestId) {
-            const response = await fetch(`/api/auth/manager-requests/${requestId}/reject`, { method: 'POST' });
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/reject`, {method: 'POST'});
             if (response.ok) {
                 alert('Request Rejected');
                 await fetchManagerRequests();
+            } else {
+                const data = await response.json();
+                alert(data.message);
             }
         }
     });
