@@ -20,7 +20,9 @@ public class Reservation  extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Setter
     private LocalDate checkIn;
+    @Setter
     private LocalDate checkOut;
 
     // 결제관련
