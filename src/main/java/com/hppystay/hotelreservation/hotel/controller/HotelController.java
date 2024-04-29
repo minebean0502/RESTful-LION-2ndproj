@@ -124,7 +124,7 @@ public class HotelController {
     }
 
     // 좋아요 기능
-    @PostMapping("{hotelId}")
+    @PostMapping("/{hotelId}/like")
     public ResponseEntity<String> toggleLike(
             @PathVariable("hotelId")
             Long hotelId

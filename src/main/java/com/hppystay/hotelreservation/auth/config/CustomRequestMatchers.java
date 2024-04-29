@@ -68,7 +68,7 @@ public class CustomRequestMatchers {
 
 
             // Like
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/likes/{hotelId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/{hotelId}/like"),
 
             // view
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page/**"),
@@ -141,7 +141,7 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/manager-requests"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/approve"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/reject"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/{reviewId}/delete"),
+
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/admin"),
 
             // Review

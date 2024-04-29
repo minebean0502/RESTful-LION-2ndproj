@@ -46,7 +46,6 @@ public class ReviewService {
         Review review = Review.customBuilder()
                 .hotel(hotel)
                 .member(member)
-                .hotel(hotel)
                 .content(dto.getContent())
                 .score(dto.getScore())
                 .depth(0)
@@ -82,7 +81,7 @@ public class ReviewService {
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.REVIEW_NOT_FOUND));
 
         // 호텔 관리자 혹은 시스템 관리자 인지
-        if (!member.getRole().equals(MemberRole.ROLE_ADMIN) || member.getRole().equals(MemberRole.ROLE_MANAGER)) {
+        if (!member.getRole().equals(MemberRole.ROLE_ADMIN) && !member.getId().equals(hotel.getManager().getId())) {
             throw new GlobalException(GlobalErrorCode.ROLE_UNAUTHORIZED);
         }
 
