@@ -61,7 +61,7 @@ public class ViewController {
 
     @GetMapping("/my-page/reservation/transfered")
     public String transferedAndDoPay() {
-        return "reservation/transfer/transferd-by-member";
+        return "reservation/transfer/transfered-by-member";
     }
 
     @GetMapping("/hotel/1/details")

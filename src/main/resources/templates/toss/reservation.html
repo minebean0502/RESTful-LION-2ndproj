@@ -126,10 +126,13 @@
                 <!-- 맨 밑에 paymentMethodsWidget.updateAmount( >> body.rooms[이부분].price << )-->
                 <!-- 저 부분이 업데이트가 되어야함 (room의 price를 바꾸게) -->
             `;
+            console.log(room.name)
+            console.log(body.title)
             roomsList.appendChild(roomElement);
         });
 
         document.getElementById('item-name').innerText = body.title;
+        console.log(body.title);
         document.getElementById('item-address').innerText = body.address;
         document.getElementById('item-description').innerText = body.description
 

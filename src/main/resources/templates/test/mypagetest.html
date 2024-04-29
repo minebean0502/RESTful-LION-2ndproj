@@ -588,7 +588,7 @@
     // TODO 논의할것 (reservationId, orderName)을 보내줘서 입력해야할지
     // TODO 아니면 어자피 api에서 reservationId만 받으면 orderName도 받아올 수 있으니 그걸로 할지
     function openTossPaymentWindow(reservationId, orderName) {
-        var url = '/my-page/reservation/transfered?' + reservationId + 'orderName?' + orderName;
+        var url = '/my-page/reservation/transfered?reservationId=' + reservationId + '&orderName=' + orderName;
         window.open(url, "payAssignmentWindow", 'width=600,height=800')
     }
 
