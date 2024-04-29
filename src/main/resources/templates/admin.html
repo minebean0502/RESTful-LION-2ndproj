@@ -1,64 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manager Role Requests</title>
-  <style>
-      body {
-          font-family: Arial, sans-serif;
-          margin: 20px;
-          padding: 0;
-          background-color: #f4f4f4;
-      }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager Role Requests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
 
-      table {
-          width: 100%;
-          border-collapse: collapse;
-      }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-      th, td {
-          border: 1px solid #ddd;
-          padding: 8px;
-          text-align: left;
-      }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-      th {
-          background-color: #4CAF50;
-          color: white;
-      }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
 
-      tr:nth-child(even) {
-          background-color: #f2f2f2;
-      }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
-      button {
-          cursor: pointer;
-      }
-  </style>
+        button {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <h1>관리자 페이지</h1>
 <table id="requestsTable">
-  <thead>
-  <tr>
-    <th>Index</th>
-    <th>Nickname</th>
-    <th>Email</th>
-    <th>Business Number</th>
-    <th>Status</th>
-    <th>Approve</th>
-    <th>Reject</th>
+    <thead>
+    <tr>
+        <th>Index</th>
+        <th>Nickname</th>
+        <th>Email</th>
+        <th>Business Number</th>
+        <th>Status</th>
+        <th>Approve</th>
+        <th>Reject</th>
 
-  </tr>
-  </thead>점
-  <tbody>
-  <!-- Requests will be loaded here -->
-  </tbody>
+    </tr>
+    </thead>
+    점
+    <tbody>
+    <!-- Requests will be loaded here -->
+    </tbody>
 </table>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         fetchManagerRequests();
 
         async function fetchManagerRequests() {
@@ -85,18 +86,24 @@
         }
 
         async function handleApproval(requestId) {
-            const response = await fetch(`/api/auth/manager-requests/${requestId}/approve`, { method: 'POST' });
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/approve`, {method: 'POST'});
             if (response.ok) {
                 alert('Request Approved');
                 await fetchManagerRequests();
+            } else {
+                const data = await response.json();
+                alert(data.message);
             }
         }
 
         async function handleRejection(requestId) {
-            const response = await fetch(`/api/auth/manager-requests/${requestId}/reject`, { method: 'POST' });
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/reject`, {method: 'POST'});
             if (response.ok) {
                 alert('Request Rejected');
                 await fetchManagerRequests();
+            } else {
+                const data = await response.json();
+                alert(data.message);
             }
         }
     });

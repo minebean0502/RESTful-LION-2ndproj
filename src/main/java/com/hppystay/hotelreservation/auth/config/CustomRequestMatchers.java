@@ -68,7 +68,7 @@ public class CustomRequestMatchers {
 
 
             // Like
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/likes/{hotelId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/{hotelId}/like"),
 
             // view
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page/**"),
