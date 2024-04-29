@@ -17,8 +17,14 @@ public class UserConfig {
     private final PasswordEncoder passwordEncoder;
     private final HotelRepository hotelRepository;
 
-    //관리자 생성
     @PostConstruct
+    public void createTestUsers() {
+        createAdmin();
+        createUser();
+        createManager();
+    }
+
+
     public void createAdmin() {
         memberRepository.save(Member.builder()
                 .nickname("admin")
@@ -31,7 +37,6 @@ public class UserConfig {
     // 채운 수정 04-25~
     //테스트용 계정 추가
     // 유저
-    @PostConstruct
     public void createUser() {
         for (int i = 1; i <= 10; i++) {
             memberRepository.save(Member.builder()
@@ -44,7 +49,6 @@ public class UserConfig {
     }
 
     // 매니저
-    @PostConstruct
     public void createManager() {
         for (int i = 11; i <= 20; i++) {
             memberRepository.save(Member.builder()

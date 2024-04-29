@@ -36,13 +36,16 @@ public enum GlobalErrorCode {
 
     // 리뷰 관련 에러
     HOTEL_MISMATCH(HttpStatus.BAD_REQUEST, "3001", "해당 호텔의 댓글이 아닙니다."),
-    HOTEL_NOT_FOUND(HttpStatus.NOT_FOUND, "3002", "일치하는 호텔이 없습니다."),
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "3003", "일치하는 리뷰가 없습니다."),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "3002", "일치하는 리뷰가 없습니다."),
 
 
-    // 호텔 생성 관련 에러
-    NOT_AUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "4001", "호텔생성 권한이 없습니다."),
-    ALREADY_MANAGER(HttpStatus.CONFLICT,"4002", "이미 호텔 1개를 생성했습니다."),
+    // 호텔 관련 에러
+    NOT_AUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "4001", "호텔 생성 권한이 없습니다."),
+    HOTEL_ALREADY_CREATED(HttpStatus.CONFLICT,"4002", "이미 호텔 1개를 생성했습니다."),
+    HOTEL_NOT_CREATED(HttpStatus.CONFLICT,"4002", "이미 호텔 1개를 생성했습니다."),
+    HOTEL_NOT_FOUND(HttpStatus.NOT_FOUND, "4003", "일치하는 호텔이 없습니다."),
+    HOTEL_ROOM_MISMATCH(HttpStatus.BAD_REQUEST,"4004", "요청하신 호텔과 방이 일치하지 않습니다."),
+
 
     // 좋아요 관련 에러
     ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "5001", "이미 좋아요를 생성했습니다.");

@@ -41,37 +41,37 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         fetch('/api/hotel/inquiries/list')
-            .then(response => response.json())
-            .then(data => {
-                const tableBody = document.querySelector('#inquiriesTable tbody');
-                data.content.forEach(inquiry => {
-                    const row = tableBody.insertRow();
-                    const titleCell = row.insertCell(0);
-                    const contentCell = row.insertCell(1);
-                    const writerIdCell = row.insertCell(2);
-                    const statusCell = row.insertCell(3)
-                    const createdAtCell = row.insertCell(4);
-                    const commentCell = row.insertCell(5);
-                    const commentCreatedAtCell = row.insertCell(6);
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('#inquiriesTable tbody');
+                    data.content.forEach(inquiry => {
+                        const row = tableBody.insertRow();
+                        const titleCell = row.insertCell(0);
+                        const contentCell = row.insertCell(1);
+                        const writerIdCell = row.insertCell(2);
+                        const statusCell = row.insertCell(3)
+                        const createdAtCell = row.insertCell(4);
+                        const commentCell = row.insertCell(5);
+                        const commentCreatedAtCell = row.insertCell(6);
 
-                    titleCell.textContent = inquiry.title;
-                    contentCell.textContent = inquiry.content;
-                    writerIdCell.textContent = inquiry.writerId;
-                    statusCell.textContent = inquiry.status;
-                    createdAtCell.textContent = new Date(inquiry.createdAt).toLocaleDateString();
+                        titleCell.textContent = inquiry.title;
+                        contentCell.textContent = inquiry.content;
+                        writerIdCell.textContent = inquiry.writerId;
+                        statusCell.textContent = inquiry.status;
+                        createdAtCell.textContent = new Date(inquiry.createdAt).toLocaleDateString();
 
-                    if (inquiry.comment) {
-                        statusCell.textContent = '답변완료';
-                        commentCell.textContent = inquiry.comment.comment;
-                        commentCreatedAtCell.textContent = new Date(inquiry.comment.createdAt).toLocaleString();
-                    } else {
-                        statusCell.textContent = '미답변';
-                        commentCell.textContent = 'No comment';
-                        commentCreatedAtCell.textContent = 'No Date';
-                    }
-                });
-            })
-            .catch(error => console.error('Error:', error));
+                        if (inquiry.comment) {
+                            statusCell.textContent = '답변완료';
+                            commentCell.textContent = inquiry.comment.comment;
+                            commentCreatedAtCell.textContent = new Date(inquiry.comment.createdAt).toLocaleString();
+                        } else {
+                            statusCell.textContent = '미답변';
+                            commentCell.textContent = 'No comment';
+                            commentCreatedAtCell.textContent = 'No Date';
+                        }
+                    });
+                })
+                .catch(error => console.error('Error:', error));
     });
 </script>
 </body>

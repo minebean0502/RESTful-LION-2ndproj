@@ -99,6 +99,8 @@ spring:
 
 toss:
   secret: ${TOSS_SECRET}
+  client: ${TOSS_CLIENT_KEY}
+
 
 #kakaoPay:
 #  secret: ${KAKAO_PAY_SECRET}

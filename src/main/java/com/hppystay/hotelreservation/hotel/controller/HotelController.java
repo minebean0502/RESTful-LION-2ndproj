@@ -6,6 +6,7 @@ import com.hppystay.hotelreservation.hotel.dto.*;
 import com.hppystay.hotelreservation.hotel.service.HotelService;
 import com.hppystay.hotelreservation.hotel.service.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -110,8 +111,25 @@ public class HotelController {
         return reservationService.createReservation(dto);
     }
 
+    // 예약에 대해 조회
     @GetMapping("/reservation/my")
     public List<ReservationInfoDto> readAllMyReservation() {
         return reservationService.readAllMyReservation();
+    }
+
+    // 양도에 대해 조회
+    @GetMapping("/reservation/pending")
+    public List<ReservationInfoDto> readAllPendingReservation() {
+        return reservationService.readAllPendingReservation();
+    }
+
+    // 좋아요 기능
+    @PostMapping("/{hotelId}/like")
+    public ResponseEntity<String> toggleLike(
+            @PathVariable("hotelId")
+            Long hotelId
+    ) {
+        hotelService.toggleLike(hotelId);
+        return ResponseEntity.ok("{}");
     }
 }

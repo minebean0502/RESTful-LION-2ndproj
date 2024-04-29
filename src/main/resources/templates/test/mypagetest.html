@@ -29,11 +29,11 @@
             overflow: hidden;
             border-bottom: 1px solid #ccc;
             margin-bottom: 20px;
+            display: flex; /* 탭을 가로로 배열하기 위해 flex 사용 */
         }
 
         .tab-link {
             background-color: #f2f2f2;
-            float: left;
             border: none;
             outline: none;
             cursor: pointer;
@@ -119,6 +119,10 @@
             flex: 1;
         }
 
+        /* 탭 우측에 버튼을 배치하기 위한 스타일 */
+        .tablink:last-child {
+            margin-left: auto; /* 나머지 공간을 모두 차지하도록 설정 */
+        }
         /* 예약 현황 CSS */
         .reservation {
             display: flex;
@@ -168,7 +172,6 @@
         .transfer-btn:hover {
             background-color: #0056b3;
         }
-
     </style>
 </head>
 <body>
@@ -177,10 +180,12 @@
 
     <!-- 탭 -->
     <div class="tabs">
-        <button class="tab-link" onclick="openTab('userInfo')">프로필 정보</button>
-        <button class="tab-link" onclick="openTab('changePassword')">비밀번호 변경</button>
-        <button class="tab-link" onclick="fetchReservations(); openTab('reservationStatus');">예약 현황</button>
-        <button class="tab-link" onclick="fetchReservations(); openTab('transferStatus');">양도 현황</button>
+        <button class="tablink" onclick="openTab('UserInfo')">프로필 정보</button>
+        <button class="tablink" onclick="openTab('ChangePassword')">비밀번호 변경</button>
+        <button class="tablink" onclick="openTab('ReservationStatus')">예약 현황</button>
+          <button class="tab-link" onclick="openTab('transferStatus');">양도 현황</button>
+        <!-- 관리자 전환 버튼 onclick 내부 수정 필요-->
+        <button class="tablink" onclick="">호텔 관리자 전환 신청</button>
     </div>
 
     <!-- 탭 내용 -->
@@ -334,7 +339,7 @@
         if (response.ok) {
             const reservations = await response.json();
             const reservationList = document.getElementById('reservationList');
-
+            console.log(reservations)
             reservations.forEach(reservation => {
                 // 예약 정보를 표시할 요소들을 생성합니다.
                 const reservationDiv = document.createElement('div');
@@ -344,7 +349,8 @@
                 hotelInfoDiv.classList.add('hotel-info');
 
                 const hotelPhoto = document.createElement('img');
-                hotelPhoto.src = `/static/${reservation.hotelImage}`;
+                hotelPhoto.src = `${reservation.hotelImage}`;
+                console.log(hotelPhoto.src);
                 hotelPhoto.alt = 'hotel_image';
                 hotelPhoto.classList.add('hotel-photo');
 
@@ -364,7 +370,7 @@
                 checkoutDateP.innerHTML = `체크아웃 날짜: <span>${reservation.checkOut}</span>`;
 
                 const statusP = document.createElement('p');
-                statusP.innerHTML = '`상태: <span>${reservation.status}</span>`';
+                statusP.innerHTML = `상태: <span>${reservation.status}</span>`;
 
                 hotelDetailsDiv.appendChild(hotelNameP);
                 hotelDetailsDiv.appendChild(roomNameP);
@@ -385,7 +391,7 @@
                 const transferBtn = document.createElement('button');
                 transferBtn.textContent = '예약 양도';
                 transferBtn.onclick = function () {
-                    openTransferWindow(reservation.id);
+                    openTransferWindow(reservation.reservationId);
                 }
                 transferBtn.classList.add('transfer-btn');
 
@@ -403,21 +409,117 @@
         }
     }
 
-    async function fetchTransfer() {
+    // 채운 시작
+    // 양도 정보들 가져오는 함수
+    async function fetchAssignments() {
+        // 이걸로 B의 reservation 정보들을 찾음
+        const response = await fetch('/api/hotel/reservation/pending');
+        if (response.ok) {
+            // 반환값은 /api/hotel/reservation/my와 동일하며, status가 Assignment_payment_pending인 것만 가져옴
+            // B의 reservation 정보들을 다 가져옴
+            const reservation_pendings = await response.json();
+            const pending_list = document.getElementById('transferList')
+            console.log(reservation_pendings)
+            reservation_pendings.forEach(reservation_pending => {
+                // [1]예약을 담을 전체 컨테이너 (body)
+                const assignmentDiv = document.createElement('section');
+                assignmentDiv.classList.add('assign-reservation');
+                // [1-A] hotel의 정보를 담을 컨테이너
+                const hotelInfoDiv = document.createElement('div');
+                hotelInfoDiv.classList.add('hotel-info');
+                // 호텔의 사진을 담을 컨테이너
+                const hotelPhoto = document.createElement('img');
+                hotelPhoto.src = `${reservation_pending.hotelImage}`
+                hotelPhoto.alt = `hotel_image`;
+                hotelPhoto.classList.add('hotel-photo');
+
+                // [1-B] rooms 부모 컨테이너
+                const hotelDetailsDiv = document.createElement('div')
+                hotelDetailsDiv.classList.add('hotel-details')
+
+                // 이 뒤로 각각 (a)호텔 이름, (b)방 이름, (c)체크인 날짜, (d)체크아웃 날짜, (e)결제 상태
+                const hotelNameP = document.createElement('p');
+                hotelNameP.innerHTML = `호텔명: <span>${reservation_pending.hotelName}</span>`;
+                const roomNameP = document.createElement('p');
+                roomNameP.innerHTML = `룸 이름: <span>${reservation_pending.roomName}</span>`;
+                const checkinDateP = document.createElement('p');
+                checkinDateP.innerHTML = `체크인 날짜: <span>${reservation_pending.checkIn}</span>`;
+                const checkoutDateP = document.createElement('p');
+                checkoutDateP.innerHTML = `체크아웃 날짜: <span>${reservation_pending.checkOut}</span>`;
+                const statusP = document.createElement('p');
+                statusP.innerHTML = `상태: <span>${reservation_pending.status}</span>`;
+
+                // [1-B]에 (a)~(e) 담음
+                hotelDetailsDiv.appendChild(hotelNameP);
+                hotelDetailsDiv.appendChild(roomNameP);
+                hotelDetailsDiv.appendChild(checkinDateP);
+                hotelDetailsDiv.appendChild(checkoutDateP);
+                hotelDetailsDiv.appendChild(statusP);
+
+                // [1-A]에 호텔 사진 정보와 [1-B]담음
+                hotelInfoDiv.appendChild(hotelPhoto);
+                hotelInfoDiv.appendChild(hotelDetailsDiv);
+
+                // 양도 수락, 양도 거절 버튼
+                const assignmentActionsDiv = document.createElement('div');
+                assignmentActionsDiv.classList.add('assignment-actions');
+
+                // 수락 버튼
+                const acceptBtn = document.createElement('button');
+                acceptBtn.textContent = '양도 수락';
+                acceptBtn.onclick = function () {
+                    // 양도 수락시 실행할 function
+                    // 새 창을 열고, TOSS 위젯이 나오면 거기에서 결제 진행
+
+                    // 여기에 어떤 정보들을 전달해줘야할까?
+                    // 예약 Id 정보와, 해당 방의 이름 정보가 필요함
+                    // 새 창에 B의 reservationId와, room의 이름을 담아 열음
+                    openTossPaymentWindow(reservation_pending.reservationId, reservation_pending.roomName);
+                    // 결제가 끝나고 나면, A의 환불을 진행하고, 결제 상태 또한 바꿔줘야함
+                    // 결제 끝난 뒤에, 해당 창에서 A의 환불도 진행되었고, A의 reservation도 바뀌어졌고
+                    // B의 결제상태 및 예약 상태도 업데이트 했음
+                }
+                acceptBtn.classList.add('accept-btn');
+
+                // 거절 버튼
+                const denyBtn = document.createElement('button');
+                denyBtn.textContent = '양도 거절';
+                denyBtn.onclick = function () {
+                    // 양도 거절시 실행할 function
+                    // 바로 B의 예약 정보를 삭제하고, A의 status 바꿔줘야함
+                    // TODO 이거 월요일날 진행합시다 너무 졸림 (02:23)
+                }
+                acceptBtn.classList.add('deny-btn');
+
+                assignmentActionsDiv.appendChild(acceptBtn);
+                assignmentActionsDiv.appendChild(denyBtn);
+
+                assignmentDiv.appendChild(hotelInfoDiv);
+                assignmentDiv.appendChild(assignmentActionsDiv);
+
+                pending_list.appendChild(assignmentDiv);
+            })
+        } else {
+            console.log('양도 정보들을 가져오는데 실패했습니다.');
+        }
+    }
+
+    // 이 부분은 남겨놓긴 했습니다
+    async function fetchTransfer1234567890() {
         const response = await fetch('/api/hotel/reservation/transfer/pending');
         if (response.ok) {
             const transfers = await response.json();
             const transferList = document.getElementById('transferList');
-
-            transfers.forEach(reservation => {
-                const reservationDiv = document.createElement('div');
-                reservationDiv.classList.add('reservation');
+            console.log(transfers);
+            transfers.forEach(transfer => {
+                const transferDiv = document.createElement('div');
+                transferDiv.classList.add('reservation');
 
                 const hotelInfoDiv = document.createElement('div');
                 hotelInfoDiv.classList.add('hotel-info');
 
                 const hotelPhoto = document.createElement('img');
-                hotelPhoto.src = `/static/${reservation.hotelImage}`;
+                hotelPhoto.src = `${transfer.hotelImage}`;
                 hotelPhoto.alt = 'hotel_image';
                 hotelPhoto.classList.add('hotel-photo');
 
@@ -425,19 +527,19 @@
                 hotelDetailsDiv.classList.add('hotel-details');
 
                 const hotelNameP = document.createElement('p');
-                hotelNameP.innerHTML = `호텔명: <span>${reservation.hotelName}</span>`;
+                hotelNameP.innerHTML = `호텔명: <span>${transfer.hotelName}</span>`;
 
                 const roomNameP = document.createElement('p');
-                roomNameP.innerHTML = `룸 이름: <span>${reservation.roomName}</span>`;
+                roomNameP.innerHTML = `룸 이름: <span>${transfer.roomName}</span>`;
 
                 const checkinDateP = document.createElement('p');
-                checkinDateP.innerHTML = `체크인 날짜: <span>${reservation.checkIn}</span>`;
+                checkinDateP.innerHTML = `체크인 날짜: <span>${transfer.checkIn}</span>`;
 
                 const checkoutDateP = document.createElement('p');
-                checkoutDateP.innerHTML = `체크아웃 날짜: <span>${reservation.checkOut}</span>`;
+                checkoutDateP.innerHTML = `체크아웃 날짜: <span>${transfer.checkOut}</span>`;
 
                 const statusP = document.createElement('p');
-                statusP.innerHTML = '`상태: <span>${reservation.status}</span>`';
+                statusP.innerHTML = `상태: <span>${transfer.status}</span>`;
 
                 hotelDetailsDiv.appendChild(hotelNameP);
                 hotelDetailsDiv.appendChild(roomNameP);
@@ -448,19 +550,22 @@
                 hotelInfoDiv.appendChild(hotelPhoto);
                 hotelInfoDiv.appendChild(hotelDetailsDiv);
 
-                const reservationActionsDiv = document.createElement('div');
-                reservationActionsDiv.classList.add('reservation-actions');
+                const transferActionsDiv = document.createElement('div');
+                transferActionsDiv.classList.add('reservation-actions');
 
                 const transferBtn = document.createElement('button');
                 transferBtn.textContent = '양도 받기';
+                transferBtn.classList.add('transfer-btn');
                 transferBtn.onclick = function () {
+                    openTransferWindow()
                     //결제 기능
                 }
-                transferBtn.classList.add('transfer-btn');
 
-                reservationActionsDiv.appendChild(transferBtn);
-                reservationDiv.appendChild(reservationActionsDiv);
-                transferList.appendChild(reservationDiv);
+                transferActionsDiv.appendChild(transferBtn);
+
+                transferDiv.appendChild(hotelInfoDiv);
+                transferDiv.appendChild(transferActionsDiv);
+                transferList.appendChild(transferDiv);
             });
         } else {
             console.log('양도 정보를 가져오는 데 실패했습니다.');
@@ -470,13 +575,21 @@
     function initialize() {
         fetchMyProfile();
         fetchReservations(); // 예약 정보 가져오기
-        fetchTransfer();
+        fetchAssignments();
         openTab('userInfo');
     }
 
     function openTransferWindow(reservationId) {
         var url = '/my-page/reservation/transfer?grantorReservationId=' + reservationId;
         window.open(url, 'TransferWindow', 'width=600,height=800');
+    }
+
+    // 사실 reservationId만 받아와줘도 되기는 함
+    // TODO 논의할것 (reservationId, orderName)을 보내줘서 입력해야할지
+    // TODO 아니면 어자피 api에서 reservationId만 받으면 orderName도 받아올 수 있으니 그걸로 할지
+    function openTossPaymentWindow(reservationId, orderName) {
+        var url = '/my-page/reservation/transfered?reservationId=' + reservationId + '&orderName=' + orderName;
+        window.open(url, "payAssignmentWindow", 'width=600,height=800')
     }
 
     initialize();
