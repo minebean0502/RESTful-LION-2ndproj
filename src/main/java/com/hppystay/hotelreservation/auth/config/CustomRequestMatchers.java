@@ -38,9 +38,12 @@ public class CustomRequestMatchers {
             //임의 추가
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/37/details/m"),
 
-            // Review
+//            // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/list"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
 
     };
@@ -79,8 +82,8 @@ public class CustomRequestMatchers {
 //            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/admin"),
 
            // Review
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/list"),
+//            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
+//            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/list"),
 
 
     };
@@ -92,7 +95,6 @@ public class CustomRequestMatchers {
 
             // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
-
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
@@ -146,9 +148,9 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/admin"),
 
             // Review
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
+//            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
+//            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
+//            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
 
     };
