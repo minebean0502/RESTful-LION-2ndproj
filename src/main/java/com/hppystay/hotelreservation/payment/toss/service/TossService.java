@@ -37,26 +37,25 @@ public class TossService {
 
     @Transactional
     public Object confirmPayment(TossPaymentConfirmDto dto) {
+        Member member = facade.getCurrentMember();
         // 1. Object 형태로 DTO를 받습니다.
         Object tossPaymentObj = tossService.confirmPayment(dto);
+        log.info("정보를 확인합시다");
         log.info(tossPaymentObj.toString());
-
         // orderName은 memberId - roomId 의 형태로 이뤄집니다
         String orderNameInfo = ((LinkedHashMap<String, Object>) tossPaymentObj).get("orderName").toString();
-        Long reservationId = Long.parseLong(orderNameInfo.split("-")[0]);
+        // Long reservationId = Long.parseLong(orderNameInfo.split("-")[0]);
         String requestedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("requestedAt").toString();
         String approvedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("approvedAt").toString();
         String lastTransactionKey = ((LinkedHashMap<String, Object>) tossPaymentObj).get("lastTransactionKey").toString();
 
-        // 해당 PK로 Reservation 정보 추출 (Temp라서 나중에 로직상 사라질 부분입니다)
-        // --------------------------------------------------------------------------- //
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR));
-        // --------------------------------------------------------------------------- //
-        // 1. 일단 tosspayment에 저장정보 생성
+
+        Reservation reservation = reservationRepository.findByMember(member);
+        log.info("현재 진행하는 reservation의 id는: " + reservation.getId());
+
         TossPayment tossPayment = tossPaymentRepository.save(TossPayment.builder()
                 .reservation(reservation)
-                .reservationId(reservationId)
+                .reservationId(reservation.getId())
                 .tossPaymentKey(dto.getPaymentKey())
                 .tossOrderId(dto.getOrderId())
                 .totalAmount(dto.getAmount())
@@ -138,16 +137,20 @@ public class TossService {
         Assignment assignment = assignmentRepository.findByToMember(toMember)
                 .orElseThrow(() -> new RuntimeException("assignment가 없습니다"));
 
-        // 여기서 A의 정보를 추출함
-        Member fromUser = assignment.getFromMember();
-
         // 그리고 여기서부터 취소할 A의 주문을 찾고 갱신하고 취소를 진행해야함
-        TossPayment tossPayment = tossPaymentRepository.findById(fromUser.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        TossPayment fromMemberTossPayment = tossPaymentRepository.findById(assignment.getReservation().getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "이전 사용자의 정보를 찾을 수 없어요"));
+        Reservation reservation = reservationRepository.findById(assignment.getReservation().getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "<1>reservation 못찾았음"));
         // A의 주문 정보를 갱신함
-        if (!tossPayment.getStatus().equals("CANCEL")) {
-            tossPayment.setStatus("CANCEL");
-            return tossService.cancelPayment(tossPayment.getTossPaymentKey(), dto);
+        log.info("현재 A의 tossPayment의 status는 어떤가요");
+        log.info(fromMemberTossPayment.getStatus());
+        if (!fromMemberTossPayment.getStatus().equals("CANCEL")) {
+            fromMemberTossPayment.setStatus("CANCEL");
+            reservation.setStatus(ReservationStatus.ASSIGNMENT_COMPLETED);
+            log.info("A의 상태가 어떻게 바뀌었나요");
+            log.info(fromMemberTossPayment.getStatus());
+            return tossService.cancelPayment(fromMemberTossPayment.getTossPaymentKey(), dto);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "주문 정보를 갱신/취소 할 수 없었음");
     }
 }

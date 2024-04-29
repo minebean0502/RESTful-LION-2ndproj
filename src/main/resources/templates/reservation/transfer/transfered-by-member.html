@@ -33,11 +33,11 @@
     // url에서 params 정보들 받아와야함 [1] B의 reservationId, [2]orderName(방이름)
     const urlParams = new URLSearchParams(window.location.search);
     // [1] reservationId는 >> /transfered? + reservationId << 에서 추출해야함
-    const reservationId = urlParams.get('transfered');
-    console.log('reservationId는' + reservationId);
+    const reservationId = urlParams.get('reservationId');
+    console.log('reservationId는 ' + reservationId);
     // [2] orderName (방 이름)도 추출해줌
     const roomName = urlParams.get('orderName');
-    console.log('orderName은' + orderName);
+    console.log('orderName은 ' + roomName);
 
     const clientKey = "test_ck_Gv6LjeKD8aX1eR5boGBBrwYxAdXy"; // 이것도 보안 설정하고싶은데, 작은 윈도우라 모르겠음
     // 위젯 기본 세팅
@@ -66,7 +66,7 @@
                 orderId: crypto.randomUUID().replaceAll('-', ''),
                 orderName: roomName,
             }).then(async data => {
-                const response = await fetch('/toss/confirm-payment', {
+                const response = await fetch('/api/toss/confirm-payment', {
                     method: 'post',
                     headers: {
                         'Content-Type' : 'application/json',
@@ -127,16 +127,21 @@
     // 먼저 reservationId를 바탕으로 관련된 정보를 불러오는 부분
     // assignmentDto에서 정보들을 이것 저것 가져올 수 있음 (from, to, reservationId)
     fetch(`/api/hotel/reservation/transfer/assignment?reservationId=${reservationId}`)
-        .then(response => {
+        .then(async response => {
             if (!response.ok) {
-                console.log('양도 데이터를 정상적으로 받아오지 못했습니다')
-                console.log('reservationId: ' + reservationId)
-                alert('데이터 받아오지 못함')
+                console.log('양도 데이터를 정상적으로 받아오지 못했습니다');
+                console.log('reservationId: ' + reservationId);
+                alert('데이터 받아오지 못함');
             } else {
-                console.log('데이터 잘 받아왔음')
-                const body = response.json();
-                paymentMethodsWidget.updateAmount(body.price)
-            }
+                response.json().then(body => {
+                    console.log('데이터 잘 받아왔음');
+                    console.log('Price: ' + body.price);
+                    paymentMethodsWidget.updateAmount(body.price);
+                })
+            };
+        })
+        .catch(error => {
+            console.log('데이터에 파싱하는데 문제 생겼습니다', error);
         })
 </script>
 </html>
