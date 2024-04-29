@@ -22,7 +22,7 @@ public class UserConfig {
 
     }
 
-    //관리자 생성
+//    //관리자 생성
     @PostConstruct
     public void createAdmin() {
         memberRepository.save(Member.builder()

@@ -96,5 +96,14 @@ public class ViewController {
 
     @GetMapping("/hotel/inquiries/submit")
     public String submitInquiry() { return "inquiries/submitInquiry"; }
-}
 
+    //임시
+    @GetMapping("/hotel/37/details/m")
+    public String hotelDetailsm() {
+        return "temphtml/hotelDetails-m1";
+    }
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
+    }
+}
