@@ -5,10 +5,10 @@ import com.hppystay.hotelreservation.hotel.entity.Assignment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
-    // toUser(B)로 assignment의 정보를 찾는 부분
-    Assignment findByToUser(Member toUser);
+    // toMember(B)로 assignment의 정보를 찾는 부분
+    Optional<Assignment> findByToMember(Member toMember);
 }

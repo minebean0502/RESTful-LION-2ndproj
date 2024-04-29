@@ -133,9 +133,10 @@ public class TossService {
         // 취소하기 위한 정보들은 A의 tosspayment 정보
         // 따라서 assignment 에 접근해야함 (접근하려면, a의 memberId, b의 memberId, a의 reservationId인데)
         // 가능한건 b의 memberId를 이용해서 접근 가능
-        Member toUser = facade.getCurrentMember();
+        Member toMember = facade.getCurrentMember();
         // 현재 멤버를 조회했으니 이를 사용해서 assignment에 접근해야함
-        Assignment assignment = (Assignment) assignmentRepository.findByToUser(toUser);
+        Assignment assignment = assignmentRepository.findByToMember(toMember)
+                .orElseThrow(() -> new RuntimeException("assignment가 없습니다"));
 
         // 여기서 A의 정보를 추출함
         Member fromUser = assignment.getFromMember();
