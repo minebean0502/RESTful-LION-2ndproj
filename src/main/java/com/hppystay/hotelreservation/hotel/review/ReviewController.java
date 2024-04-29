@@ -1,7 +1,11 @@
 package com.hppystay.hotelreservation.hotel.review;
 
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/api/{hotelId}/review")
@@ -32,6 +36,17 @@ public class ReviewController {
     ) {
         return reviewService.replyReview(hotelId, reviewId, dto);
     }
+
+
+    // 리뷰 리스트
+    @GetMapping("/list")
+    public List<ReviewDto> readAllReviews(
+            @PathVariable("hotelId")
+            Long hotelId
+    ) {
+        return reviewService.readAllReviews(hotelId);
+    }
+
 
     // 리뷰 수정
     @PutMapping("{reviewId}/update")

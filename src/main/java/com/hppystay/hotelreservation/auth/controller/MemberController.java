@@ -119,7 +119,7 @@ public class MemberController {
         return ResponseEntity.ok("{}");
     }
 
-    @GetMapping("/manager-requests")
+    @GetMapping("/manager-requests/list")
     public List<ManagerRequestDto> readAllManagerRequests() {
         return memberService.readAllManagerRequests();
     }
@@ -142,4 +142,3 @@ public class MemberController {
         return ResponseEntity.ok("{}");
     }
 }
-

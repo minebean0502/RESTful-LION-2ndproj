@@ -12,6 +12,10 @@ import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,8 +44,8 @@ public class ReviewService {
         //TODO: 리뷰를 작성하려는 고객이 해당 호텔에서 구매 기록이 없는 경우 로직 추가?
 
         Review review = Review.customBuilder()
-                .member(member)
                 .hotel(hotel)
+                .member(member)
                 .content(dto.getContent())
                 .score(dto.getScore())
                 .depth(0)
@@ -77,7 +81,7 @@ public class ReviewService {
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.REVIEW_NOT_FOUND));
 
         // 호텔 관리자 혹은 시스템 관리자 인지
-        if (!member.getRole().equals(MemberRole.ROLE_ADMIN) || member.getRole().equals(MemberRole.ROLE_MANAGER)) {
+        if (!member.getRole().equals(MemberRole.ROLE_ADMIN) && !member.getId().equals(hotel.getManager().getId())) {
             throw new GlobalException(GlobalErrorCode.ROLE_UNAUTHORIZED);
         }
 
@@ -91,6 +95,15 @@ public class ReviewService {
                 .build();
 
         return ReviewDto.fromEntity(reviewRepository.save(replyReview));
+    }
+
+    //리뷰 리스트
+    public List<ReviewDto> readAllReviews (
+            Long hotelId
+    ) {
+        return reviewRepository.findAllByHotelId(hotelId).stream()
+                .map(ReviewDto::fromEntity)
+                .toList();
     }
 
     // 리뷰 수정 - 리뷰 작성한 본인 혹은 시스템 관리자만 가능

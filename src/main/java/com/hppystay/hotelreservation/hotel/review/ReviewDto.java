@@ -18,6 +18,8 @@ public class ReviewDto {
     private Long id;
     private Long memberId;
     private Long hotelId;
+    private String nickname;
+    private String email;
     private Integer depth;
     private String content;
     private double score; // 리뷰 점수
@@ -30,8 +32,10 @@ public class ReviewDto {
 
         return new ReviewDto(
                 entity.getId(),
-                entity.getHotel().getId(),
                 entity.getMember().getId(),
+                entity.getHotel().getId(),
+                entity.getMember().getNickname(),
+                entity.getMember().getEmail(),
                 entity.getDepth(),
                 entity.getContent(),
                 entity.getScore(),
