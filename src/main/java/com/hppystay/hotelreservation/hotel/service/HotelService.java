@@ -82,7 +82,21 @@ public class HotelService {
         Hotel hotel = hotelRepo.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
 
-        return HotelDto.fromEntity(hotelRepo.save(hotel));
+        return HotelDto.fromEntity(hotel);
+    }
+
+    public HotelDto readOneHotelReservationPossible(Long id, LocalDate checkIn, LocalDate checkOut) {
+        Hotel hotel = hotelRepo.findById(id)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
+        List<Long> unavailableRoomIds = reservationRepo.findUnavailableRoomIds(checkIn, checkOut);
+
+        HotelDto dto = HotelDto.fromEntity(hotel);
+        dto.setRooms(hotel.getRooms().stream()
+                .filter(room -> !unavailableRoomIds.contains(room.getId()))
+                .map(RoomDto::fromEntity)
+                .toList());
+
+        return dto;
     }
 
     // 예약 가능한 호텔과 방 조회
