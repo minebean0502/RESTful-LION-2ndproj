@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Font Awesome 추가 -->
     <style>
         #inquiries table {
             border-collapse: collapse;
@@ -41,11 +42,11 @@
             border-bottom: 1px solid #ccc;
         }
         #inquiries .board-table th {
-            text-align: center;
+            text-align: left;
         }
         #inquiries .board-table .th-num {
             width: 100px;
-            text-align: center;
+            text-align: left;
         }
         #inquiries .board-table .th-date {
             width: 200px;
@@ -55,7 +56,7 @@
         }
         #inquiries .board-table tbody td {
             border-top: 1px solid #e7e7e7;
-            text-align: center;
+            text-align: left;
         }
         #inquiries .board-table tbody th {
             padding-left: 28px;
@@ -82,10 +83,55 @@
             color: #fff;
         }
 
+        #inquiries .btn-reply {
+            display: inline-block;
+            padding: 0 10px;
+            font-size: 10px;
+            font-weight: 300;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
         #inquiries .btn-dark:hover, .btn-dark:focus {
             background: #373737;
             border-color: #373737;
             color: #fff;
+        }
+
+        #inquiries .reply-input, .btn-reply {
+            height: 40px; /* 높이 설정 */
+            line-height: 40px; /* 세로 중앙 정렬을 위해 line-height도 맞춤 */
+            vertical-align: middle;
+            margin-top: 10px;
+        }
+
+        #inquiries .reply-input {
+            width: 80%;
+        }
+
+        #inquiries .pagination-btn {
+            padding: 5px 5px;
+            font-size: 16px;
+            color: #333;
+            background-color: transparent;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        #inquiries .pagination-btn:hover {
+            color: #fff;
+            background-color: #555;
+            border-color: #555;
+        }
+
+        #inquiries .pagination-btn:disabled {
+            color: #ccc;
+            background-color: #f8f8f8;
+            cursor: not-allowed;
+            border-color: #eee;
         }
 
         .hidden-content {
@@ -94,11 +140,7 @@
             padding: 10px;
             font-size: 12px;
         }
-        .divider {
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border-top: 1px dashed #ccc;
-        }
+
         /* reset */
         * {
             list-style: none;
@@ -110,6 +152,15 @@
         .container {
             width: 1100px;
             margin: 0 auto;
+        }
+        .icon-button {
+            color: #555;
+            cursor: pointer;
+            padding: 5px;
+            font-size:10px;
+        }
+        .action-icons {
+            margin-left: 10px;
         }
     </style>
 </head>
@@ -155,6 +206,7 @@
                         <tr>
                             <th scope="col" class="th-num">답변상태</th>
                             <th scope="col" class="th-title">제목</th>
+                            <th scope="col" class="th-author">작성자</th>
                             <th scope="col" class="th-date">등록일</th>
                         </tr>
                     </thead>
@@ -165,34 +217,27 @@
             </div>
         </div>
 
-        <!-- pagenation-->
+        <!-- pagination area-->
         <div id="pagination">
-            <button onclick="previousPage()">이전</button>
-            <span id="currentPage">1</span> / <span id="totalPages">?</span>
-            <button onclick="nextPage()">다음</button>
         </div>
 
     </section>
 </main>
 </body>
 <script>
-
-    let currentPage = 0; // 문의사항 현재 페이지 초기값
-    let totalPages = 0; //문의사항 전체 페이지 수
-    async function fetchInquiries(pageNumber = 1) {
+    let currentPage = 0; // Initialize current page state
+    async function fetchInquiries(page = 0, size = 10) {
+        currentPage = page;
         const urlParams = new URLSearchParams(window.location.search);
         //const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
         const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
-        const response = await fetch(`/api/hotel/inquiries/${hotelId}?page=${pageNumber - 1}`);
-        //console.log(response.json()); // 로그 추가
+        const response = await fetch(`/api/hotel/inquiries/${hotelId}?page=${page}&size=${size}`);
 
         if (response.ok) {
             const inquiries = await response.json();
-            totalPages = inquiries.totalPages; // 전체 페이지 수 업데이트
-            currentPage = inquiries.number;
-
-            document.getElementById('currentPage').textContent = currentPage + 1;
-            document.getElementById('totalPages').textContent = totalPages;
+            console.log("API Response:", inquiries);
+            updatePaginationControls(inquiries);
+            updateTable(inquiries);
 
             const inquiriesTableBody = document.querySelector('#inquiries tbody');
             inquiriesTableBody.innerHTML = ''; // 이전 데이터 삭제
@@ -201,47 +246,201 @@
                 const row = inquiriesTableBody.insertRow();
                 const statusCell = row.insertCell(0);
                 const titleCell = row.insertCell(1);
-                const createdAtCell = row.insertCell(2);
-                const detailRow = inquiriesTableBody.insertRow();
-                detailRow.className = 'hidden-content';
-                const detailCell = detailRow.insertCell();
-                detailCell.colSpan = 3;
-                //detailCell.textContent = inquiries.content;
-
-                // 내용과 답변을 detailCell에 표시
-                detailCell.innerHTML = `${inquiries.content}<br/>`;
-                if (inquiries.comment) {
-                    detailCell.innerHTML += `<div class='divider'></div>${inquiries.comment.comment}`;
-                }
+                const authorCell = row.insertCell(2)
+                const createdAtCell = row.insertCell(3);
 
                 statusCell.textContent = inquiries.comment ? '답변완료' : '미답변';
                 titleCell.textContent = inquiries.title;
                 titleCell.style.cursor = 'pointer'; // Make it look clickable
+                authorCell.textContent = inquiries.writer;
                 createdAtCell.textContent = new Date(inquiries.createdAt).toLocaleString();
 
                 titleCell.addEventListener('click', function() {
-                    // Toggle the display of the hidden content
-                    detailRow.style.display = detailRow.style.display === 'table-row' ? 'none' : 'table-row';
+                    const input = document.getElementById('reply-' + inquiries.id);
+                    const button = input.nextElementSibling;
+                    if (detailRow.style.display === 'none') {
+                        detailRow.style.display = 'table-row';
+                        detailCommentRow.style.display = 'table-row';
+                        input.style.display = 'inline-block';
+                        button.style.display = 'inline-block';
+                    } else {
+                        detailRow.style.display = 'none';
+                        detailCommentRow.style.display = 'none';
+                        input.style.display = 'none';
+                        button.style.display = 'none';
+                    }
                 });
+
+                const detailRow = inquiriesTableBody.insertRow();
+                detailRow.className = 'hidden-content';
+                const detailStatusCell = detailRow.insertCell(0);
+                const detailCell = detailRow.insertCell(1);
+                const detailAuthorCell = detailRow.insertCell(2);
+                const detailDateCell = detailRow.insertCell(3);
+                detailCell.innerHTML = `<div class='action-icons'>${inquiries.content}&nbsp;&nbsp;&nbsp;&nbsp;|
+                                            <i class='fas fa-edit icon-button' onclick='openUpdateForm(${inquiries.id})'></i>
+                                            <i class='fas fa-trash icon-button' onclick='deleteInquiry(${inquiries.id})'></i>
+                                        </div>`;
+
+
+                const detailCommentRow = inquiriesTableBody.insertRow();
+                detailCommentRow.className = 'hidden-content';
+                const detailCommentStatusCell = detailCommentRow.insertCell(0);
+                const detailCommentCell = detailCommentRow.insertCell(1);
+                const detailCommentAuthorCell = detailCommentRow.insertCell(2);
+                const detailCommentDateCell = detailCommentRow.insertCell(3);
+
+
+                if (inquiries.comment) {
+                    detailCommentAuthorCell.textContent = inquiries.comment.writer;
+                    detailCommentDateCell.textContent = new Date(inquiries.comment.createdAt).toLocaleString();
+                    detailCommentCell.innerHTML += `<div class='action-icons'>└ ${inquiries.comment.comment}&nbsp;&nbsp;&nbsp;&nbsp;|
+                                                        <i class='fas fa-edit icon-button' onclick='showEditDiv(${inquiries.comment.id})'></i>
+                                                        <i class='fas fa-trash icon-button' onclick='deleteComment(${inquiries.comment.id})'></i>
+                                                    </div>
+                                                    <div style='display: none;' id='edit-${inquiries.comment.id}'>
+                                                        <input type='text' id='comment-${inquiries.comment.id}' placeholder='Type your reply here...' class='reply-input' style='margin-top: 10px; width: 80%;'>
+                                                        <button onclick='updateReply(${inquiries.comment.id})' class='btn-dark btn-reply' style='margin-left: 10px;'>답변 수정</button>
+                                                    </div>
+                                                    `;
+                    detailCell.innerHTML += `<div style='display: none;'>
+                                                <input type='text' id='reply-${inquiries.id}' placeholder='답변을 입력하세요.' class='reply-input'>
+                                                <button onclick='submitReply(${inquiries.id})' class='btn-dark btn-reply' style='margin-left: 10px;'>답변 등록</button>
+                                            </div>`;
+                } else {
+                    detailCell.innerHTML += `<div style='display: flex;'>
+                                                <input type='text' id='reply-${inquiries.id}' placeholder='답변을 입력하세요.' class='reply-input'>
+                                                <button onclick='submitReply(${inquiries.id})' class='btn-dark btn-reply' style='margin-left: 10px;'>답변 등록</button>
+                                            </div>`;
+                }
+
             })
         }
     }
 
     function openSubmitForm() {
-        window.open('/hotel/inquiries/submit', 'SubmitForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
+        const urlParams = new URLSearchParams(window.location.search);
+        //const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
+        const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
+        window.open(`/hotel/inquiries/submit/${hotelId}`, 'SubmitForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
     }
 
-    function nextPage() {
-        console.log(`Current Page: ${currentPage}, Total Pages: ${totalPages}`);
-        if (currentPage < totalPages -1 ) {
-            fetchInquiries(currentPage + 1);
+    function openUpdateForm(id) {
+        window.open(`/hotel/inquiries/update/${id}`, 'UpdateForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
+    }
+
+    async function deleteInquiry(inquiryId) {
+        const confirmed = confirm("삭제하시겠습니까?");
+        if (confirmed) {
+            const response = await fetch(`/api/hotel/inquiries/delete/${inquiryId}`, {
+                method: 'POST'
+            });
+            if (response.ok) {
+                alert("문의를 성공적으로 삭제하였습니다.");
+                await fetchInquiries(); // Reload inquiries to reflect the change
+            } else {
+                alert("문의 삭제에 실패하였습니다.");
+            }
         }
     }
 
-    function previousPage() {
-        if (currentPage > 0) {  // 이전 페이지 존재 여부 확인
-            fetchInquiries(currentPage - 1); // 이전 페이지 데이터 요청
+    async function submitReply(inquiryId) {
+        const replyText = document.getElementById('reply-' + inquiryId).value;
+        if (replyText.trim() === '') {
+            alert('Please type a reply.');
+            return;
         }
+        // Assuming you have an endpoint to handle POST requests for replies
+        const response = await fetch(`/api/hotel/inquiries/comments/submit`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inquiryId:inquiryId, comment: replyText }),
+        });
+
+        if (response.ok) {
+            alert('답변이 정상적으로 등록되었습니다.');
+            document.getElementById('reply-' + inquiryId).value = ''; // Clear input field
+            location.reload();
+        } else {
+            alert('답변 등록에 실패하였습니다.');
+        }
+    }
+
+    function showEditDiv(commentId) {
+        const editDiv = document.getElementById(`edit-${commentId}`);
+        editDiv.style.display = 'flex'; // 이 부분을 'flex'로 설정하여 보이게 합니다.
+    }
+
+    async function updateReply(commentId) {
+        console.log(commentId);
+        const replyInput = document.getElementById(`comment-${commentId}`);
+        const commentContent = replyInput.value.trim();
+
+        // 입력 필드가 비어있지 않은지 확인
+        if (commentContent === '') {
+            alert('답변 내용을 입력해주세요.');
+            return;
+        }
+
+        const response = await fetch('/api/hotel/inquiries/comments/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: commentId, comment: commentContent })
+        });
+
+        if (response.ok) {
+            alert('답변이 성공적으로 수정되었습니다.');
+            location.reload(); // 페이지를 새로고침하여 수정 사항 반영
+        } else {
+            throw new Error('답변 수정에 실패했습니다.');
+        }
+
+    }
+
+    async function deleteComment(commentId) {
+        const confirmed = confirm("답변을 삭제하시겠습니까?");
+        if (confirmed) {
+            const response = await fetch(`/api/hotel/inquiries/comments/delete/${commentId}`, {
+                method: 'POST'
+            });
+            if (response.ok) {
+                alert("답변이 성공적으로 삭제되었습니다..");
+                await fetchInquiries(); // Reload inquiries to reflect the change
+            } else {
+                alert("답변 삭제에 실패하였습니다.");
+            }
+        }
+    }
+
+
+    function updatePaginationControls(inquiries) {
+        const paginationArea = document.querySelector("#pagination");
+        if (inquiries) {
+            const { totalPages } = inquiries;
+            const pageNumber = inquiries.pageable.pageNumber;  // 'pageNumber' 사용
+
+            // 페이지네이션 버튼 동적 생성 및 이벤트 핸들러 할당
+            paginationArea.innerHTML = `
+            <button class="pagination-btn" onclick="fetchInquiries(${pageNumber - 1}, 10)" ${pageNumber === 0 ? 'disabled' : ''}><</button>
+            <span id="totalPages">${pageNumber + 1} / ${totalPages}</span>
+            <button class="pagination-btn" onclick="fetchInquiries(${pageNumber + 1}, 10)" ${pageNumber >= totalPages - 1 ? 'disabled' : ''}>></button>
+        `;
+        } else {
+            paginationArea.innerHTML = "<span>페이지 정보를 사용할 수 없습니다.</span>";  // 잘못되거나 누락된 페이지네이션 데이터 처리
+            console.error("Pagination data is missing or incorrect");
+        }
+    }
+
+    function updateTable(inquiries) {
+        const inquiriesTableBody = document.querySelector('#inquiries tbody');
+        inquiriesTableBody.innerHTML = ''; // Clear existing entries
+        inquiries.content.forEach(inquiry => {
+            // Append new rows to the table as done previously
+        });
     }
 
     function initialize() {

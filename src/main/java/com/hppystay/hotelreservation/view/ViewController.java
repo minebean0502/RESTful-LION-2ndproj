@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Slf4j
 @Controller
@@ -83,12 +84,16 @@ public class ViewController {
 
 
     //임시로 만듦
-    @GetMapping("/hotel/1/details/somin")
+    @GetMapping("/hotel/inquiries/list")
     public String hotelDetailsSomin() {
         return "temphtml/hotelDetails-somin";
     }
 
-    @GetMapping("/hotel/inquiries/submit")
+    @GetMapping("/hotel/inquiries/submit/{hotelId}")
     public String submitInquiry() { return "inquiries/submitInquiry"; }
+
+    @GetMapping("/hotel/inquiries/update/{id}")
+    public String updateInquiry() { return "inquiries/submitInquiry"; }
+
 }
 

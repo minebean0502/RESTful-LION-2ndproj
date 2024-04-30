@@ -14,6 +14,7 @@ public class CommentMapper {
                 .id(comment.getId())
                 .comment(comment.getComment())
                 .writerId(comment.getWriterId())
+                .writer(comment.getWriter())
                 .inquiryId(comment.getHotelInquiry() != null ? comment.getHotelInquiry().getId() : null)
                 .createdAt(comment.getCreatedAt())
                 .build();
@@ -25,9 +26,10 @@ public class CommentMapper {
         }
 
         Comment comment = new Comment();
-        comment.setId(commentDto.getId());
+        //comment.setId(commentDto.getId());
         comment.setComment(commentDto.getComment());
         comment.setWriterId(commentDto.getWriterId());
+        comment.setWriter(commentDto.getWriter());
         return comment;
     }
 }

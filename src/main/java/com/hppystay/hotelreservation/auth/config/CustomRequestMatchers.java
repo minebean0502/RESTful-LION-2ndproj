@@ -21,7 +21,7 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/{id}"),
 
             // 호텔 문의
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/list"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/inquiries/list"), //hotel 상세 페이지가 생기고 나면 없앨 것.
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/{hotelId}"),
 
 
@@ -52,12 +52,16 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/pending"),
 
             // 호텔 문의
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/submit/{hotelId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/update/{hotelId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/delete/{hotelId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/submit/{inquiryId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/update/{inquiryId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/delete/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/inquiries/submit/{hotelId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/submit"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/inquiries/update/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/update/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/update"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/delete/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/submit"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/comments/update/{commentId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/update"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/delete/{commentId}"),
 
 
             // Like
