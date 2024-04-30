@@ -7,6 +7,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.time.LocalDate;
 
 
 @Slf4j
@@ -53,7 +56,18 @@ public class ViewController {
     }
 
     @GetMapping("/hotel/search")
-    public String hotelSearch() {
+    public String hotelSearch(
+            @RequestParam("keyword")
+            String keyword,
+            @RequestParam("checkIn")
+            LocalDate checkIn,
+            @RequestParam("checkOut")
+            LocalDate checkOut,
+            Model model
+    ) {
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
         return "hotelSearch/hotel-list-search";
     }
 
