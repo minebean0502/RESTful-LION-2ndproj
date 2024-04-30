@@ -486,26 +486,26 @@
     // 주변 관광지 fetch
     let pageNum = 1;
 
-    function loadTourInfo() {
+     function loadTourInfo() {
         fetch(`/api/hotel/location/${mapX}/${mapY}/${pageNum}`)
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(tour => {
-                        // const tourList = document.getElementById('tourList');
-                        const tourList = document.querySelector('.horizontal-scroll');
-                        const li = document.createElement('li');
-                        li.className = 'tour-item';
-                        li.innerHTML = `
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(tour => {
+                    // const tourList = document.getElementById('tourList');
+                    const tourList = document.querySelector('.horizontal-scroll');
+                    const li = document.createElement('li');
+                    li.className = 'tour-item';
+                    li.innerHTML = `
                             <img src="${tour.firstImage}" alt="Image of ${tour.title}">
                             <h3>${tour.title}</h3>
                             <p>${tour.address}</p>
                         `;
-                        tourList.appendChild(li);
-                    });
-                    pageNum++;  // 다음 페이지 번호 증가
+                    tourList.appendChild(li);
+                });
+                pageNum++;  // 다음 페이지 번호 증가
 
-                })
-                .catch(error => console.error('주변 관광지를 불러올 수 없습니다.:', error));
+            })
+            .catch(error => console.error('주변 관광지를 불러올 수 없습니다.:', error));
     }
 
     function updateScrollWidth(container) {
