@@ -39,7 +39,9 @@
     const roomName = urlParams.get('orderName');
     console.log('orderName은 ' + roomName);
 
-    const clientKey = "test_ck_Gv6LjeKD8aX1eR5boGBBrwYxAdXy"; // 이것도 보안 설정하고싶은데, 작은 윈도우라 모르겠음
+    // const clientKey = "test_ck_Gv6LjeKD8aX1eR5boGBBrwYxAdXy"; // 이것도 보안 설정하고싶은데, 작은 윈도우라 모르겠음
+    // clientKey 변경 되었음... docs 키로 변경 (기존키 사용 불가능)
+    const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
     // 위젯 기본 세팅
     const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS)
     const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
@@ -49,12 +51,12 @@
             currency: 'KRW',
             country: 'KR'
         },
-        { variantKey: 'widgetA' }
+        { variantKey: 'DEFAULT' }
     )
     // 규약 세팅
     const paymentAgreement = paymentWidget.renderAgreement(
         '#agreement',
-        { variantKey: 'AGREEMENT' }
+        { variantKey: 'DEFAULT' }
     )
     // 여기에 어떤 버튼 누르면 활성화 시킬지 생성
     const paymentRequestButton = document.getElementById('payment-request-button');
