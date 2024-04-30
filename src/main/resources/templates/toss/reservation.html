@@ -45,13 +45,14 @@
 <script>
     // [순서1 : 처음에 위젯 전처리 및 세팅] -> 그 뒤 데이터 정보 받아옴 [순서2로]
     // const clientKey = document.querySelector('meta[name="toss-client-key"]').getAttribute('content');
-    const clientKey = 'test_ck_Gv6LjeKD8abL6vGlDnb43wYxAdXy'
+    const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
+    console.log(clientKey)
     // 사실 hotelId도 타고 올 때 결정되기는 하는데
     // 일단은 1번 hotel이라 가정해서 hotelId를 설정
     const hotelId = 1;
 
     // 여기부터 건들건 없음
-    const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS)
+    const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS);
     const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
         '#payment-method',
         {
@@ -59,11 +60,11 @@
             currency: 'KRW',
             country: 'KR'
         },
-        { variantKey: 'widgetA' }
+        { variantKey: 'DEFAULT' }
     )
     const paymentAgreement = paymentWidget.renderAgreement(
         '#agreement',
-        { variantKey: 'AGREEMENT' }
+        { variantKey: 'DEFAULT' }
     )
 
     // [순서4] 업데이트된 정보를 가지고 토스 로직 실행
