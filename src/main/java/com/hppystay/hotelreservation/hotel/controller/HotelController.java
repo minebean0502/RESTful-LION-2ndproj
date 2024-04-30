@@ -32,16 +32,15 @@ public class HotelController {
         return apiService.callHotelByKeywordApi(keyword);
     }
 
-    @GetMapping("/location/{id}/{pageNum}")
+    @GetMapping("/location/{mapX}/{mapY}/{pageNum}")
     public List<TourInfoApiDto> findSpotByLocation(
-            @PathVariable("id")
-            Long id,
+            @PathVariable("mapX")
+            String mapX,
+            @PathVariable("mapY")
+            String mapY,
             @PathVariable("pageNum")
             int pageNum
     ) {
-        HotelDto dto = hotelService.readOneHotel(id);
-        String mapX = dto.getMapX();
-        String mapY = dto.getMapY();
         return apiService.callSpotByLocationApi(mapX, mapY, pageNum);
     }
 

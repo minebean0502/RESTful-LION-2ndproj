@@ -10,5 +10,5 @@ import java.time.LocalDate;
 public class SearchDto {
     private String keyword;
     private LocalDate checkIn;          // `YYYY-MM-DD` = 2024-05-01
-    private LocalDate checkOut;
+    private LocalDate checkOut;         // `YYYY-MM-DD` = 2024-05-01
 }

@@ -16,7 +16,7 @@ public class CustomRequestMatchers {
             // Hotel
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/areaCode/{area}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/keyword/{keyword}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/location/{mapX}{mapY}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/location/{mapX}/{mapY}/{pageNum}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/update-view/{id}"),
