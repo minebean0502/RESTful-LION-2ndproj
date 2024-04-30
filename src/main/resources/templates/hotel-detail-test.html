@@ -7,6 +7,8 @@
     <!-- 이모티콘 사용 -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script type="text/javascript"
+            th:src="@{https://oapi.map.naver.com/openapi/v3/maps.js(ncpClientId=${clientId})}"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,7 +25,30 @@
             height: auto;
         }
 
+        .tour-info-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: auto;
+            overflow: hidden; /* 컨테이너에서 벗어나는 내용을 숨김 */
+        }
+
         .hotel-info, .room-info, .location-info, .review-info, .contact-info {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            max-width: 700px;
+            width: 100%;
+            /* 간격을 좁힘 */
+            margin-bottom: 20px;
+        }
+
+        .tour-info {
+            overflow: hidden; /* 가로 스크롤 부분에서 벗어나는 내용을 숨김 */
             background-color: #fff;
             padding: 30px;
             border-radius: 15px;
@@ -78,6 +103,62 @@
         /* 호텔과 방 사이의 간격 */
         .space {
             margin-bottom: 20px;
+        }
+
+        /* 주변 관광지 */
+        .horizontal-scroll {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow: auto;
+            overflow-x: scroll;
+            margin-left: -30px; /* 첫 번째 요소의 왼쪽 여백 조정 */
+            padding-left: 30px; /* 스크롤 영역의 시작 부분에 패딩 추가 */
+            padding-right: 30px;
+            white-space: nowrap;
+            width: 80%;
+        }
+
+        .tour-item {
+            flex: 0 0 auto;
+            display: inline-block;
+            width: 200px; /* 너비 조정 가능 */
+            height: auto;
+            margin-right: 15px;
+            vertical-align: top;
+            background: #f4f4f4; /* 배경 색상 */
+            border-radius: 8px; /* 모서리 둥글게 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+        }
+
+        .tour-item img {
+            width: 100%; /* 이미지 너비 */
+            height: 100px; /* 이미지 높이 조정 */
+            object-fit: cover; /* 이미지 비율 유지 */
+        }
+
+        .tour-item h3, .tour-item p {
+            padding: 8px 12px; /* 내부 여백 */
+            margin: 0; /* 외부 여백 제거 */
+        }
+
+        .tour-item h3 {
+            font-size: 18px; /* 제목 글자 크기 */
+            color: #333; /* 제목 글자 색상 */
+        }
+
+        .tour-item p {
+            font-size: 15px; /* 내용 글자 크기 */
+            color: #666; /* 내용 글자 색상 */
+        }
+
+        .load-more {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px; /* 버튼 상단 여백 */
+            align-self: center;  /* 버튼을 자신의 영역 중앙에 위치 */
         }
 
         .form-group {
@@ -138,38 +219,46 @@
             padding: 8px;
             margin-bottom: 5px;
         }
+
         button {
             padding: 10px 20px;
             cursor: pointer;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         th, td {
             padding: 8px;
             border: 1px solid #ccc;
             text-align: left;
         }
+
         .star-rating {
             display: flex;
             flex-direction: row-reverse;
             justify-content: flex-end;
         }
+
         .star-rating input {
             display: none;
         }
+
         .star-rating label {
             font-size: 30px;
             padding: 5px;
             color: #ccc;
             cursor: pointer;
         }
+
         .star-rating input:checked ~ label,
         .star-rating label:hover,
         .star-rating label:hover ~ label {
             color: #f90;
         }
+
         .stars-inner {
             font-size: 20px;
             color: #f90;
@@ -212,6 +301,8 @@
             <h2>방</h2>
             <ul id="roomList">
 
+                <!-- 방 정보가 들어갈 곳 -->
+
             </ul>
         </div>
     </div>
@@ -224,6 +315,22 @@
 <div class="container">
     <div class="location-info">
         <h2>위치 정보</h2>
+    </div>
+</div>
+
+<!-- 간격 추가 -->
+<div class="space"></div>
+
+<!-- 주변 여행지 -->
+<div class="tour-info-container">
+    <div class="tour-info">
+        <div class="tour-details">
+            <h2>주변 여행지</h2>
+            <ul id="tourList" class="horizontal-scroll">
+                <!-- 관광지 정보가 들어갈 곳 -->
+            </ul>
+            <button id="loadMore" class="load-more">더 보기 &raquo;</button>
+        </div>
     </div>
 </div>
 
@@ -290,16 +397,28 @@
 <!--</div>-->
 
 <script>
-    let hotelId = [[${hotelId}]];
+    const hotelId = [[${hotelId}]];
+    const checkIn = `[[${checkIn}]]`;
+    const checkOut = `[[${checkOut}]]`;
+
+    let mapX;
+    let mapY;
 
     async function fetchHotelInfo() {
-        const response = await fetch(`/api/hotel/${hotelId}`);
+        const url = encodeURI(`/api/hotel/search/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}`)
+        const response = await fetch(url);
         const data = await response.json();
         if (response.ok) {
             document.getElementById('hotelName').innerText = data.title;
             document.getElementById('hotelImage').src = data.firstImage;
             document.getElementById('hotelAddress').innerText = data.address;
             document.getElementById('hotelTel').innerText = data.tel;
+
+            mapX = data.mapX;
+            mapY = data.mapY;
+
+            console.log(mapX);
+            console.log(mapY);
 
             const hotelRating = data.avg_score;
             const ratingStars = document.getElementById('ratingStars');
@@ -323,21 +442,83 @@
                 const roomLi = document.createElement('li');
                 const roomName = document.createElement('h3');
                 const roomContent = document.createElement('p');
+                const roomPrice = document.createElement('p');
 
                 roomName.innerText = room.name;
                 roomContent.innerText = room.content;
+                roomPrice.innerText = room.price;
 
                 roomLi.appendChild(roomName);
                 roomLi.appendChild(roomContent);
+                roomLi.appendChild(roomPrice);
 
                 roomUl.appendChild(roomLi);
             })
-        } else {
 
+            displayMap(data.mapX, data.mapY);
+        } else {
+            console.log(data);
+            alert('호텔 정보를 찾을 수 없습니다.');
+            history.back();
         }
     }
 
-    fetchHotelInfo();
+    function displayMap(mapX, mapY) {
+        var mapOptions = {
+            center: new naver.maps.LatLng(mapY, mapX),
+            zoom: 17
+        };
+
+        var map = new naver.maps.Map('map', mapOptions);
+
+        // 마커 생성
+        var position = new naver.maps.LatLng(mapY, mapX);
+        var marker = new naver.maps.Marker({
+            position: position,
+            map: map
+        });
+    }
+
+    // 주변 관광지 fetch
+    let pageNum = 1;
+
+     function loadTourInfo() {
+        fetch(`/api/hotel/location/${mapX}/${mapY}/${pageNum}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(tour => {
+                    // const tourList = document.getElementById('tourList');
+                    const tourList = document.querySelector('.horizontal-scroll');
+                    const li = document.createElement('li');
+                    li.className = 'tour-item';
+                    li.innerHTML = `
+                            <img src="${tour.firstImage}" alt="Image of ${tour.title}">
+                            <h3>${tour.title}</h3>
+                            <p>${tour.address}</p>
+                        `;
+                    tourList.appendChild(li);
+                });
+                pageNum++;  // 다음 페이지 번호 증가
+
+            })
+            .catch(error => console.error('주변 관광지를 불러올 수 없습니다.:', error));
+    }
+
+    function updateScrollWidth(container) {
+        const totalWidth = Array.from(container.children).reduce((total, child) => total + child.offsetWidth + 15 /* 마진 포함 */, 0);
+        container.style.width = `${totalWidth}px`;
+    }
+
+    // 윈도우 로드 후 실행할 함수들
+    window.onload = async function () {
+        await fetchHotelInfo();
+        fetchReviews();
+        loadTourInfo();
+    }
+
+    // 더 보기 버튼 이벤트 핸들러
+    document.getElementById('loadMore').addEventListener('click', loadTourInfo);
+
 
     // 리뷰
     async function submitReview() {
