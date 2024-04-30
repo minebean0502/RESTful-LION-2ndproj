@@ -281,13 +281,13 @@
     </div>
 </section>
 <!-- 간격 추가 -->
-<div class="space"></div>
+<!--<div class="space"></div>-->
 
-<!-- 문의 -->
-<div class="container">
-    <div class="contact-info">
-    </div>
-</div>
+<!--&lt;!&ndash; 문의 &ndash;&gt;-->
+<!--<div class="container">-->
+<!--    <div class="contact-info">-->
+<!--    </div>-->
+<!--</div>-->
 
 <script>
     let hotelId = [[${hotelId}]];
@@ -339,7 +339,7 @@
 
     fetchHotelInfo();
 
-    //     리뷰
+    // 리뷰
     async function submitReview() {
         const content = document.getElementById('reviewContent').value;
         const score = document.querySelector('input[name="rating"]:checked').value;
@@ -401,40 +401,6 @@
         return starsHtml;
     }
 
-    async function editReview(reviewId) {
-        const response = await fetch(`/api/${hotelId}/review/${reviewId}`);
-        const review = await response.json();
-
-        if (response.ok) {
-            const reviewContent = document.createElement('textarea');
-            reviewContent.className = 'form-control';
-            reviewContent.value = review.content;
-
-            const starContainer = createStarRating(review.score);
-
-            const submitButton = document.createElement('button');
-            submitButton.textContent = 'Update Review';
-            submitButton.className = 'btn btn-primary';
-            submitButton.onclick = async () => {
-                const selectedScore = document.querySelector('input[name="editRating"]:checked').value;
-                await updateReview(reviewId, reviewContent.value, selectedScore);
-            };
-
-            const formContainer = document.createElement('div');
-            formContainer.appendChild(reviewContent);
-            formContainer.appendChild(starContainer);
-            formContainer.appendChild(submitButton);
-
-            const existingForm = document.getElementById('editForm');
-            if (existingForm) existingForm.remove();
-
-            document.body.appendChild(formContainer);
-            formContainer.id = 'editForm';
-        } else {
-            alert('Failed to load review details.');
-        }
-    }
-
     // 별점 선택기 생성 함수
     function createStarRating(currentScore) {
         const container = document.createElement('div');
@@ -494,11 +460,10 @@
                 await updateReview(reviewId, reviewContent.value, selectedScore);
             };
 
-
             // 폼 컨테이너 생성 및 추가
             const formContainer = document.createElement('div');
 
-            formContainer.style.width = '60%'; // 폼의 너비 설정
+            formContainer.style.width = '50%'; // 폼의 너비 설정
             formContainer.style.padding = '20px'; // 내부 패딩 설정
             formContainer.style.margin = 'auto'; // 중앙 정렬
             formContainer.style.marginBottom = '50px';
