@@ -91,17 +91,6 @@ public class HotelController {
         hotelService.deleteHotel(id);
     }
 
-    // 기존 호텔에 방만 추가하는 경우
-    @PostMapping("/{id}")
-    public HotelDto addRoom(
-            @PathVariable("id")
-            Long hotelId,
-            @RequestBody
-            RoomDto roomDto
-    ) {
-        return hotelService.addRoom(roomDto, hotelId);
-    }
-
     // 예약 기능
     @PostMapping("/reservation")
     public ReservationDto addReservation(

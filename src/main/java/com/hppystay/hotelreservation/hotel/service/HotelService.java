@@ -1,6 +1,5 @@
 package com.hppystay.hotelreservation.hotel.service;
 
-import com.hppystay.hotelreservation.api.KNTO.utils.AreaCode;
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
 import com.hppystay.hotelreservation.common.exception.GlobalException;
@@ -108,6 +107,12 @@ public class HotelService {
         Hotel hotel = hotelRepo.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
 
+        Member member = facade.getCurrentMember();
+
+        // 매니저가 아닌 경우
+        if (!hotel.getManager().getId().equals(member.getId()))
+            throw new GlobalException(GlobalErrorCode.NOT_AUTHORIZED_MANAGER);
+
         // 호텔 업데이트
         hotel.setTitle(hotelDto.getTitle());
         hotel.setAddress(hotelDto.getAddress());
@@ -163,21 +168,6 @@ public class HotelService {
         hotelRepo.delete(hotel);
     }
 
-    // 기존 호텔에 방만 추가하는 경우
-    public HotelDto addRoom(RoomDto roomDto, Long hotelId) {
-        Hotel hotel = hotelRepo.findById(hotelId)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
-
-        Room room = roomRepo.save(Room.builder()
-                .name(roomDto.getName())
-                .price(roomDto.getPrice())
-                .content(roomDto.getContent())
-                .hotel(hotel)
-                .build());
-
-        return HotelDto.fromEntity(hotelRepo.save(hotel.addRoom(room)));
-    }
-
     public void toggleLike(Long hotelId) {
         Member member = facade.getCurrentMember();
 
@@ -194,11 +184,5 @@ public class HotelService {
             hotel.setLike_count(hotel.getLike_count() - 1);
             hotelLikeRepo.deleteByMemberAndHotel(member, hotel);
         }
-    }
-
-    public boolean checkRegion(String regionName) {
-        int areaCode = AreaCode.getAreaCode(regionName);
-
-        return areaCode != 0;
     }
 }

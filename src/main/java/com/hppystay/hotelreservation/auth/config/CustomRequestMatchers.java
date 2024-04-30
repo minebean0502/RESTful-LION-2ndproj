@@ -29,6 +29,7 @@ public class CustomRequestMatchers {
             // View
             AntPathRequestMatcher.antMatcher( "/login"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/create-view"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/{hotelId}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/is-login"),
             AntPathRequestMatcher.antMatcher( "/denied"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/main"),

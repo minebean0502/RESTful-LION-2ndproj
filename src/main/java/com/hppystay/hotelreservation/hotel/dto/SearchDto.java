@@ -9,6 +9,6 @@ import java.time.LocalDate;
 @Builder
 public class SearchDto {
     private String keyword;
-    private LocalDate checkIn;
+    private LocalDate checkIn;          // `YYYY-MM-DD` = 2024-05-01
     private LocalDate checkOut;
 }

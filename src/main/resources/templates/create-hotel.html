@@ -126,8 +126,8 @@
             resize: vertical;
         }
 
-        #hotelInfoForm button, input[type="submit"] {
-            width: 100%;
+        .addRoomButton {
+            width: 30%;
             padding: 15px; /* 크기 조정 */
             border: none;
             border-radius: 5px;
@@ -135,6 +135,16 @@
             color: #fff;
             cursor: pointer;
             margin-top: 20px; /* 구분을 위한 간격 추가 */
+        }
+
+        .deleteRoomButton {
+            width: 30%;
+            padding: 15px; /* 크기 조정 */
+            border: none;
+            border-radius: 5px;
+            background-color: #A52A2A;
+            color: #fff;
+            cursor: pointer;
         }
 
         #hotelInfoForm input[type="submit"] {
@@ -219,14 +229,14 @@
         <div id="roomFields">
             <!-- Room fields will be dynamically added here -->
         </div>
-        <button type="button" onclick="addRoom()">새로운 방 추가하기</button>
+        <button class="addRoomButton" type="button" onclick="addRoom()">새로운 방 추가하기</button>
 
         <input type="submit" value="Submit">
     </form>
 </div>
 
 <script>
-    const rooms = [];
+    var rooms = [];
 
     function addRoom() {
         const roomFields = document.getElementById('roomFields');
@@ -235,7 +245,7 @@
         const roomDiv = document.createElement('div');
         roomDiv.innerHTML = `
                 <h3>${roomNumber}번 방</h3>
-                <div id="roomInfoForm${roomNumber}">
+                <div id="roomInfoForm${roomNumber}" data-room-number="${roomNumber}">
                     <label for="roomName${roomNumber}">Name:</label>
                     <input type="text" id="roomName${roomNumber}" name="roomName${roomNumber}">
 
@@ -245,31 +255,126 @@
                     <label for="roomContent${roomNumber}">Content:</label>
                     <textarea id="roomContent${roomNumber}" name="roomContent${roomNumber}"></textarea><br>
 
-                    <button id="pushRoomButton${roomNumber}" type="button" onclick="pushRoom(${roomNumber})">추가하기</button>
+                    <button class="deleteRoomButton" id="deleteRoomButton${roomNumber}" name="deleteRoomButton${roomNumber}" type="button" onclick="deleteRoom(this)" data-room-number="${roomNumber}">${roomNumber}방 삭제하기</button>
                 </div>
             `;
         roomFields.appendChild(roomDiv);
     }
 
-    function pushRoom(roomNumber) {
-        const roomName = document.getElementById('roomName'+roomNumber).value;
-        const roomPrice = document.getElementById('roomPrice'+roomNumber).value;
-        const roomContent = document.getElementById('roomContent'+roomNumber).value;
+    function deleteRoom(buttonElement) {
+        const roomNumber = buttonElement.getAttribute('data-room-number');
+        console.log(roomNumber);
+        const roomFields = document.getElementById("roomFields");
 
-        console.log(roomName)
+        const target = roomFields.children[roomNumber - 1];
 
-        document.getElementById('roomName'+roomNumber).disabled = true;
-        document.getElementById('roomPrice'+roomNumber).disabled = true;
-        document.getElementById('roomContent'+roomNumber).disabled = true;
-        document.getElementById('pushRoomButton'+roomNumber).style.display = 'none';
+        console.log(roomFields.removeChild(target));
+        updateRoomNumbers();
 
+        Array.from(roomFields.children).forEach(roomDiv => {
+            console.log(roomDiv);
+        })
+    }
 
-        rooms.push({
-            name: roomName,
-            price: roomPrice,
-            content: roomContent
+    function updateRoomNumbers() {
+        const roomFields = document.getElementById("roomFields");
+        let roomNumber = 1;
+        Array.from(roomFields.children).forEach(roomDiv => {
+            const innerDiv = roomDiv.querySelector('div');
+            // dataset 변경
+            innerDiv.dataset.roomNumber = roomNumber.toString(); // 데이터 속성 업데이트
+
+            // div id 변경
+            innerDiv.id = `roomInfoForm${roomNumber}`;
+
+            // 제목 변경
+            roomDiv.querySelector('h3').textContent = `${roomNumber}번 방`;
+
+            // 방 이름, 가격, 설명 부분 변경
+            const inputs = roomDiv.querySelectorAll('input[type="text"], textarea');
+            inputs.forEach(input => {
+                const baseName = input.name.replace(/\d+$/, ''); // 이름에서 숫자 부분 제거
+                input.id = `${baseName}${roomNumber}`;
+                input.name = `${baseName}${roomNumber}`;
+            });
+
+            // 라벨 변경
+            const labels = roomDiv.querySelectorAll('label');
+            labels.forEach(label => {
+                const baseFor = label.getAttribute('for').replace(/\d+$/, ''); // for 속성에서 숫자 부분 제거
+                label.setAttribute('for', `${baseFor}${roomNumber}`);
+            });
+
+            // 버튼 변경
+            const deleteButton = roomDiv.querySelector('button');
+            deleteButton.setAttribute('data-room-number', roomNumber);
+            deleteButton.textContent = `${roomNumber}방 삭제하기`;
+
+            // 방 번호 증가
+            roomNumber++;
         });
     }
+
+    function saveRooms() {
+        rooms = []; // 방 초기화
+        const roomFields = document.getElementById("roomFields");
+        Array.from(roomFields.children).forEach(roomDiv => {
+            const innerDiv = roomDiv.querySelector('div');
+
+            const roomId = innerDiv.dataset.roomId; // 방 ID 추출
+            const roomNumber = innerDiv.dataset.roomNumber; // 방 번호 추출
+
+            const name = innerDiv.querySelector(`[name="roomName${roomNumber}"]`).value;
+            const price = innerDiv.querySelector(`[name="roomPrice${roomNumber}"]`).value;
+            const content = innerDiv.querySelector(`[name="roomContent${roomNumber}"]`).value;
+
+            const roomData = {
+                id: roomId,
+                name: name,
+                price: price,
+                content: content
+            };
+
+            rooms.push(roomData);
+        });
+    }
+
+    document.getElementById('hotelInfoForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const formData = new FormData(this);
+        const jsonData = {};
+        for (const [key, value] of formData.entries()) {
+            // 'room'이 나오면 break
+            if (key.includes('room')) {
+                break;
+            }
+            jsonData[key] = value;
+        }
+
+        saveRooms();
+        jsonData['rooms'] = rooms;
+
+        const jsonString = JSON.stringify(jsonData);
+        console.log(jsonString);
+
+        fetch('/api/hotel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonString
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('New hotel created:', data);
+                // Handle success, such as displaying a success message to the user
+            })
+            .catch(error => {
+                console.error('Error creating hotel:', error);
+                // Handle error, such as displaying an error message to the user
+            });
+    });
 
     function searchHotels() {
         const searchType = document.getElementById('searchType').value;
@@ -332,39 +437,6 @@
         document.getElementById('hotelMapX').value = hotel.mapX;
         document.getElementById('hotelMapY').value = hotel.mapY;
     }
-
-    document.getElementById('hotelInfoForm').addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        const formData = new FormData(this);
-        const jsonData = {};
-        for (const [key, value] of formData.entries()) {
-            // 'roomFields'를 제외한 필드만 추가
-            if (key !== 'roomFields') {
-                jsonData[key] = value;
-            }
-        }
-        jsonData['rooms'] = rooms;
-
-        const jsonString = JSON.stringify(jsonData);
-        console.log(jsonString);
-        fetch('/api/hotel', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: jsonString
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('New hotel created:', data);
-                // Handle success, such as displaying a success message to the user
-            })
-            .catch(error => {
-                console.error('Error creating hotel:', error);
-                // Handle error, such as displaying an error message to the user
-            });
-    });
 </script>
 </body>
 </html>

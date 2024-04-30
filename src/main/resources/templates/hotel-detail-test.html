@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>호텔 예약 페이지</title>
     <!-- 이모티콘 사용 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,6 +13,7 @@
             padding: 0;
             background-color: #f9f9f9;
         }
+
         .container {
             display: flex;
             align-items: center;
@@ -20,6 +21,7 @@
             /* 각 컨테이너의 높이를 자동으로 조정 */
             height: auto;
         }
+
         .hotel-info, .room-info, .location-info, .review-info, .contact-info {
             background-color: #fff;
             padding: 30px;
@@ -31,45 +33,56 @@
             /* 간격을 좁힘 */
             margin-bottom: 20px;
         }
+
         .hotel-image {
             flex: 0 0 40%;
             margin-right: 30px;
         }
+
         .hotel-image img {
             width: 100%;
             border-radius: 10px;
         }
+
         .hotel-details, .room-details {
             flex: 0 0 60%;
         }
+
         .hotel-details h2, .room-details h2 {
             margin-top: 0;
             font-size: 24px;
             color: #333;
         }
+
         .hotel-details p, .room-details p {
             margin: 10px 0;
             font-size: 16px;
             color: #666;
         }
+
         .rating {
             display: flex;
             align-items: center;
             color: #f39c12;
         }
+
         .rating .fa-star {
             font-size: 20px;
         }
+
         .rating span {
             margin-left: 5px;
         }
+
         /* 호텔과 방 사이의 간격 */
         .space {
             margin-bottom: 20px;
         }
+
         .form-group {
             margin-bottom: 20px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
@@ -110,18 +123,19 @@
     <div class="hotel-info">
         <div class="hotel-image">
             <!-- 호텔 이미지 삽입 필요 -->
-            <img src="hotel1.jpeg" alt="Hotel Image">
+            <img src="" alt="Hotel Image" id="hotelImage">
         </div>
         <div class="hotel-details">
-            <h2>호텔 이름</h2>
-            <p><i class="fas fa-map-marker-alt"></i> address</p>
-            <p><i class="fas fa-phone"></i> tel</p>
+            <h2 id="hotelName">호텔 이름</h2>
+            <p id="hotelAddress"><i class="fas fa-map-marker-alt"></i> address</p>
+            <p id="hotelTel"><i class="fas fa-phone"></i> tel</p>
             <!-- 별점 표시 조건 로직 필요(js) -->
             <div class="rating">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
+                <div id="ratingStars">
+
+                </div>
                 <!-- 별점 데이터 삽입 -->
-                <span>(별점 데이터)/5</span>
+                <span id="ratingScore">(별점 데이터)/5</span>
             </div>
         </div>
     </div>
@@ -135,15 +149,8 @@
     <div class="room-info">
         <div class="room-details">
             <h2>방</h2>
-            <ul>
-                <li>
-                    <h3>방 이름 1</h3>
-                    <p>방 설명 1</p>
-                </li>
-                <li>
-                    <h3>방 이름 2</h3>
-                    <p>방 설명 2</p>
-                </li>
+            <ul id="roomList">
+
             </ul>
         </div>
     </div>
@@ -216,5 +223,56 @@
     <div class="contact-info">
     </div>
 </div>
+
+<script>
+    let hotelId = [[${hotelId}]];
+
+    async function fetchHotelInfo() {
+        const response = await fetch(`/api/hotel/${hotelId}`);
+        const data = await response.json();
+        if (response.ok) {
+            document.getElementById('hotelName').innerText = data.title;
+            document.getElementById('hotelImage').src = data.firstImage;
+            document.getElementById('hotelAddress').innerText = data.address;
+            document.getElementById('hotelTel').innerText = data.tel;
+
+            const hotelRating = data.avg_score;
+            const ratingStars = document.getElementById('ratingStars');
+
+            let cnt = 0;
+            for (let i = 0; i < Math.round(hotelRating); i++) {
+                const fullStar = document.createElement('i');
+                fullStar.className = 'fas fa-star';
+                ratingStars.appendChild(fullStar);
+                cnt++;
+            }
+            for (let i = 0; i < 5 - cnt; i++) {
+                const emptyStar = document.createElement('i');
+                emptyStar.className = 'far fa-star';
+                ratingStars.appendChild(emptyStar);
+            }
+            document.getElementById('ratingScore').innerText = hotelRating.toFixed(2);
+
+            const roomUl = document.getElementById('roomList');
+            data.rooms.forEach(room => {
+                const roomLi = document.createElement('li');
+                const roomName = document.createElement('h3');
+                const roomContent = document.createElement('p');
+
+                roomName.innerText = room.name;
+                roomContent.innerText = room.content;
+
+                roomLi.appendChild(roomName);
+                roomLi.appendChild(roomContent);
+
+                roomUl.appendChild(roomLi);
+            })
+        } else {
+
+        }
+    }
+
+    fetchHotelInfo();
+</script>
 </body>
 </html>
