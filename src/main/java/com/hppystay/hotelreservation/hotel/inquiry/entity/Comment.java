@@ -7,7 +7,6 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-@Setter
 @SuperBuilder
 @Table(name = "comment")
 @NoArgsConstructor
@@ -16,9 +15,14 @@ public class Comment extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Setter
     private String comment;
     @OneToOne
+    @Setter
     @JoinColumn(name = "inquiry_id")
     private HotelInquiry hotelInquiry;
-    private String writerId;
+    @Setter
+    private Long writerId;
+    @Setter
+    private String writer;
 }

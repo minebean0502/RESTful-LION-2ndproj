@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>질문등록</title>
+    <title></title>
     <style>
         /* 기존의 CSS 스타일 */
         body {
@@ -69,40 +69,91 @@
 </head>
 <body>
 <div class="container">
-    <h5 class="my-3 border-bottom pb-2">질문등록</h5>
-    <form action="#" method="post">
+    <h5 class="my-3 border-bottom pb-2"></h5>
+    <input type="hidden" id="urlId">
         <div class="mb-3">
-            <label for="subject" class="form-label">제목</label>
-            <input type="text" name="subject" id="subject" class="form-control">
+            <label for="title" class="form-label">제목</label>
+            <input type="text" name="title" id="title" class="form-control">
         </div>
         <div class="mb-3">
             <label for="content" class="form-label">내용</label>
             <textarea name="content" id="content" class="form-control" rows="10"></textarea>
         </div>
-        <input type="submit" value="저장하기" class="btn btn-primary my-2">
-    </form>
+        <button type="button" onclick="submitInquiry()" class="btn btn-primary my-2">저장하기</button>
+
+
 </div>
 <script>
-    window.onload = function() {
-        const url = window.location.href;
-        const form = document.querySelector('form');
-        const subjectInput = document.getElementById('subject');
-        const contentInput = document.getElementById('content');
+    let apiUrl;
+    let isUpdate = false;
+    let data = {};
+    async function openWindow() {
+        const url = new URL(window.location.href);
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlId = urlParams.get('id');
+        //const urlId = 1; // 하드 코딩
+        document.getElementById('urlId').value = urlId;
 
-        // 질문 수정 페이지인지 확인
-        if (url.includes('/update/')) {
-            const questionId = document.querySelector('input[type="hidden"]').value;
-            form.action = `/update/${questionId}`;
-            document.querySelector('title').textContent = '질문수정';
-            document.querySelector('h5').textContent = '질문수정';
-
-            // 여기에 AJAX 요청을 추가하여 기존 데이터를 불러와 입력 필드에 채워 넣기
-            // 예제 코드를 아래에 작성
-        } else if (url.includes('/submit/')) {
-            const hotelId = url.split('/').pop();
-            form.action = `/submit/${hotelId}`;
+        if (url.pathname.includes('/update')) {
+            apiUrl = '/api/hotel/inquiries/update';
+            isUpdate = true;
+            data.id = document.getElementById('urlId').value; // 'id' 필드를 data에 추가
+            await fetchUpdate(urlId);
+        } else if (url.pathname.includes('/submit')) {
+            apiUrl = '/api/hotel/inquiries/submit';
+            isUpdate = false;
+            data.hotelId = document.getElementById('urlId').value; // 'hotelId' 필드를 data에 추가
+            await fetchSubmit();
         }
     }
+    async function fetchUpdate(urlId) {
+        document.querySelector('title').textContent = '질문 수정';
+        document.querySelector('h5').textContent = '질문 수정';
+        const response = await fetch(`/api/hotel/inquiries/update/${urlId}`);
+        if (response.ok) {
+            const inquiry = await response.json();
+            document.getElementById('title').value = inquiry.title;
+            document.getElementById('content').innerText = inquiry.content;
+        }
+    }
+
+    async function fetchSubmit() {
+        document.querySelector('title').textContent = '질문 등록';
+        document.querySelector('h5').textContent = '질문 등록';
+
+    }
+
+    function submitInquiry() {
+
+        data.title = document.getElementById('title').value;
+        data.content = document.getElementById('content').value;
+
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert('성공적으로 처리되었습니다.');
+                window.opener.location.reload();  // 원래 있던 창 새로고침
+                window.close();  // 현재 창 닫기
+                console.log(data);
+            })
+            .catch(error => {
+                console.error('에러 발생:', error);
+                console.error('Failed to send data:', data);
+                alert('처리 중 에러가 발생했습니다.');
+            });
+    }
+
+    function initialize() {
+        openWindow();
+    }
+
+    initialize();
 </script>
 </body>
 </html>

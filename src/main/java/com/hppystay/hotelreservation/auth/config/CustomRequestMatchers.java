@@ -16,13 +16,13 @@ public class CustomRequestMatchers {
             // Hotel
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/areaCode/{area}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/keyword/{keyword}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/location/{mapX}{mapY}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/location/{mapX}/{mapY}/{pageNum}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/update-view/{id}"),
 
             // 호텔 문의
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/list"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/inquiries/list"), //hotel 상세 페이지가 생기고 나면 없앨 것.
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/{hotelId}"),
 
 
@@ -64,12 +64,15 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/pending"),
 
             // 호텔 문의
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/submit/{hotelId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/update/{hotelId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/delete/{hotelId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/submit/{inquiryId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/update/{inquiryId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/delete/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/inquiries/submit/{hotelId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/submit"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/inquiries/update/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/update/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/update"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/hotel/inquiries/inquiry/{inquiryId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/inquiries/comments/comment"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/hotel/inquiries/comments/comment"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/hotel/inquiries/comments/comment/{commentId}"),
 
 
             // Like
