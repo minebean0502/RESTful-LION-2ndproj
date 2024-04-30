@@ -50,6 +50,8 @@ public enum GlobalErrorCode {
     // 좋아요 관련 에러
     ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "5001", "이미 좋아요를 생성했습니다.");
 
+    // toss 관련 에러
+
 
     // errorCode는 영역별로 나누기 (EX: 회원 관련 에러는 1000번대)
 
