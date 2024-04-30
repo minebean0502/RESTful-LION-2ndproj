@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ViewController {
     @Value("${TOSS_CLIENT_KEY}")
-    private String clientKey;
+    private String tossClientKey;
+
+    @Value("${NCP_CLIENT_ID}")
+    private String ncpClientKey;
 
     @RequestMapping("/login")
     public String login() {
@@ -86,7 +89,7 @@ public class ViewController {
     // 호텔 예약 완료(가정) 후 toss 결제용 view
     @GetMapping("/hotel/test")
     public String tossTestHotel1Room1to3(Model model) {
-        model.addAttribute("clientKey", clientKey);
+        model.addAttribute("clientKey", tossClientKey);
         return "toss/reservation";
     }
 
@@ -132,6 +135,7 @@ public class ViewController {
             Model model
     ) {
         model.addAttribute("hotelId", hotelId);
+        model.addAttribute("clientId", ncpClientKey);
         return "hotel-detail-test";
     }
 }
