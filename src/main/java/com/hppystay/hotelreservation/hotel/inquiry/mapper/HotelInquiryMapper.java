@@ -22,6 +22,7 @@ public class HotelInquiryMapper {
                 .title(hotelInquiry.getTitle())
                 .content(hotelInquiry.getContent())
                 .writerId(hotelInquiry.getWriterId())
+                .writer(hotelInquiry.getWriter())
                 .hotelId(hotelInquiry.getHotelId())
                 .comment(commentDto)
                 .createdAt(hotelInquiry.getCreatedAt())
@@ -34,10 +35,11 @@ public class HotelInquiryMapper {
         }
 
         HotelInquiry hotelInquiry = new HotelInquiry();
-        hotelInquiry.setId(hotelInquiryDto.getId());
+        //hotelInquiry.setId(hotelInquiryDto.getId());
         hotelInquiry.setTitle(hotelInquiryDto.getTitle());
         hotelInquiry.setContent(hotelInquiryDto.getContent());
         hotelInquiry.setWriterId(hotelInquiryDto.getWriterId());
+        hotelInquiry.setWriter(hotelInquiryDto.getWriter());
         hotelInquiry.setHotelId(hotelInquiryDto.getHotelId());
 
         return hotelInquiry;
