@@ -1,428 +1,23 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Title</title>-->
-<!--    &lt;!&ndash;    리뷰&ndash;&gt;-->
-<!--    <style>-->
-<!--        .container {-->
-<!--            width: 80%;-->
-<!--            margin: 20px auto;-->
-<!--        }-->
-<!--        textarea, input[type="number"], input[type="text"] {-->
-<!--            width: 100%;-->
-<!--            padding: 8px;-->
-<!--            margin-bottom: 10px;-->
-<!--        }-->
-<!--        button {-->
-<!--            padding: 10px 20px;-->
-<!--            cursor: pointer;-->
-<!--        }-->
-<!--        table {-->
-<!--            width: 100%;-->
-<!--            border-collapse: collapse;-->
-<!--        }-->
-<!--        th, td {-->
-<!--            padding: 8px;-->
-<!--            border: 1px solid #ccc;-->
-<!--            text-align: left;-->
-<!--        }-->
-<!--        .hidden {-->
-<!--            display: none;-->
-<!--        }-->
-<!--    </style>-->
-<!--    &lt;!&ndash;    문의사항&ndash;&gt;-->
-<!--    <style>-->
-<!--        #inquiries table {-->
-<!--            border-collapse: collapse;-->
-<!--            border-spacing: 0;-->
-<!--        }-->
-<!--        section.inquiries {-->
-<!--            padding: 80px 0;-->
-<!--        }-->
-<!--        #inquiries .page-title {-->
-<!--            margin-bottom: 60px;-->
-<!--        }-->
-<!--        #inquiries .page-title h3 {-->
-<!--            font-size: 28px;-->
-<!--            color: #333333;-->
-<!--            font-weight: 400;-->
-<!--            text-align: center;-->
-<!--        }-->
-
-<!--        #board-search .search-window {-->
-<!--            padding: 15px 0;-->
-<!--            position: relative;-->
-<!--        }-->
-<!--        #board-search .search-window .search-wrap {-->
-<!--            position: absolute;-->
-<!--            left: 0;-->
-<!--            top: 0;-->
-<!--            padding: 0;-->
-<!--            margin: 0;-->
-<!--            width: 100%;-->
-<!--        }-->
-
-<!--        #inquiries .board-table {-->
-<!--            font-size: 13px;-->
-<!--            width: 100%;-->
-<!--            border-top: 1px solid #ccc;-->
-<!--            border-bottom: 1px solid #ccc;-->
-<!--        }-->
-<!--        #inquiries .board-table th {-->
-<!--            text-align: center;-->
-<!--        }-->
-<!--        #inquiries .board-table .th-num {-->
-<!--            width: 100px;-->
-<!--            text-align: center;-->
-<!--        }-->
-<!--        #inquiries .board-table .th-date {-->
-<!--            width: 200px;-->
-<!--        }-->
-<!--        #inquiries .board-table th, .board-table td {-->
-<!--            padding: 14px 0;-->
-<!--        }-->
-<!--        #inquiries .board-table tbody td {-->
-<!--            border-top: 1px solid #e7e7e7;-->
-<!--            text-align: center;-->
-<!--        }-->
-<!--        #inquiries .board-table tbody th {-->
-<!--            padding-left: 28px;-->
-<!--            padding-right: 14px;-->
-<!--            border-top: 1px solid #e7e7e7;-->
-<!--            text-align: left;-->
-<!--        }-->
-<!--        #inquiries .btn {-->
-<!--            display: inline-block;-->
-<!--            padding: 0 30px;-->
-<!--            font-size: 15px;-->
-<!--            font-weight: 400;-->
-<!--            background: transparent;-->
-<!--            text-align: center;-->
-<!--            vertical-align: middle;-->
-<!--            cursor: pointer;-->
-<!--            border: 1px solid transparent;-->
-<!--            text-transform: uppercase;-->
-<!--            transition: all 0.3s;-->
-<!--        }-->
-
-<!--        #inquiries .btn-dark {-->
-<!--            background: #555;-->
-<!--            color: #fff;-->
-<!--        }-->
-
-<!--        #inquiries .btn-dark:hover, .btn-dark:focus {-->
-<!--            background: #373737;-->
-<!--            border-color: #373737;-->
-<!--            color: #fff;-->
-<!--        }-->
-
-<!--        .hidden-content {-->
-<!--            display: none;-->
-<!--            background-color: #f9f9f9;-->
-<!--            padding: 10px;-->
-<!--            font-size: 12px;-->
-<!--        }-->
-<!--        .divider {-->
-<!--            margin-top: 10px;-->
-<!--            margin-bottom: 10px;-->
-<!--            border-top: 1px dashed #ccc;-->
-<!--        }-->
-<!--        /* reset */-->
-<!--        * {-->
-<!--            list-style: none;-->
-<!--            text-decoration: none;-->
-<!--            padding: 0;-->
-<!--            margin: 0;-->
-<!--            box-sizing: border-box;-->
-<!--        }-->
-<!--        .container {-->
-<!--            width: 1100px;-->
-<!--            margin: 0 auto;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--<main>-->
-<!--    &lt;!&ndash; 각자 맡은 section 부분에 대해 적당히 div 등의 container 만들어서 진행하면 될 것 같습니다 &ndash;&gt;-->
-<!--    <section class = "main-page" id="main-page">-->
-
-<!--    </section>-->
-<!--    <section class= "room-page" id="room-page">-->
-
-<!--    </section>-->
-<!--    <section class="location" id="location">-->
-
-<!--    </section>-->
-<!--    &lt;!&ndash; 리뷰 섹션 &ndash;&gt;-->
-<!--    <section class="reviews" id="reviews">-->
-<!--        <div class="container">-->
-<!--            <div>-->
-<!--                <h2>리뷰 작성하기</h2>-->
-<!--                <textarea id="reviewContent" placeholder="리뷰를 작성해주세요."></textarea>-->
-<!--                <input type="number" id="reviewScore" placeholder="호텔의 점수 (1~5점)" min="1" max="5">-->
-<!--                <button onclick="submitReview()">작성 완료</button>-->
-<!--            </div>-->
-<!--            <div>-->
-<!--                <h2>리뷰 목록</h2>-->
-<!--                <table id="reviewsTable">-->
-<!--                    <thead>-->
-<!--                    <tr>-->
-<!--                        <th>닉네임</th>-->
-<!--                        <th>내용</th>-->
-<!--                        <th>점수</th>-->
-<!--                    </tr>-->
-<!--                    </thead>-->
-<!--                    <tbody>-->
-<!--                    &lt;!&ndash; Reviews will be listed here &ndash;&gt;-->
-<!--                    </tbody>-->
-<!--                </table>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </section>-->
-
-<!--    &lt;!&ndash;    문의사항    &ndash;&gt;-->
-<!--    <section class="inquiries" id="inquiries">-->
-
-<!--        <div class="page-title">-->
-<!--            <div class="container">-->
-<!--                <h3>문의사항</h3>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash;Submit Question button area&ndash;&gt;-->
-<!--        <div id="board-search">-->
-<!--            <div class="container">-->
-<!--                <div class="search-window">-->
-<!--                    <div class="search-wrap">-->
-<!--                        <button type="submit" class="btn btn-dark" onclick="openSubmitForm()">질문등록</button>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; board list area&ndash;&gt;-->
-<!--        <div id="board-list">-->
-<!--            <div class="container">-->
-<!--                <table class="board-table">-->
-<!--                    <thead>-->
-<!--                    <tr>-->
-<!--                        <th scope="col" class="th-num">답변상태</th>-->
-<!--                        <th scope="col" class="th-title">제목</th>-->
-<!--                        <th scope="col" class="th-date">등록일</th>-->
-<!--                    </tr>-->
-<!--                    </thead>-->
-<!--                    <tbody>-->
-
-<!--                    </tbody>-->
-<!--                </table>-->
-<!--            </div>-->
-<!--        </div>-->
-
-<!--        &lt;!&ndash; pagenation&ndash;&gt;-->
-<!--        <div id="pagination">-->
-<!--            <button onclick="previousPage()">이전</button>-->
-<!--            <span id="currentPage">1</span> / <span id="totalPages">?</span>-->
-<!--            <button onclick="nextPage()">다음</button>-->
-<!--        </div>-->
-
-<!--    </section>-->
-<!--</main>-->
-<!--</body>-->
-<!--<script>-->
-<!--    &lt;!&ndash;리뷰&ndash;&gt;-->
-<!--    const hotelId = 37; // Example hotel ID, adjust as necessary-->
-
-<!--    async function submitReview() {-->
-<!--        const content = document.getElementById('reviewContent').value;-->
-<!--        const score = document.getElementById('reviewScore').value;-->
-<!--        const response = await fetch(`/api/${hotelId}/review`, {-->
-<!--            method: 'POST',-->
-<!--            headers: {'Content-Type': 'application/json'},-->
-<!--            body: JSON.stringify({content, score})-->
-<!--        });-->
-
-<!--        if (response.ok) {-->
-<!--            alert('리뷰가 성공적으로 작성되었습니다.');-->
-<!--            await fetchReviews(); // Refresh the reviews list-->
-<!--        } else {-->
-<!--            alert('리뷰 작성에 실패했습니다.');-->
-<!--        }-->
-<!--    }-->
-
-<!--    // Edit Review Function-->
-<!--    async function editReview(reviewId) {-->
-<!--        const newContent = prompt('Enter new review content:');-->
-<!--        const newScore = prompt('Enter new review score (1-5):');-->
-<!--        if (newContent && newScore) {-->
-<!--            const response = await fetch(`/api/${hotelId}/review/${reviewId}/update`, {-->
-<!--                method: 'PUT',-->
-<!--                headers: {'Content-Type': 'application/json'},-->
-<!--                body: JSON.stringify({content: newContent, score: newScore})-->
-<!--            });-->
-
-<!--            if (response.ok) {-->
-<!--                alert('Review successfully updated.');-->
-<!--                await fetchReviews();-->
-<!--            } else {-->
-<!--                alert('Failed to update review.');-->
-<!--            }-->
-<!--        }-->
-<!--    }-->
-
-<!--    // Delete Review Function-->
-<!--    async function deleteReview(reviewId) {-->
-<!--        if (confirm('Are you sure you want to delete this review?')) {-->
-<!--            const response = await fetch(`/api/${hotelId}/review/${reviewId}/delete`, {-->
-<!--                method: 'DELETE'-->
-<!--            });-->
-
-<!--            if (response.ok) {-->
-<!--                alert('Review successfully deleted.');-->
-<!--                await fetchReviews();-->
-<!--            } else {-->
-<!--                alert('Failed to delete review.');-->
-<!--            }-->
-<!--        }-->
-<!--    }-->
-
-<!--    // 리뷰 목록 로딩 및 답글 버튼 추가-->
-<!--    async function fetchReviews() {-->
-<!--        const response = await fetch(`/api/${hotelId}/review/list`);-->
-<!--        if (response.ok) {-->
-<!--            const reviews = await response.json();-->
-<!--            const tableBody = document.getElementById('reviewsTable').getElementsByTagName('tbody')[0];-->
-<!--            tableBody.innerHTML = '';-->
-
-<!--            reviews.forEach(review => {-->
-<!--                const row = tableBody.insertRow();-->
-<!--                row.insertCell(0).textContent = review.nickname;-->
-<!--                row.insertCell(1).textContent = review.content;-->
-<!--                row.insertCell(2).textContent = review.score;-->
-<!--                const replyCell = row.insertCell(3);-->
-<!--                const replyButton = document.createElement('button');-->
-<!--                replyButton.textContent = '답글 달기';-->
-<!--                replyButton.onclick = () => replyToReview(review.id);-->
-<!--                replyCell.appendChild(replyButton);-->
-<!--            });-->
-<!--        } else {-->
-<!--            console.error('리뷰 데이터를 불러오는데 실패했습니다.');-->
-<!--        }-->
-<!--    }-->
-
-<!--    // 리뷰에 대한 답글 작성 함수-->
-<!--    function replyToReview(reviewId) {-->
-<!--        const replyContent = prompt('답글 내용을 입력하세요:');-->
-<!--        if (replyContent) {-->
-<!--            fetch(`/api/${hotelId}/review/${reviewId}`, {-->
-<!--                method: 'POST',-->
-<!--                headers: {'Content-Type': 'application/json'},-->
-<!--                body: JSON.stringify({content: replyContent})-->
-<!--            })-->
-<!--                    .then(response => {-->
-<!--                        if (response.ok) {-->
-<!--                            alert('답글이 성공적으로 등록되었습니다.');-->
-<!--                            fetchReviews(); // 리뷰 목록 새로 고침-->
-<!--                        } else {-->
-<!--                            alert('답글 등록에 실패했습니다.');-->
-<!--                        }-->
-<!--                    })-->
-<!--                    .catch(error => {-->
-<!--                        console.error('답글 등록에 실패했습니다:', error);-->
-<!--                        alert('답글 등록에 실패했습니다.');-->
-<!--                    });-->
-<!--        }-->
-<!--    }-->
-
-<!--    document.addEventListener('DOMContentLoaded', function() {-->
-<!--        fetchReviews(); // 페이지 로딩 시 리뷰 목록 로딩-->
-<!--    });-->
-<!--</script>-->
-<!--<script>-->
-<!--    &lt;!&ndash;    문의사항&ndash;&gt;-->
-<!--    let currentPage = 0; // 문의사항 현재 페이지 초기값-->
-<!--    let totalPages = 0; //문의사항 전체 페이지 수-->
-<!--    async function fetchInquiries(pageNumber = 1) {-->
-<!--        const urlParams = new URLSearchParams(window.location.search);-->
-<!--        //const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'-->
-<!--        const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것-->
-<!--        const response = await fetch(`/api/hotel/inquiries/${hotelId}?page=${pageNumber - 1}`);-->
-<!--        //console.log(response.json()); // 로그 추가-->
-
-<!--        if (response.ok) {-->
-<!--            const inquiries = await response.json();-->
-<!--            totalPages = inquiries.totalPages; // 전체 페이지 수 업데이트-->
-<!--            currentPage = inquiries.number;-->
-
-<!--            document.getElementById('currentPage').textContent = currentPage + 1;-->
-<!--            document.getElementById('totalPages').textContent = totalPages;-->
-
-<!--            const inquiriesTableBody = document.querySelector('#inquiries tbody');-->
-<!--            inquiriesTableBody.innerHTML = ''; // 이전 데이터 삭제-->
-
-<!--            inquiries.content.forEach(inquiries => {-->
-<!--                const row = inquiriesTableBody.insertRow();-->
-<!--                const statusCell = row.insertCell(0);-->
-<!--                const titleCell = row.insertCell(1);-->
-<!--                const createdAtCell = row.insertCell(2);-->
-<!--                const detailRow = inquiriesTableBody.insertRow();-->
-<!--                detailRow.className = 'hidden-content';-->
-<!--                const detailCell = detailRow.insertCell();-->
-<!--                detailCell.colSpan = 3;-->
-<!--                //detailCell.textContent = inquiries.content;-->
-
-<!--                // 내용과 답변을 detailCell에 표시-->
-<!--                detailCell.innerHTML = `${inquiries.content}<br/>`;-->
-<!--                if (inquiries.comment) {-->
-<!--                    detailCell.innerHTML += `<div class='divider'></div>${inquiries.comment.comment}`;-->
-<!--                }-->
-
-<!--                statusCell.textContent = inquiries.comment ? '답변완료' : '미답변';-->
-<!--                titleCell.textContent = inquiries.title;-->
-<!--                titleCell.style.cursor = 'pointer'; // Make it look clickable-->
-<!--                createdAtCell.textContent = new Date(inquiries.createdAt).toLocaleString();-->
-
-<!--                titleCell.addEventListener('click', function() {-->
-<!--                    // Toggle the display of the hidden content-->
-<!--                    detailRow.style.display = detailRow.style.display === 'table-row' ? 'none' : 'table-row';-->
-<!--                });-->
-<!--            })-->
-<!--        }-->
-<!--    }-->
-
-<!--    function openSubmitForm() {-->
-<!--        window.open('/hotel/inquiries/submit', 'SubmitForm', 'width=500, height=700, resizable=yes, scrollbars=yes');-->
-<!--    }-->
-
-<!--    function nextPage() {-->
-<!--        console.log(`Current Page: ${currentPage}, Total Pages: ${totalPages}`);-->
-<!--        if (currentPage < totalPages -1 ) {-->
-<!--            fetchInquiries(currentPage + 1);-->
-<!--        }-->
-<!--    }-->
-
-<!--    function previousPage() {-->
-<!--        if (currentPage > 0) {  // 이전 페이지 존재 여부 확인-->
-<!--            fetchInquiries(currentPage - 1); // 이전 페이지 데이터 요청-->
-<!--        }-->
-<!--    }-->
-
-<!--    function initialize() {-->
-<!--        fetchInquiries();-->
-<!--    }-->
-
-<!--    initialize();-->
-<!--</script>-->
-<!--</html>-->
-
-<!--  실제 실행부분-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Hotel Reviews and Comments</title>
+    <title>Hotel Reviews</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <style>
+        h3 { text-align: center; }
+
+        .left-align-container {
+            text-align: left;
+            margin: 5px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 0rem;
+        }
+
         .container {
             width: 80%;
             margin: 20px auto;
@@ -430,7 +25,7 @@
         textarea, input[type="number"], input[type="text"] {
             width: 100%;
             padding: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         button {
             padding: 10px 20px;
@@ -445,8 +40,28 @@
             border: 1px solid #ccc;
             text-align: left;
         }
-        .hidden {
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        .star-rating input {
             display: none;
+        }
+        .star-rating label {
+            font-size: 30px;
+            padding: 5px;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #f90;
+        }
+        .stars-inner {
+            font-size: 20px;
+            color: #f90;
         }
     </style>
 </head>
@@ -454,23 +69,36 @@
 <main>
     <section class="reviews" id="reviews">
         <div class="container">
-            <h2>리뷰 작성하기</h2>
-            <textarea id="reviewContent" placeholder="리뷰를 작성해주세요."></textarea>
-            <input type="number" id="reviewScore" placeholder="호텔의 점수 (1~5점)" min="1" max="5">
-            <button onclick="submitReview()">등록</button>
+            <h3>리뷰 작성하기</h3>
+            <br>
+            <textarea id="reviewContent" class="form-control" placeholder="리뷰를 작성해주세요."></textarea>
 
-            <h2>리뷰 리스트</h2>
-            <table id="reviewsTable">
+            <p style="text-align: left; padding-left:10px; padding-top: 5px;" class="text-bold" >별점을 선택해주세요.</p>
+            <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5"/><label for="star5">★</label>
+                <input type="radio" id="star4" name="rating" value="4"/><label for="star4">★</label>
+                <input type="radio" id="star3" name="rating" value="3"/><label for="star3">★</label>
+                <input type="radio" id="star2" name="rating" value="2"/><label for="star2">★</label>
+                <input type="radio" id="star1" name="rating" value="1"/><label for="star1">★</label>
+            </div>
+            <div class="left-align-container">
+                <button onclick="submitReview()" class="btn btn-primary btn-sm">등록</button>
+            </div>
+            <br>
+            <h3>리뷰 리스트</h3>
+            <hr>
+            <table id="reviewsTable" class="table table-borderless">
                 <thead>
                 <tr>
-                    <th>닉네임</th>
+                    <th>작성자</th>
                     <th>내용</th>
-                    <th>점수</th>
-                    <th>Actions</th>
+                    <th>별점</th>
+                    <th> </th>
+<!--                    <th>작성일</th>-->
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Reviews will be listed here -->
+
                 </tbody>
             </table>
         </div>
@@ -478,11 +106,11 @@
 </main>
 
 <script>
-    const hotelId = 37; // Adjust as necessary
+    const hotelId = 37; //임의로 지정
 
     async function submitReview() {
         const content = document.getElementById('reviewContent').value;
-        const score = document.getElementById('reviewScore').value;
+        const score = document.querySelector('input[name="rating"]:checked').value;
         const response = await fetch(`/api/${hotelId}/review`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -491,7 +119,7 @@
 
         if (response.ok) {
             alert('리뷰가 성공적으로 작성되었습니다.');
-            fetchReviews();
+            await fetchReviews();
         } else {
             alert('리뷰 작성에 실패했습니다.');
         }
@@ -508,53 +136,67 @@
                 const row = tableBody.insertRow();
                 row.insertCell(0).textContent = review.nickname;
                 row.insertCell(1).textContent = review.content;
-                row.insertCell(2).textContent = review.score;
-
+                const starCell = row.insertCell(2);
+                starCell.innerHTML = createStars(review.score);
                 const actionCell = row.insertCell(3);
                 const editButton = document.createElement('button');
                 editButton.textContent = 'Edit';
-                editButton.onclick = () => editReview(review.id);
+                editButton.className = 'btn btn-outline-primary btn-sm';
+                editButton.style.marginRight = "10px";
+                editButton.addEventListener('click', () => editReview(review.id));
                 actionCell.appendChild(editButton);
 
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
-                deleteButton.onclick = () => deleteReview(review.id);
+                deleteButton.className = 'btn btn-outline-danger btn-sm';
+                deleteButton.addEventListener('click', () => deleteReview(review.id));
                 actionCell.appendChild(deleteButton);
+
+                // const dateCell = row.insertCell(4);
+                // const reviewDate = new Date(review.createdAt); // 서버에서 받은 timestamp를 Date 객체로 변환
+                // dateCell.textContent = reviewDate.toLocaleString();
             });
         } else {
-            console.error('Failed to load reviews data.');
+            console.error('리뷰 불러오기에 실패하였습니다.');
         }
     }
 
-    async function editReview(reviewId) {
-        const content = prompt('Update your review content:');
-        const score = prompt('Update your review score (1-5):');
+    function createStars(score) {
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            starsHtml += `<span class="fa fa-star ${i <= score ? 'filled' : ''}" style="color: ${i <= score ? '#f90' : '#ccc'};"></span>`;
+        }
+        return starsHtml;
+    }
 
+    async function editReview(reviewId) {
+        const newContent = prompt("수정할 내용을 작성해주세요:");
+        const newScore = prompt("리뷰 점수를 작성해주세요(1-5점):");
         const response = await fetch(`/api/${hotelId}/review/${reviewId}/update`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({content, score})
+            body: JSON.stringify({ content: newContent, score: newScore })
         });
 
         if (response.ok) {
-            alert('Review successfully updated.');
+            alert('리뷰가 성공적으로 수정되었습니다.');
             await fetchReviews();
         } else {
-            alert('Failed to update review.');
+            alert('리뷰를 수정하는데 실패하였습니다.');
         }
     }
 
     async function deleteReview(reviewId) {
-        if (confirm('Are you sure you want to delete this review?')) {
+        if (confirm('리뷰를 정말 지우시겠습니까?')) {
             const response = await fetch(`/api/${hotelId}/review/${reviewId}/delete`, {
                 method: 'DELETE'
             });
 
             if (response.ok) {
-                alert('Review successfully deleted.');
-                fetchReviews();
+                alert('리뷰가 성공적으로 지워졌습니다.');
+                await fetchReviews();
             } else {
-                alert('Failed to delete review.');
+                alert('리뷰를 삭제하지 못하였습니다.');
             }
         }
     }
