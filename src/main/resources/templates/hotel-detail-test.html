@@ -401,13 +401,16 @@
 </div>
 
 <script>
-    let hotelId = [[${hotelId}]];
+    const hotelId = [[${hotelId}]];
+    const checkIn = `[[${checkIn}]]`;
+    const checkOut = `[[${checkOut}]]`;
 
     let mapX;
     let mapY;
 
     async function fetchHotelInfo() {
-        const response = await fetch(`/api/hotel/search/${hotelId}`);
+        const url = encodeURI(`/api/hotel/search/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}`)
+        const response = await fetch(url);
         const data = await response.json();
         if (response.ok) {
             document.getElementById('hotelName').innerText = data.title;
