@@ -13,9 +13,9 @@ import java.util.Base64;
 
 @Configuration
 public class PaymentClientConfig {
-    // toss_secret키
-    @Value("${toss.secret}")
-    private String tossSecret;
+    // toss_secret키 
+     @Value("${toss.secret}")
+     private String tossSecret;
 
     // 토스 설정
     @Bean
