@@ -54,17 +54,20 @@ public class HotelController {
         return hotelService.createHotel(dto);
     }
 
-    @GetMapping
-    public List<HotelDto> readAllHotel(
-            @RequestBody
-            SearchDto dto
+    @GetMapping("/search")
+    public List<HotelDto> searchAllHotel(
+            @RequestParam("keyword")
+            String keyword,
+            @RequestParam("checkIn")
+            LocalDate checkIn,
+            @RequestParam("checkOut")
+            LocalDate checkOut
     ) {
-        String keyword = dto.getKeyword();
-        LocalDate checkIn = dto.getCheckIn();
-        LocalDate checkOut = dto.getCheckOut();
         return hotelService.readHotelsReservationPossible(keyword, checkIn, checkOut);
     }
 
+
+    // api/hotel/{id}
     @GetMapping("/{id}")
     public HotelDto readHotel(
             @PathVariable("id")

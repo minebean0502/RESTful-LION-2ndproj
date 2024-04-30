@@ -12,32 +12,89 @@
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/static/css/slider.css">
-<!--    <link rel="stylesheet" href="/static/css/header.css">-->
-<!--    <link rel="stylesheet" href="/static/css/footer.css">-->
+    <!--    <link rel="stylesheet" href="/static/css/header.css">-->
+    <!--    <link rel="stylesheet" href="/static/css/footer.css">-->
     <style>
-        .header-bar {background-color: #FF9900;color: white;padding: 10px;margin: 10px;text-align: center;}
-        .header-bar a {color: white;text-decoration: none;margin: 0 10px;}
-        body {font-family: 'Noto Sans KR', sans-serif;margin: 0;padding: 0;background-color: #f4f4f4;}
-        h1 {font-size: 1.5em;margin-bottom: 20px;}
-        form {display: flex;flex-wrap: wrap;gap: 10px;}
-        .input-group {flex-grow: 1;min-width: 120px;}
-        .input-group label {display: block;margin-bottom: 5px;}
+        .header-bar {
+            background-color: #FF9900;
+            color: white;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .header-bar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .input-group {
+            flex-grow: 1;
+            min-width: 120px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
         .input-group input[type="date"],
-        .input-group input[type="text"] {width: 100%;padding: 10px;border: 1px solid #ccc;}
+        .input-group input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
         .search-keyword {
             display: flex;
             flex-grow: 2;
         }
-        .search-keyword input {flex-grow: 1;}
-        .slider {width: 100%;}
-        button {padding: 10px;border: 1px solid #000;background-color: #fff;cursor: pointer;}
-        button:hover {background-color: #eee;}
+
+        .search-keyword input {
+            flex-grow: 1;
+        }
+
+        .slider {
+            width: 100%;
+        }
+
+        button {
+            padding: 10px;
+            border: 1px solid #000;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #eee;
+        }
+
         .main-container {
             /*border: 2px solid #000000;*/
             padding: 10px;
             margin: 0px 10px 10px 10px;
             height: 100%;
         }
+
         .search-container {
             border: 2px solid #000000;
             background: #fff;
@@ -49,9 +106,11 @@
             max-width: 500px;
             transition: box-shadow 0.3s ease-in-out;
         }
+
         .search-container:hover {
             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
         }
+
         .main-content {
             /*border: 2px solid #000;*/
             border-radius: 10px;
@@ -61,6 +120,7 @@
             /*max-height: 100%;*/
             overflow: hidden
         }
+
         .lion-background {
             /*border: 2px solid #000;*/
             /*border-radius: 50px;*/
@@ -76,12 +136,14 @@
             /*padding: 10px;*/
             overflow: hidden;
         }
+
         .main-background {
             border-radius: 2px;
             /*margin: 0px 5px 0px 5px;*/
             /*padding: 5px;*/
             background-color: white;
         }
+
         .scroll {
             height: 1000px;
         }
@@ -163,10 +225,13 @@
             slides[i].style.display = "none";
         }
         slideIndex++;
-        if (slideIndex > slides.length) {slideIndex = 1}
-        slides[slideIndex-1].style.display = "block";
+        if (slideIndex > slides.length) {
+            slideIndex = 1
+        }
+        slides[slideIndex - 1].style.display = "block";
         setTimeout(showSlides, 5000); // Change image every 5 seconds
     }
+
     function moveSlide(n) {
         slideIndex += n - 1;
         showSlides();
@@ -174,16 +239,16 @@
 
     window.addEventListener('load', showSlides);
 
-    document.getElementById('search-form').addEventListener('submit', function(event) {
+    document.getElementById('search-form').addEventListener('submit', function (event) {
         event.preventDefault(); // 기본 제출 방지
         // requestparam으로 보낼 3가지 키워드
         var keyword = document.getElementById('search-keyword').value;      // 키워드
         var checkIn = document.getElementById('checkin-date').value;        // 체크인
         var checkOut = document.getElementById('checkout-date').value;      // 체크아웃
 
-        var url = `/hotel/search?keyword=${encodeURIComponent(keyword)}
-        &checkin=${encodeURIComponent(checkIn)}
-        &checkout=${encodeURIComponent(checkOut)}`;
+        var url = `/hotel/search?keyword=${encodeURIComponent(keyword)}` +
+            `&checkIn=${encodeURIComponent(checkIn)}` +
+            `&checkOut=${encodeURIComponent(checkOut)}`;
         alert(url);
         // 리다이렉트 시켜서 보내줍시다
         window.location = url;
