@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- toss-client-key를 타임리프로 암호화로 가져옴 -->
+    <meta name="toss-client-key" th:content="${clientKey}" />
+    <title>예약 결제 페이지</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 p-3">
+            <div id="item-wrapper">
+                <!--  호텔의 이름 표시  -->
+                <h1 class="mb-3">Name: <span id="item-name"></span></h1>
+                <!--  호텔의 주소 표시 -->
+                <p class="mb-3">Address : <span id="item-address"></span></p>
+                <!--  호텔의 설명 표시 -->
+                <p class="mb-3">Description : <span id="item-description"></span></p>
+                <p> -----------------절취선----------------- </p>
+
+                <!-- 호텔의 [방 정보 나열] -->
+                <div id ="rooms-list"></div>
+
+                <a href="/reservations">목록으로</a>
+            </div>
+        </div>
+        <div class="col-lg-6 p-3">
+            <div id="payment-wrapper">
+                <div id="payment-method"></div>
+                <div id="agreement"></div>
+                <div class="p-3 w-100">
+                    <button id="payment-request-button" class="btn btn-primary w-100">결제하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script>
+    // [순서1 : 처음에 위젯 전처리 및 세팅] -> 그 뒤 데이터 정보 받아옴 [순서2로]
+    // const clientKey = document.querySelector('meta[name="toss-client-key"]').getAttribute('content');
+    const clientKey = 'test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm';
+    console.log(clientKey)
+    // 사실 hotelId도 타고 올 때 결정되기는 하는데
+    // 일단은 1번 hotel이라 가정해서 hotelId를 설정
+    const hotelId = 1;
+
+    // 여기부터 건들건 없음
+    const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS);
+    const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
+        '#payment-method',
+        {
+            value: 0,
+            currency: 'KRW',
+            country: 'KR'
+        },
+        { variantKey: 'DEFAULT' }
+    )
+    const paymentAgreement = paymentWidget.renderAgreement(
+        '#agreement',
+        { variantKey: 'DEFAULT' }
+    )
+
+    // [순서4] 업데이트된 정보를 가지고 토스 로직 실행
+    // 백엔드 -> toss서버 -> paymentKey 발급되고 그것을 가지고 -> 백엔드 서버 -> 다시 /api/toss/confirm-paymnet로 결제 진행
+    const paymentRequestButton = document.getElementById('payment-request-button');
+    paymentRequestButton.addEventListener('click', () => {
+        try {
+            paymentWidget.requestPayment({
+                // orderId는 상관없음
+                orderId: crypto.randomUUID().replaceAll('-', ''),
+                // orderName은 저장되는 item의 name인데 여기서는
+                // room을 저장하기 때문에
+                orderName: `${hotelId}-${document.getElementById('item-name').innerText}`,
+            }).then(async data => {
+                const response = await fetch('/api/toss/confirm-payment', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        paymentKey: data.paymentKey,
+                        orderId: data.orderId,
+                        amount: data.amount
+                    }),
+                })
+                if (response.ok) {
+                    window.location.href = '/my-page'
+                }
+            });
+        } catch (err) {
+            if (err.code === 'USER_CANCEL') {
+                alert('사용자 결제 취소')
+                window.location.href = '/hotel/test/paymentFail'
+            }
+            else alert(err)
+        }
+    });
+    // 여기 위까지 건들건 없음
+
+    // [순서2] 여기서 /api/hotel/{hotelId}로 요청
+    // 해당 호텔에 있는 방의 정보들을 다 불러옴
+    fetch(`/api/hotel/${hotelId}`,).then(async response => {
+        if (!response.ok) {
+            console.log(response)
+            // location.href = '/hotel/reservations/reservation'
+            return;
+        }
+        // [순서2-1] response를 받아오면 그 response는 해당 호텔에 있는 rooms들에 대한 정보가 json형태로 올 것이고
+        const body = await response.json();
+        // <!-- 호텔의 [방 정보 나열]
+        // <div id ="rooms-list"></div> --> 부분에 표시해주기 위해 roomList 만들어줌
+        const roomsList = document.getElementById('rooms-list');
+        // 순회를 돌면서 room에 대한 정보를 가져와줌
+        body.rooms.forEach(room => {
+            const roomElement = document.createElement('div');
+            roomElement.innerHTML = `
+                <h3>Name: ${room.name}</h3>
+                <p>Price: ${room.price}</p>
+                <p>Description: ${room.content}</p>
+                <!-- [순서2-2]여기에 button 부분을 추가해서, 해당 버튼을 누르면  -->
+                <!-- 맨 밑에 paymentMethodsWidget.updateAmount( >> body.rooms[이부분].price << )-->
+                <!-- 저 부분이 업데이트가 되어야함 (room의 price를 바꾸게) -->
+            `;
+            console.log(room.name)
+            console.log(body.title)
+            roomsList.appendChild(roomElement);
+        });
+
+        document.getElementById('item-name').innerText = body.title;
+        console.log(body.title);
+        document.getElementById('item-address').innerText = body.address;
+        document.getElementById('item-description').innerText = body.description
+
+        // [순서3 tosswidget에 결제할 가격 업데이트]
+        // 사용자가 주문한 방의 가격과 일치해야함
+        // 그 결제해야 할 amount를 payment위젯에다 입력 (업데이트 시켜줌)
+        paymentMethodsWidget.updateAmount(body.rooms[0].price);
+        // 따라서 나중에 예약할 room의 버튼을 누르면 ↑ 업데이트 시켜줄 로직 필요
+    })
+</script>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Reviews</title>
+  <style>
+      body { font-family: Arial, sans-serif; }
+      .container { width: 80%; margin: auto; }
+      .form-section { margin-top: 20px; padding: 20px; border: 1px solid #ccc; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+      th { background-color: #f2f2f2; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Hotel Reviews</h1>
+
+  <div class="form-section">
+    <h2>Write a Review</h2>
+    <form id="reviewForm">
+      <input type="hidden" id="hotelId" value="123">
+      <label for="content">Review:</label>
+      <textarea id="content" required></textarea>
+      <label for="score">Score:</label>
+      <input type="number" id="score" required min="1" max="5">
+      <button type="submit">Submit Review</button>
+    </form>
+  </div>
+
+  <div id="reviewList" class="form-section">
+    <h2>Reviews</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>Review ID</th>
+        <th>Score</th>
+        <th>Content</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!-- Reviews will be loaded here -->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="form-section">
+    <h2>Reply to a Review</h2>
+    <form id="replyForm">
+      <label for="reviewId">Review ID:</label>
+      <input type="number" id="reviewId" required>
+      <label for="replyContent">Reply:</label>
+      <textarea id="replyContent" required></textarea>
+      <button type="submit">Submit Reply</button>
+    </form>
+  </div>
+</div>
+
+<script>
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const hotelId = document.getElementById('hotelId').value;
+        const content = document.getElementById('content').value;
+        const score = document.getElementById('score').value;
+
+        fetch(`/api/${hotelId}/review`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({content, score})
+        })
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                alert('Review submitted!');
+                loadReviews();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to submit review: ' + error.message);
+            });
+    });
+
+    document.getElementById('replyForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const hotelId = document.getElementById('hotelId').value;
+        const reviewId = document.getElementById('reviewId').value;
+        const replyContent = document.getElementById('replyContent').value;
+
+        fetch(`/api/${hotelId}/review/${reviewId}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({content: replyContent})
+        })
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                alert('Reply submitted!');
+                loadReviews();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to submit reply: ' + error.message);
+            });
+    });
+
+    function loadReviews() {
+        const hotelId = document.getElementById('hotelId').value;
+        fetch(`/api/${hotelId}/review/list`)
+            .then(response => {
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                return response.json();
+            })
+            .then(data => {
+                const reviews = Array.isArray(data) ? data : [];
+                const tbody = document.querySelector('#reviewList table tbody');
+                tbody.innerHTML = '';
+                reviews.forEach(({ id, score, content }) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${id}</td><td>${score}</td><td>${content}</td><td><button onclick="replyToReview(${id})">Reply</button></td>`;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(error => {
+                console.error('Failed to load reviews:', error);
+                alert('Failed to load reviews: ' + error.message);
+            });
+    }
+
+    function replyToReview(reviewId) {
+        document.getElementById('reviewId').value = reviewId;
+        document.getElementById('replyContent').focus();
+    }
+
+    window.onload = loadReviews;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사업자 번호 제출 화면</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <input type="text" placeholder="사업자 번호를 입력해주세요" id="submit-Input">
+        <div class="buttons">
+            <button id="submit">제출하기</button>
+            <button id="cancel">돌아가기</button>
+        </div>
+    </div>
+</body>
+
+<script>
+    document.getElementById('submit').addEventListener('click', function () {
+        const businessNum = document.getElementById('submit-Input').value;
+        console.log(businessNum);
+        fetch(`/api/auth/manager-requests?business-number=${encodeURIComponent(businessNum)}`, {
+            method: 'POST', // 메서드 명시
+            headers: {
+                'Content-Type': 'application/hmm' // 콘텐츠 타입 추가
+            }
+        })
+            .then(async response => {
+                if (response.ok) {
+                    alert('신청이 완료되었습니다')
+                } else {
+                    alert('신청이 정상적으로 완료되지 않았습니다');
+                } return response.text();
+            })
+            .then(data => {
+                window.close();
+            })
+            .catch(error => {
+                alert('문제 발생', error);
+                window.location.reload();
+            });
+    });
+    document.getElementById('cancel').addEventListener('click', function () {
+        window.close();
+    })
+</script>
+</html>

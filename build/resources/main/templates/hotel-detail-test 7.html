@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>호텔 예약 페이지</title>
+    <!-- 이모티콘 사용 -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 각 컨테이너의 높이를 자동으로 조정 */
+            height: auto;
+        }
+
+        .hotel-info, .room-info, .location-info, .review-info, .contact-info {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            max-width: 700px;
+            width: 100%;
+            /* 간격을 좁힘 */
+            margin-bottom: 20px;
+        }
+
+        .hotel-image {
+            flex: 0 0 40%;
+            margin-right: 30px;
+        }
+
+        .hotel-image img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .hotel-details, .room-details {
+            flex: 0 0 60%;
+        }
+
+        .hotel-details h2, .room-details h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .hotel-details p, .room-details p {
+            margin: 10px 0;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            color: #f39c12;
+        }
+
+        .rating .fa-star {
+            font-size: 20px;
+        }
+
+        .rating span {
+            margin-left: 5px;
+        }
+
+        /* 호텔과 방 사이의 간격 */
+        .space {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* 입력란 */
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        /* 제출 버튼*/
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+    /*    리뷰    */
+        h3 { text-align: center; }
+
+        .left-align-container {
+            text-align: left;
+            margin: 5px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 0rem;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        textarea, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+        .star-rating input {
+            display: none;
+        }
+        .star-rating label {
+            font-size: 30px;
+            padding: 5px;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #f90;
+        }
+        .stars-inner {
+            font-size: 20px;
+            color: #f90;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 호텔 -->
+<div class="container">
+    <div class="hotel-info">
+        <div class="hotel-image">
+            <!-- 호텔 이미지 삽입 필요 -->
+            <img src="" alt="Hotel Image" id="hotelImage">
+        </div>
+        <div class="hotel-details">
+            <h2 id="hotelName">호텔 이름</h2>
+            <p id="hotelAddress"><i class="fas fa-map-marker-alt"></i> address</p>
+            <p id="hotelTel"><i class="fas fa-phone"></i> tel</p>
+            <!-- 별점 표시 조건 로직 필요(js) -->
+            <div class="rating">
+                <div id="ratingStars">
+
+                </div>
+                <!-- 별점 데이터 삽입 -->
+                <span id="ratingScore">(별점 데이터)/5</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 간격 추가 -->
+<div class="space"></div>
+
+<!-- 방 -->
+<div class="container">
+    <div class="room-info">
+        <div class="room-details">
+            <h2>방</h2>
+            <ul id="roomList">
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 간격 추가 -->
+<div class="space"></div>
+
+<!-- 위치 -->
+<div class="container">
+    <div class="location-info">
+        <h2>위치 정보</h2>
+    </div>
+</div>
+
+<!-- 간격 추가 -->
+<div class="space"></div>
+
+<!-- 리뷰 -->
+<!--<div class="container">-->
+<!--    <div class="review-info" id="review-info">-->
+<!--        <div class="review-details">-->
+<!--            <h2>리뷰</h2>-->
+<!--            <form id="review-form">-->
+<!--                <div class="form-group">-->
+<!--                    <textarea id="user-review" placeholder="리뷰 작성" required></textarea>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label for="rating">별점</label>-->
+<!--                    <div id="rating" class="rating">-->
+<!--                        <input type="radio" id="star5" name="rating" value="5">-->
+<!--                        <i class="fas fa-star"></i>-->
+
+<!--                        <input type="radio" id="star4" name="rating" value="4">-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+
+<!--                        <input type="radio" id="star3" name="rating" value="3">-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+
+<!--                        <input type="radio" id="star2" name="rating" value="2">-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+
+<!--                        <input type="radio" id="star1" name="rating" value="1">-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+<!--                        <i class="fas fa-star"></i>-->
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <button type="submit">제출</button>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<section class="reviews" id="reviews">
+    <div class="container">
+        <h3>리뷰 작성하기</h3>
+    </div>
+    <div class="container">
+        <textarea id="reviewContent" class="form-control" placeholder="리뷰를 작성해주세요."></textarea>
+        <div class="container">
+        <p style="text-align: left; padding-left:10px; padding-top: 5px;" class="text-bold" >별점을 선택해주세요.</p>
+        </div>
+        <div class="container">
+        <div class="star-rating">
+            <input type="radio" id="star5" name="rating" value="5"/><label for="star5">★</label>
+            <input type="radio" id="star4" name="rating" value="4"/><label for="star4">★</label>
+            <input type="radio" id="star3" name="rating" value="3"/><label for="star3">★</label>
+            <input type="radio" id="star2" name="rating" value="2"/><label for="star2">★</label>
+            <input type="radio" id="star1" name="rating" value="1"/><label for="star1">★</label>
+        </div>
+        </div>
+        <div class="left-align-container">
+            <button onclick="submitReview()" class="btn btn-primary btn-sm">등록</button>
+        </div>
+    </div>
+        <br>
+        <!-- 간격 추가 -->
+        <div class="space"></div>
+        <h3>리뷰 리스트</h3>
+        <hr>
+        <table id="reviewsTable" class="table table-borderless">
+            <thead>
+            <tr>
+                <th>작성자</th>
+                <th>내용</th>
+                <th>별점</th>
+                <th> </th>
+                <!--<th>작성일</th>-->
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+</section>
+<!-- 간격 추가 -->
+<div class="space"></div>
+
+<!-- 문의 -->
+<div class="container">
+    <div class="contact-info">
+    </div>
+</div>
+
+<script>
+    let hotelId = [[${hotelId}]];
+
+    async function fetchHotelInfo() {
+        const response = await fetch(`/api/hotel/${hotelId}`);
+        const data = await response.json();
+        if (response.ok) {
+            document.getElementById('hotelName').innerText = data.title;
+            document.getElementById('hotelImage').src = data.firstImage;
+            document.getElementById('hotelAddress').innerText = data.address;
+            document.getElementById('hotelTel').innerText = data.tel;
+
+            const hotelRating = data.avg_score;
+            const ratingStars = document.getElementById('ratingStars');
+
+            let cnt = 0;
+            for (let i = 0; i < Math.round(hotelRating); i++) {
+                const fullStar = document.createElement('i');
+                fullStar.className = 'fas fa-star';
+                ratingStars.appendChild(fullStar);
+                cnt++;
+            }
+            for (let i = 0; i < 5 - cnt; i++) {
+                const emptyStar = document.createElement('i');
+                emptyStar.className = 'far fa-star';
+                ratingStars.appendChild(emptyStar);
+            }
+            document.getElementById('ratingScore').innerText = hotelRating.toFixed(2);
+
+            const roomUl = document.getElementById('roomList');
+            data.rooms.forEach(room => {
+                const roomLi = document.createElement('li');
+                const roomName = document.createElement('h3');
+                const roomContent = document.createElement('p');
+
+                roomName.innerText = room.name;
+                roomContent.innerText = room.content;
+
+                roomLi.appendChild(roomName);
+                roomLi.appendChild(roomContent);
+
+                roomUl.appendChild(roomLi);
+            })
+        } else {
+
+        }
+    }
+
+    fetchHotelInfo();
+
+//     리뷰
+  //  const hotelId = 37; //임의로 지정
+
+    async function submitReview() {
+        const content = document.getElementById('reviewContent').value;
+        const score = document.querySelector('input[name="rating"]:checked').value;
+        const response = await fetch(`/api/${hotelId}/review`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({content, score})
+        });
+
+        if (response.ok) {
+            alert('리뷰가 성공적으로 작성되었습니다.');
+            await fetchReviews();
+        } else {
+            alert('리뷰 작성에 실패했습니다.');
+        }
+    }
+
+    async function fetchReviews() {
+        const response = await fetch(`/api/${hotelId}/review/list`);
+        if (response.ok) {
+            const reviews = await response.json();
+            const tableBody = document.getElementById('reviewsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            reviews.forEach(review => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = review.nickname;
+                row.insertCell(1).textContent = review.content;
+                const starCell = row.insertCell(2);
+                starCell.innerHTML = createStars(review.score);
+                const actionCell = row.insertCell(3);
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.className = 'btn btn-outline-primary btn-sm';
+                editButton.style.marginRight = "10px";
+                editButton.addEventListener('click', () => editReview(review.id));
+                actionCell.appendChild(editButton);
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.className = 'btn btn-outline-danger btn-sm';
+                deleteButton.addEventListener('click', () => deleteReview(review.id));
+                actionCell.appendChild(deleteButton);
+
+                // const dateCell = row.insertCell(4);
+                // const reviewDate = new Date(review.createdAt); // 서버에서 받은 timestamp를 Date 객체로 변환
+                // dateCell.textContent = reviewDate.toLocaleString();
+            });
+        } else {
+            console.error('리뷰 불러오기에 실패하였습니다.');
+        }
+    }
+
+    function createStars(score) {
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            starsHtml += `<span class="fa fa-star ${i <= score ? 'filled' : ''}" style="color: ${i <= score ? '#f90' : '#ccc'};"></span>`;
+        }
+        return starsHtml;
+    }
+
+    async function editReview(reviewId) {
+        const newContent = prompt("수정할 내용을 작성해주세요:");
+        const newScore = prompt("리뷰 점수를 작성해주세요(1-5점):");
+        const response = await fetch(`/api/${hotelId}/review/${reviewId}/update`, {
+            method: 'PUT',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ content: newContent, score: newScore })
+        });
+
+        if (response.ok) {
+            alert('리뷰가 성공적으로 수정되었습니다.');
+            await fetchReviews();
+        } else {
+            alert('리뷰를 수정하는데 실패하였습니다.');
+        }
+    }
+
+    async function deleteReview(reviewId) {
+        if (confirm('리뷰를 정말 지우시겠습니까?')) {
+            const response = await fetch(`/api/${hotelId}/review/${reviewId}/delete`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert('리뷰가 성공적으로 지워졌습니다.');
+                await fetchReviews();
+            } else {
+                alert('리뷰를 삭제하지 못하였습니다.');
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchReviews);
+</script>
+</body>
+</html>

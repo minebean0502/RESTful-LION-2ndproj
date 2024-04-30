@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        .user-info {
+            margin-bottom: 20px;
+        }
+        .user-info label {
+            font-weight: bold;
+        }
+        .user-info p {
+            margin: 5px 0;
+        }
+        .reservation-status {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .reservation-status label {
+            font-weight: bold;
+        }
+        .reservation-status p {
+            margin: 5px 0;
+        }
+        #datepicker {
+            width: 200px;
+            padding: 8px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>마이페이지</h1>
+    <div class="user-info">
+        <label for="username">사용자 이름:</label>
+        <p id="username">사용자명</p>
+        <label for="email">이메일:</label>
+        <p id="email">user@example.com</p>
+        <!-- 다른 사용자 정보도 이와 같은 방식으로 추가 가능 -->
+    </div>
+    <div class="reservation-status">
+        <label for="reservation">예약 날짜 선택:</label><br>
+        <input type="date" id="datepicker">
+        <p id="reservation">예약 정보 없음</p>
+        <!-- 예약 정보가 있을 경우, 예약 내용을 여기에 추가 -->
+    </div>
+    <!-- 다른 마이페이지 내용을 추가하려면 여기에 추가 -->
+</div>
+
+<script>
+    // 예약 날짜 선택 input 요소
+    const datepicker = document.getElementById('datepicker');
+
+    // 날짜가 선택될 때의 이벤트 리스너
+    datepicker.addEventListener('change', function() {
+        const selectedDate = this.value;
+        const reservationInfo = document.getElementById('reservation');
+        if (selectedDate) {
+            reservationInfo.textContent = `선택한 날짜: ${selectedDate}`;
+        } else {
+            reservationInfo.textContent = '예약 정보';
+        }
+    });
+</script>
+</body>
+</html>
