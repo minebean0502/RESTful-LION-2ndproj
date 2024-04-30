@@ -6,14 +6,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 @Slf4j
 @Controller
 public class ViewController {
     @Value("${TOSS_CLIENT_KEY}")
-    private String clientKey;
+    private String tossClientKey;
 
-    @GetMapping("/login")
+    @Value("${NCP_CLIENT_ID}")
+    private String ncpClientKey;
+
+    @RequestMapping("/login")
     public String login() {
         return "login/login";
     }
@@ -24,12 +29,20 @@ public class ViewController {
         return "create-hotel";
     }
 
+    @GetMapping("/hotel/update-view/{id}")
+    public String hotelUpdate(
+            @PathVariable("id")
+            Long id
+    ) {
+        return "update-hotel";
+    }
+
     @GetMapping("/is-login")
     public String isLogin() {
         return "is-login";
     }
 
-    @GetMapping("/denied")
+    @RequestMapping("/denied")
     public String denied() {
         return "denied";
     }
@@ -54,9 +67,19 @@ public class ViewController {
         return "test/mypagetest";
     }
 
+    @GetMapping("/my-page/submit-businessNum")
+    public String submitPage() {
+        return "test/submit-business-num";
+    }
+
     @GetMapping("/my-page/reservation/transfer")
     public String transferToMember() {
         return "reservation/transfer/transfer-to-member";
+    }
+
+    @GetMapping("/my-page/reservation/transfered")
+    public String transferedAndDoPay() {
+        return "reservation/transfer/transfered-by-member";
     }
 
     @GetMapping("/hotel/1/details")
@@ -66,8 +89,8 @@ public class ViewController {
 
     // 호텔 예약 완료(가정) 후 toss 결제용 view
     @GetMapping("/hotel/test")
-    public String tossTestHotel1Room1to3(Model model){
-        model.addAttribute("clientKey", clientKey);
+    public String tossTestHotel1Room1to3(Model model) {
+        model.addAttribute("clientKey", tossClientKey);
         return "toss/reservation";
     }
 
@@ -76,6 +99,7 @@ public class ViewController {
     public String tossTestHotelPaySuccess() {
         return "toss/success";
     }
+
     // 결제 실패 후 toss redirect view
     @GetMapping("/hotel/test/paymentFail")
     public String tossTestHotelPayFail() {
@@ -95,5 +119,26 @@ public class ViewController {
     @GetMapping("/hotel/inquiries/update/{id}")
     public String updateInquiry() { return "inquiries/submitInquiry"; }
 
-}
 
+    //임시
+    @GetMapping("/hotel/37/details/m")
+    public String hotelDetailsm() {
+        return "temphtml/hotelDetails-m1";
+    }
+
+    @GetMapping("/admin")
+    public String admin() {
+        return "admin";
+    }
+
+    @GetMapping("/hotel/{hotelId}")
+    public String hotelDetailView(
+            @PathVariable("hotelId")
+            Long hotelId,
+            Model model
+    ) {
+        model.addAttribute("hotelId", hotelId);
+        model.addAttribute("clientId", ncpClientKey);
+        return "hotel-detail-test";
+    }
+}

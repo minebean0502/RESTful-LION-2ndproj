@@ -24,29 +24,36 @@
         .input-group label {display: block;margin-bottom: 5px;}
         .input-group input[type="date"],
         .input-group input[type="text"] {width: 100%;padding: 10px;border: 1px solid #ccc;}
-        .search-keyword {display: flex;flex-grow: 2;}
+        .search-keyword {
+            display: flex;
+            flex-grow: 2;
+        }
         .search-keyword input {flex-grow: 1;}
         .slider {width: 100%;}
         button {padding: 10px;border: 1px solid #000;background-color: #fff;cursor: pointer;}
         button:hover {background-color: #eee;}
         .main-container {
-            border: 2px solid #000000;
+            /*border: 2px solid #000000;*/
             padding: 10px;
             margin: 0px 10px 10px 10px;
             height: 100%;
         }
-
         .search-container {
-            background: #ffffff;
             border: 2px solid #000000;
-            border-radius: 30px;
-            text-align: center;
+            background: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
             padding: 20px;
             margin: 2rem auto;
-            width: 30%;
+            width: 80%;
+            max-width: 500px;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .search-container:hover {
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
         }
         .main-content {
-            border: 2px solid #000;
+            /*border: 2px solid #000;*/
             border-radius: 10px;
             margin: 5% 10% 10% 10%;
             height: 500px;
@@ -55,7 +62,8 @@
             overflow: hidden
         }
         .lion-background {
-            border: 2px solid #000; border-radius: 50px;
+            /*border: 2px solid #000;*/
+            /*border-radius: 50px;*/
             text-align: center;
             background-image: url("../static/tempHotel/lion2.png");
             background-color: yellow;
@@ -70,8 +78,8 @@
         }
         .main-background {
             border-radius: 2px;
-            margin: 0px 5px 0px 5px;
-            padding: 5px;
+            /*margin: 0px 5px 0px 5px;*/
+            /*padding: 5px;*/
             background-color: white;
         }
         .scroll {
@@ -108,9 +116,7 @@
         <div class="input-group search-keyword">
             <label for="search-keyword">키워드/이름</label>
             <input type="text" id="search-keyword" name="keyword" placeholder="검색어 입력">
-            <button type="submit">검색</button>
         </div>
-
         <form id="search-form">
             <div class="input-group">
                 <label for="checkin-date">체크인 날짜</label>
@@ -120,6 +126,7 @@
                 <label for="checkout-date">체크아웃 날짜</label>
                 <input type="date" id="checkout-date" name="checkout">
             </div>
+            <button type="submit">검색</button>
         </form>
     </div>
 
@@ -166,5 +173,20 @@
     }
 
     window.addEventListener('load', showSlides);
+
+    document.getElementById('search-form').addEventListener('submit', function(event) {
+        event.preventDefault(); // 기본 제출 방지
+        // requestparam으로 보낼 3가지 키워드
+        var keyword = document.getElementById('search-keyword').value;      // 키워드
+        var checkIn = document.getElementById('checkin-date').value;        // 체크인
+        var checkOut = document.getElementById('checkout-date').value;      // 체크아웃
+
+        var url = `/hotel/search?keyword=${encodeURIComponent(keyword)}
+        &checkin=${encodeURIComponent(checkIn)}
+        &checkout=${encodeURIComponent(checkOut)}`;
+        alert(url);
+        // 리다이렉트 시켜서 보내줍시다
+        window.location = url;
+    })
 </script>
 </html>

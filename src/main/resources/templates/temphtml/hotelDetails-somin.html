@@ -166,26 +166,26 @@
 </head>
 <body>
 <main>
-    <!-- 각자 맡은 section 부분에 대해 적당히 div 등의 container 만들어서 진행하면 될 것 같습니다 -->
-    <section class = "main-page" id="main-page">
+  <!-- 각자 맡은 section 부분에 대해 적당히 div 등의 container 만들어서 진행하면 될 것 같습니다 -->
+  <section class = "main-page" id="main-page">
 
-    </section>
-    <section class= "room-page" id="room-page">
+  </section>
+  <section class= "room-page" id="room-page">
 
-    </section>
-    <section class="location" id="location">
+  </section>
+  <section class="location" id="location">
 
-    </section>
-    <section class =review id="review">
+  </section>
+  <section class =review id="review">
 
-    </section>
-    <section class="inquiries" id="inquiries">
+  </section>
+  <section class="inquiries" id="inquiries">
 
-        <div class="page-title">
-            <div class="container">
-                <h3>문의사항</h3>
-            </div>
-        </div>
+    <div class="page-title">
+      <div class="container">
+        <h3>문의사항</h3>
+      </div>
+    </div>
 
         <!--Submit Question button area-->
         <div id="board-search">
@@ -222,6 +222,7 @@
         </div>
 
     </section>
+
 </main>
 </body>
 <script>
@@ -229,8 +230,8 @@
     async function fetchInquiries(page = 0, size = 10) {
         currentPage = page;
         const urlParams = new URLSearchParams(window.location.search);
-        //const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
-        const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
+        const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
+        //const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
         const response = await fetch(`/api/hotel/inquiries/${hotelId}?page=${page}&size=${size}`);
 
         if (response.ok) {
@@ -320,8 +321,8 @@
 
     function openSubmitForm() {
         const urlParams = new URLSearchParams(window.location.search);
-        //const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
-        const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
+        const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
+        //const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
         window.open(`/hotel/inquiries/submit/${hotelId}`, 'SubmitForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
     }
 

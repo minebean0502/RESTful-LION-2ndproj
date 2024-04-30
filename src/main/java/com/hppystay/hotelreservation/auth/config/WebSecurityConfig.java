@@ -1,22 +1,31 @@
 package com.hppystay.hotelreservation.auth.config;
 
+import com.hppystay.hotelreservation.auth.handler.CustomAccessDeniedHandler;
 import com.hppystay.hotelreservation.auth.handler.CustomAuthenticationEntrypoint;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenFilter;
 import com.hppystay.hotelreservation.auth.jwt.JwtTokenUtils;
 import com.hppystay.hotelreservation.auth.oauth2.OAuth2SuccessHandler;
 import com.hppystay.hotelreservation.auth.oauth2.OAuth2UserService;
 import com.hppystay.hotelreservation.auth.service.MemberService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.io.IOException;
 
 @Configuration
 @RequiredArgsConstructor
@@ -26,6 +35,7 @@ public class WebSecurityConfig {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final OAuth2UserService oAuth2UserService;
     private final CustomAuthenticationEntrypoint authenticationEntrypoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
 
     // 정적 파일 무시
@@ -66,7 +76,7 @@ public class WebSecurityConfig {
                 )
                 .exceptionHandling(configurer -> configurer
                         .authenticationEntryPoint(authenticationEntrypoint)
-//                        .accessDeniedPage("/denied")
+                        .accessDeniedHandler(accessDeniedHandler)
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

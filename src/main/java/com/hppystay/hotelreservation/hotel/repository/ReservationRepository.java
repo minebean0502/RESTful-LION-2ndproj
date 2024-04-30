@@ -2,6 +2,7 @@ package com.hppystay.hotelreservation.hotel.repository;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
+import com.hppystay.hotelreservation.hotel.entity.ReservationStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,4 +16,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Long> findUnavailableRoomIds(LocalDate checkIn, LocalDate checkOut);
 
     List<Reservation> findAllByMember(Member member);
+
+    // 멤버의 id와, status로 찾는 메서드
+    List<Reservation> findByMemberIdAndStatus(Long memberId, ReservationStatus status);
+
+    Reservation findByMember(Member member);
 }

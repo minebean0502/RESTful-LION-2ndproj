@@ -1,6 +1,5 @@
 package com.hppystay.hotelreservation.hotel.service;
 
-import com.hppystay.hotelreservation.api.KNTO.utils.AreaCode;
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
 import com.hppystay.hotelreservation.common.exception.GlobalException;
@@ -9,15 +8,15 @@ import com.hppystay.hotelreservation.hotel.dto.HotelDto;
 import com.hppystay.hotelreservation.hotel.dto.RoomDto;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import com.hppystay.hotelreservation.hotel.entity.Room;
+import com.hppystay.hotelreservation.hotel.entity.HotelLike;
+import com.hppystay.hotelreservation.hotel.repository.HotelLikeRepository;
 import com.hppystay.hotelreservation.hotel.repository.HotelRepository;
 import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -30,6 +29,7 @@ public class HotelService {
     private final HotelRepository hotelRepo;
     private final RoomRepository roomRepo;
     private final ReservationRepository reservationRepo;
+    private final HotelLikeRepository hotelLikeRepo;
     private final AuthenticationFacade facade;
 
     @Transactional
@@ -107,6 +107,12 @@ public class HotelService {
         Hotel hotel = hotelRepo.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
 
+        Member member = facade.getCurrentMember();
+
+        // 매니저가 아닌 경우
+        if (!hotel.getManager().getId().equals(member.getId()))
+            throw new GlobalException(GlobalErrorCode.NOT_AUTHORIZED_MANAGER);
+
         // 호텔 업데이트
         hotel.setTitle(hotelDto.getTitle());
         hotel.setAddress(hotelDto.getAddress());
@@ -162,24 +168,21 @@ public class HotelService {
         hotelRepo.delete(hotel);
     }
 
-    // 기존 호텔에 방만 추가하는 경우
-    public HotelDto addRoom(RoomDto roomDto, Long hotelId) {
-        Hotel hotel = hotelRepo.findById(hotelId)
-                .orElseThrow(() -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
+    public void toggleLike(Long hotelId) {
+        Member member = facade.getCurrentMember();
 
-        Room room = roomRepo.save(Room.builder()
-                .name(roomDto.getName())
-                .price(roomDto.getPrice())
-                .content(roomDto.getContent())
-                .hotel(hotel)
-                .build());
+        Hotel hotel = hotelRepo.findById(hotelId).orElseThrow(
+                () -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
 
-        return HotelDto.fromEntity(hotelRepo.save(hotel.addRoom(room)));
-    }
+        if (!hotelLikeRepo.existsByMemberAndHotel(member, hotel)) {
+            // 호텔의 like_count 증가
+            hotel.setLike_count(hotel.getLike_count() + 1);
+            hotelLikeRepo.save(new HotelLike(member, hotel));
 
-    public boolean checkRegion(String regionName) {
-        int areaCode = AreaCode.getAreaCode(regionName);
-
-        return areaCode != 0;
+        } else {
+            // 좋아요가 있는 상태에서 한번 더 좋아요 하면 좋아요 취소
+            hotel.setLike_count(hotel.getLike_count() - 1);
+            hotelLikeRepo.deleteByMemberAndHotel(member, hotel);
+        }
     }
 }
