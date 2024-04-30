@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 
+
 @Slf4j
 @Controller
 public class ViewController {
@@ -121,15 +122,17 @@ public class ViewController {
 
 
     //임시로 만듦
-    @GetMapping("/hotel/1/details/somin")
+    @GetMapping("/hotel/inquiries/list")
     public String hotelDetailsSomin() {
         return "temphtml/hotelDetails-somin";
     }
 
-    @GetMapping("/hotel/inquiries/submit")
-    public String submitInquiry() {
-        return "inquiries/submitInquiry";
-    }
+    @GetMapping("/hotel/inquiries/submit/{hotelId}")
+    public String submitInquiry() { return "inquiries/submitInquiry"; }
+
+    @GetMapping("/hotel/inquiries/update/{id}")
+    public String updateInquiry() { return "inquiries/submitInquiry"; }
+
 
     //임시
     @GetMapping("/hotel/37/details/m")

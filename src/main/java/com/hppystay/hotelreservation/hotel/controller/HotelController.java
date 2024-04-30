@@ -56,18 +56,28 @@ public class HotelController {
 
     @GetMapping("/search")
     public List<HotelDto> searchAllHotel(
-            @RequestParam("keyword")
+            @RequestParam(required = true)
             String keyword,
-            @RequestParam("checkIn")
+            @RequestParam(required = true)
             LocalDate checkIn,
-            @RequestParam("checkOut")
+            @RequestParam(required = true)
             LocalDate checkOut
     ) {
         return hotelService.readHotelsReservationPossible(keyword, checkIn, checkOut);
     }
 
+    @GetMapping("/search/{id}")
+    public HotelDto searchOneHotel(
+            @PathVariable("id")
+            Long id,
+            @RequestParam(required = true)
+            LocalDate checkIn,
+            @RequestParam(required = true)
+            LocalDate checkOut
+    ) {
+        return hotelService.readOneHotelReservationPossible(id, checkIn, checkOut);
+    }
 
-    // api/hotel/{id}
     @GetMapping("/{id}")
     public HotelDto readHotel(
             @PathVariable("id")
