@@ -32,16 +32,15 @@ public class HotelController {
         return apiService.callHotelByKeywordApi(keyword);
     }
 
-    @GetMapping("/location/{id}/{pageNum}")
+    @GetMapping("/location/{mapX}/{mapY}/{pageNum}")
     public List<TourInfoApiDto> findSpotByLocation(
-            @PathVariable("id")
-            Long id,
+            @PathVariable("mapX")
+            String mapX,
+            @PathVariable("mapY")
+            String mapY,
             @PathVariable("pageNum")
             int pageNum
     ) {
-        HotelDto dto = hotelService.readOneHotel(id);
-        String mapX = dto.getMapX();
-        String mapY = dto.getMapY();
         return apiService.callSpotByLocationApi(mapX, mapY, pageNum);
     }
 
@@ -56,14 +55,16 @@ public class HotelController {
 
     @GetMapping("/search")
     public List<HotelDto> searchAllHotel(
-            @RequestParam(required = true)
+            @RequestParam(value = "keyword", required = true)
             String keyword,
-            @RequestParam(required = true)
+            @RequestParam(value = "checkIn", required = true)
             LocalDate checkIn,
-            @RequestParam(required = true)
-            LocalDate checkOut
+            @RequestParam(value = "checkOut", required = true)
+            LocalDate checkOut,
+            @RequestParam(value = "sort", required = false, defaultValue = "name")
+            String sort
     ) {
-        return hotelService.readHotelsReservationPossible(keyword, checkIn, checkOut);
+        return hotelService.searchHotelsAvailable(keyword, checkIn, checkOut, sort);
     }
 
     @GetMapping("/search/{id}")

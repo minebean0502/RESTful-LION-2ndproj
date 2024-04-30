@@ -63,11 +63,14 @@ public class ViewController {
             LocalDate checkIn,
             @RequestParam("checkOut")
             LocalDate checkOut,
+            @RequestParam(value = "sort", required = false, defaultValue = "title")
+            String sort,
             Model model
     ) {
         model.addAttribute("keyword", keyword);
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
+        model.addAttribute("sort", sort);
         return "hotelSearch/hotel-list-search";
     }
 
@@ -128,10 +131,14 @@ public class ViewController {
     }
 
     @GetMapping("/hotel/inquiries/submit/{hotelId}")
-    public String submitInquiry() { return "inquiries/submitInquiry"; }
+    public String submitInquiry() {
+        return "inquiries/submitInquiry";
+    }
 
     @GetMapping("/hotel/inquiries/update/{id}")
-    public String updateInquiry() { return "inquiries/submitInquiry"; }
+    public String updateInquiry() {
+        return "inquiries/submitInquiry";
+    }
 
 
     //임시
@@ -149,9 +156,15 @@ public class ViewController {
     public String hotelDetailView(
             @PathVariable("hotelId")
             Long hotelId,
+            @RequestParam("checkIn")
+            LocalDate checkIn,
+            @RequestParam("checkOut")
+            LocalDate checkOut,
             Model model
     ) {
         model.addAttribute("hotelId", hotelId);
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
         model.addAttribute("clientId", ncpClientKey);
         return "hotel-detail-test";
     }

@@ -134,7 +134,7 @@
             border-color: #eee;
         }
 
-        .hidden-content {
+        #inquiries .hidden-content {
             display: none;
             background-color: #f9f9f9;
             padding: 10px;
@@ -142,24 +142,24 @@
         }
 
         /* reset */
-        * {
+         * {
             list-style: none;
             text-decoration: none;
             padding: 0;
             margin: 0;
             box-sizing: border-box;
         }
-        .container {
+        #inquiries .container {
             width: 1100px;
             margin: 0 auto;
         }
-        .icon-button {
+        #inquiries .icon-button {
             color: #555;
             cursor: pointer;
             padding: 5px;
             font-size:10px;
         }
-        .action-icons {
+        #inquiries .action-icons {
             margin-left: 10px;
         }
     </style>
@@ -333,8 +333,8 @@
     async function deleteInquiry(inquiryId) {
         const confirmed = confirm("삭제하시겠습니까?");
         if (confirmed) {
-            const response = await fetch(`/api/hotel/inquiries/delete/${inquiryId}`, {
-                method: 'POST'
+            const response = await fetch(`/api/hotel/inquiries/inquiryFF/${inquiryId}`, {
+                method: 'DELETE'
             });
             if (response.ok) {
                 alert("문의를 성공적으로 삭제하였습니다.");
@@ -352,7 +352,7 @@
             return;
         }
         // Assuming you have an endpoint to handle POST requests for replies
-        const response = await fetch(`/api/hotel/inquiries/comments/submit`, {
+        const response = await fetch(`/api/hotel/inquiries/comments/comment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -385,8 +385,8 @@
             return;
         }
 
-        const response = await fetch('/api/hotel/inquiries/comments/update', {
-            method: 'POST',
+        const response = await fetch('/api/hotel/inquiries/comments/comment', {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -405,8 +405,8 @@
     async function deleteComment(commentId) {
         const confirmed = confirm("답변을 삭제하시겠습니까?");
         if (confirmed) {
-            const response = await fetch(`/api/hotel/inquiries/comments/delete/${commentId}`, {
-                method: 'POST'
+            const response = await fetch(`/api/hotel/inquiries/comments/comment/${commentId}`, {
+                method: 'DELETE'
             });
             if (response.ok) {
                 alert("답변이 성공적으로 삭제되었습니다..");

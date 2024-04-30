@@ -116,6 +116,11 @@ public class HotelService {
                 .toList();
     }
 
+    public List<HotelDto> searchHotelsAvailable(String keyword, LocalDate checkIn, LocalDate checkOut, String sort) {
+        return hotelRepo.searchByKeywordAndDateRangeAndSort(keyword, checkIn, checkOut, sort)
+                .stream().map(HotelDto::fromEntity).toList();
+    }
+
     @Transactional
     public HotelDto updateHotel(Long id, HotelDto hotelDto) {
         Hotel hotel = hotelRepo.findById(id)

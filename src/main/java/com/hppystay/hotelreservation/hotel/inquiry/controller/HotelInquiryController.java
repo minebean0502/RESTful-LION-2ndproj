@@ -49,7 +49,7 @@ public class HotelInquiryController {
         return hotelInquiryService.updateInquiry(hotelInquiryDto);
     }
 
-    @PostMapping("/delete/{id}")
+    @DeleteMapping("/inquiry/{id}")
     public ResponseEntity<?> deleteInquiry(@PathVariable("id") Integer id) {
         return hotelInquiryService.deleteInquiry(id);
     }
