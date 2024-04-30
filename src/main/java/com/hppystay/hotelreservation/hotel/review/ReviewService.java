@@ -41,8 +41,6 @@ public class ReviewService {
         Member member = auth.getCurrentMember();
         log.info("auth account: {}", member.getEmail());
 
-        //TODO: 리뷰를 작성하려는 고객이 해당 호텔에서 구매 기록이 없는 경우 로직 추가?
-
         Review review = Review.customBuilder()
                 .hotel(hotel)
                 .member(member)
@@ -106,6 +104,12 @@ public class ReviewService {
                 .toList();
     }
 
+    public ReviewDto getReview(Long reviewId) {
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.REVIEW_NOT_FOUND));
+        return ReviewDto.fromEntity(review);
+
+    }
     // 리뷰 수정 - 리뷰 작성한 본인 혹은 시스템 관리자만 가능
     public ReviewDto updateReview(Long hotelId, Long reviewId, ReviewDto dto) {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(
