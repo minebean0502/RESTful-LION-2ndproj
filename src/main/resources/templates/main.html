@@ -181,9 +181,7 @@
         var checkIn = document.getElementById('checkin-date').value;        // 체크인
         var checkOut = document.getElementById('checkout-date').value;      // 체크아웃
 
-        var url = `/hotel/search?keyword=${encodeURIComponent(keyword)}
-        &checkin=${encodeURIComponent(checkIn)}
-        &checkout=${encodeURIComponent(checkOut)}`;
+        var url = `/hotel/search?keyword=${encodeURIComponent(keyword)}&checkin=${encodeURIComponent(checkIn)}&checkout=${encodeURIComponent(checkOut)}`;
         alert(url);
         // 리다이렉트 시켜서 보내줍시다
         window.location = url;
