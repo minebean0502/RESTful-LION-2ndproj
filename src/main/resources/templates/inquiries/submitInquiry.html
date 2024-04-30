@@ -90,8 +90,8 @@
     async function openWindow() {
         const url = new URL(window.location.href);
         const urlParams = new URLSearchParams(window.location.search);
-        //const urlId = urlParams.get('id');
-        const urlId = 1;
+        const urlId = urlParams.get('id');
+        //const urlId = 1; // 하드 코딩
         document.getElementById('urlId').value = urlId;
 
         if (url.pathname.includes('/update')) {
