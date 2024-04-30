@@ -210,9 +210,9 @@
     <div class="room-info">
         <div class="room-details">
             <h2>방</h2>
-            <ul id="roomList">
+            <div id="roomList">
 
-            </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -293,7 +293,7 @@
     let hotelId = [[${hotelId}]];
 
     async function fetchHotelInfo() {
-        const response = await fetch(`/api/hotel/${hotelId}`);
+        const response = await fetch(`/api/hotel/search/${hotelId}`);
         const data = await response.json();
         if (response.ok) {
             document.getElementById('hotelName').innerText = data.title;
@@ -323,12 +323,15 @@
                 const roomLi = document.createElement('li');
                 const roomName = document.createElement('h3');
                 const roomContent = document.createElement('p');
+                const roomPrice = document.createElement('p');
 
                 roomName.innerText = room.name;
                 roomContent.innerText = room.content;
+                roomPrice.innerText = room.price;
 
                 roomLi.appendChild(roomName);
                 roomLi.appendChild(roomContent);
+                roomLi.appendChild(roomPrice);
 
                 roomUl.appendChild(roomLi);
             })
