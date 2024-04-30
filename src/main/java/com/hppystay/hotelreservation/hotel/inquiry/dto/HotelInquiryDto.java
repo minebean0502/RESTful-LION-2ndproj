@@ -18,7 +18,8 @@ public class HotelInquiryDto {
     private String title;
     private String content;
     private CommentDto comment;
-    private String writerId;
+    private Long writerId;
+    private String writer;
     private Integer hotelId;
     private LocalDateTime createdAt;
 }
