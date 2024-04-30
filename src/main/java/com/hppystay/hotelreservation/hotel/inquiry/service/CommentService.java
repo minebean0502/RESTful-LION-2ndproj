@@ -53,11 +53,6 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    public CommentDto getCommentById(Integer id) {
-        Comment comment = findCommentById(id);
-        return CommentMapper.toDto(comment);
-    }
-
     public ResponseEntity<?> updateComment( CommentDto commentDto) {
         Comment existingComment = findCommentById(commentDto.getId());
         checkPermission(existingComment.getWriterId(), facade.getCurrentMember().getId());

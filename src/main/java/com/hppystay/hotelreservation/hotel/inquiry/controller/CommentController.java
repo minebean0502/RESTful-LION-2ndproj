@@ -15,22 +15,17 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/submit")
+    @PostMapping("/comment")
     public ResponseEntity<?> submitComment(@RequestBody CommentDto commentDto) {
         return commentService.createComment(commentDto);
     }
 
-    @GetMapping("/update/{commentId}")
-    public CommentDto getCommentById(@PathVariable("commentId") Integer commentId) {
-        return commentService.getCommentById(commentId);
-    }
-
-    @PostMapping("/update")
+    @PutMapping("/comment")
     public ResponseEntity<?> updateComment(@RequestBody CommentDto commentDto) {
         return commentService.updateComment(commentDto);
     }
 
-    @PostMapping("/delete/{commentId}")
+    @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable("commentId") Integer commentId) {
         return commentService.deleteComment(commentId);
     }
