@@ -616,14 +616,9 @@
         const response = await fetch(url);
         const data = await response.json();
         if (response.ok) {
-            // 대체사진 선정
             var img;
-            if (data.firstImage === "") {
-                img = "/static/replace/replace_img.png";
-            }
-            else {
-                img = `${data.firstImage}`;
-            }
+            if (data.firstImage === "") img = "/static/replace/replace_img.png"; // 대체사진 선정
+            else img = `${data.firstImage}`;
 
             document.getElementById('hotelName').innerText = data.title;
             document.getElementById('hotelImage').src = img;

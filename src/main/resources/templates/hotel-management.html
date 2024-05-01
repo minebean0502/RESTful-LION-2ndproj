@@ -98,7 +98,10 @@
 
             // 호텔 사진 추가
             const image = document.createElement('img');
-            image.src = data.firstImage;
+            var img;
+            if (data.firstImage === "") img = "/static/replace/replace_img.png"; // 대체사진 선정
+            else img = `${data.firstImage}`;
+            image.src = img;
             image.alt = data.title;
             image.classList.add('hotel-image', 'mb-4');
             hotelDetails.appendChild(image);
