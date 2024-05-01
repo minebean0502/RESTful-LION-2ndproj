@@ -89,9 +89,26 @@ public class ViewController {
         return "test/submit-business-num";
     }
 
+    // 애도 윈도우인데 설정 안해도 되나봄?
     @GetMapping("/my-page/reservation/transfer")
     public String transferToMember() {
         return "reservation/transfer/transfer-to-member";
+    }
+
+    // 이건 마이페이지에서 결제 이어지는 부분 // 윈도우임
+    @GetMapping("/my-page/payment/start")
+    public String continuePaymentWindow() {
+        return "toss/continue-payment";
+    }
+
+    // 이건 호텔 상세 페이지에서 결제 이어지는 부분 // 윈도우임
+    // TODO hotel-detail-test 이후에 저거 맞는지 확인 필요함
+    @GetMapping("/hotel/search/{hotelId}")
+    public String doPaymentWindow(
+            @PathVariable("hotelId")
+            String hotelId)
+    {
+        return "toss/do-payment";
     }
 
     @GetMapping("/my-page/reservation/transfered")
