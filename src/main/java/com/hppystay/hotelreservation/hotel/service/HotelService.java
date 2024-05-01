@@ -210,4 +210,10 @@ public class HotelService {
             hotelLikeRepo.deleteByMemberAndHotel(member, hotel);
         }
     }
+
+    public HotelDto getMyHotel() {
+        Member member = facade.getCurrentMember();
+        return HotelDto.fromEntity(hotelRepo.findHotelByManager(member).orElseThrow(
+                () -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND)));
+    }
 }

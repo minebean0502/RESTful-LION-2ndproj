@@ -5,13 +5,13 @@
 <header>
     <!-- 부트 스트랩 세팅도 on -->
     <div class="nav-bar">
-        <a href="/main" class="logo">로고</a>
+        <a href="/main" class="logo">메인</a>
         <!-- 나중에 로고에 아이콘 링크시키기 -->
-        <ul class="nav-menu">
-            <li><a href="/hotel">호텔</a></li>
-            <li><a href="/foods">맛집</a></li>
-            <!-- 추가 메뉴 항목 -->
-        </ul>
+<!--        <ul class="nav-menu">-->
+<!--            <li><a href="/hotel">호텔</a></li>-->
+<!--            <li><a href="/foods">맛집</a></li>-->
+<!--            &lt;!&ndash; 추가 메뉴 항목 &ndash;&gt;-->
+<!--        </ul>-->
 
         <div class="nav-user-info" id="navUserInfo">
             <!--            &lt;!&ndash; 사용자 이름, 로그인 상태, 장바구니 등의 아이콘 &ndash;&gt;-->
@@ -41,28 +41,46 @@
             nicknameHref.style.color = 'black';
             nicknameHref.innerHTML = `<span class="nickname">${data.nickname}</span>`;
 
-            let role = '';
-            if (data.role === 'ROLE_USER') role = '회원';
-            else if (data.role === 'ROLE_MANAGER') role = '매니저';
-            else if (data.role === 'ROLE_ADMIN') role = '관리자';
-
             const userRoleSpan = document.createElement('span');
             userRoleSpan.classList.add('user-role');
+
+            let role = '';
+            let additionalHref = null;
+            if (data.role === 'ROLE_USER') {
+                role = '회원';
+            }
+            else if (data.role === 'ROLE_MANAGER') {
+                role = '매니저';
+                const managementHref = document.createElement('a');
+                managementHref.href = '/hotel/management';
+                managementHref.innerText = '호텔 관리';
+                managementHref.classList.add('text-menu');
+                additionalHref = managementHref;
+            }
+            else if (data.role === 'ROLE_ADMIN') {
+                role = '관리자';
+                const dashboardHref = document.createElement('a');
+                dashboardHref.href = '/admin';
+                dashboardHref.innerText = '대시보드';
+                dashboardHref.classList.add('text-menu');
+                additionalHref = dashboardHref;
+            }
             userRoleSpan.innerText = role;
 
             const logoutHref = document.createElement('a');
             logoutHref.href = '/logout';
             logoutHref.innerText = '로그아웃';
-            logoutHref.classList.add('login-logout');
+            logoutHref.classList.add('text-menu');
 
             navUserInfoDiv.appendChild(nicknameHref);
             navUserInfoDiv.appendChild(userRoleSpan);
+            if (additionalHref != null) navUserInfoDiv.appendChild(additionalHref);
             navUserInfoDiv.appendChild(logoutHref);
         } else {
             const loginHref = document.createElement('a');
             loginHref.href = '/login';
             loginHref.innerText = '로그인';
-            loginHref.classList.add('login-logout');
+            loginHref.classList.add('text-menu');
             navUserInfoDiv.appendChild(loginHref);
         }
 

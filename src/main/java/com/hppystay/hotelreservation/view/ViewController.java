@@ -187,4 +187,9 @@ public class ViewController {
         model.addAttribute("clientId", ncpClientKey);
         return "hotel-detail-test";
     }
+
+    @GetMapping("/hotel/management")
+    public String hotelManagementView() {
+        return "hotel-management";
+    }
 }
