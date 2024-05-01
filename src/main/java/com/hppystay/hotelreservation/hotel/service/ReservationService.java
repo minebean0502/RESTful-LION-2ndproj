@@ -1,6 +1,8 @@
 package com.hppystay.hotelreservation.hotel.service;
 
 import com.hppystay.hotelreservation.auth.entity.Member;
+import com.hppystay.hotelreservation.common.exception.GlobalErrorCode;
+import com.hppystay.hotelreservation.common.exception.GlobalException;
 import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
 import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
 import com.hppystay.hotelreservation.hotel.dto.ReservationInfoDto;
@@ -60,5 +62,28 @@ public class ReservationService {
                 member.getId(), ReservationStatus.ASSIGNMENT_PAYMENT_PENDING).stream()
                 .map(ReservationInfoDto::fromEntity)
                 .toList();
+    }
+
+    // 이건 PATCH용
+    public void cancelReservationAndLeft(Long reservationId) {
+        Member member = facade.getCurrentMember();
+        Reservation reservation = reservationRepo.findById(reservationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 reservation을 찾을 수 없습니다"));
+        if (!reservation.getMember().equals(member)) {
+            throw new GlobalException(GlobalErrorCode.NOT_HAVE_RESERVATION);
+        }
+        reservation.setStatus(ReservationStatus.RESERVATION_CANCELED);
+        reservationRepo.save(reservation);
+    }
+
+    // 이건 DELETE용
+    public void cancelReservation(Long reservationId) {
+        Member member = facade.getCurrentMember();
+        Reservation reservation = reservationRepo.findById(reservationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 reservation을 찾을 수 없습니다"));
+        if (!reservation.getMember().equals(member)) {
+            throw new GlobalException(GlobalErrorCode.NOT_HAVE_RESERVATION);
+        }
+        reservationRepo.delete(reservation);
     }
 }
