@@ -155,11 +155,11 @@ public class ViewController {
     }
 
 
-    //임시
-    @GetMapping("/hotel/37/details/m")
-    public String hotelDetailsm() {
-        return "temphtml/hotelDetails-m1";
-    }
+//    //임시
+//    @GetMapping("/hotel/37/details/m")
+//    public String hotelDetailsm() {
+//        return "temphtml/hotelDetails-m1";
+//    }
 
     @GetMapping("/admin")
     public String admin() {
