@@ -29,6 +29,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-align: center;
             justify-content: center;
             width: 100%;
             margin: auto;
@@ -109,13 +110,12 @@
         .horizontal-scroll {
             display: flex;
             flex-wrap: nowrap;
-            overflow: auto;
-            overflow-x: scroll;
+            overflow-x: auto;
             margin-left: -30px; /* 첫 번째 요소의 왼쪽 여백 조정 */
             padding-left: 30px; /* 스크롤 영역의 시작 부분에 패딩 추가 */
             padding-right: 30px;
             white-space: nowrap;
-            width: 80%;
+            width: 700px;
         }
 
         .tour-item {
@@ -128,6 +128,7 @@
             background: #f4f4f4; /* 배경 색상 */
             border-radius: 8px; /* 모서리 둥글게 */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+            white-space: normal;
         }
 
         .tour-item img {
@@ -142,13 +143,14 @@
         }
 
         .tour-item h3 {
-            font-size: 18px; /* 제목 글자 크기 */
+            font-size: 14px; /* 제목 글자 크기 */
             color: #333; /* 제목 글자 색상 */
         }
 
         .tour-item p {
-            font-size: 15px; /* 내용 글자 크기 */
+            font-size: 11px; /* 내용 글자 크기 */
             color: #666; /* 내용 글자 색상 */
+            word-break: keep-all;
         }
 
         .load-more {
