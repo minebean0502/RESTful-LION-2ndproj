@@ -21,6 +21,8 @@ public class ReservationInfoDto {
     private LocalDate checkOut;
     private String hotelImage;
     private ReservationStatus status;
+    // roomId 필요해서 이부분 추가함
+    private Long roomId;
 
     public static ReservationInfoDto fromEntity(Reservation entity) {
         return ReservationInfoDto.builder()
@@ -31,6 +33,8 @@ public class ReservationInfoDto {
                 .checkOut(entity.getCheckOut())
                 .hotelImage(entity.getRoom().getHotel().getFirstImage())
                 .status(entity.getStatus())
+                // 이부분 추가함
+                .roomId(entity.getRoom().getId())
                 .build();
     }
 }

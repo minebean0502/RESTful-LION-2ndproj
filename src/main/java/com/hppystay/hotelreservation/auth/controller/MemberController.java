@@ -141,4 +141,9 @@ public class MemberController {
         memberService.rejectManagerRole(requestId);
         return ResponseEntity.ok("{}");
     }
+
+    @GetMapping("/login-info")
+    public ResponseEntity<UserInfoDto> getLoginInfo() {
+        return memberService.getLoginInfo();
+    }
 }

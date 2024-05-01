@@ -12,6 +12,7 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/email/verify"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/password/send-code"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/password/reset"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/login-info"),
 
             // Hotel
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/areaCode/{area}"),
@@ -126,6 +127,9 @@ public class CustomRequestMatchers {
             // View
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentComplete"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentFail"),
+            // TODO 어... my-page 윈도우는 /**로 처리했는데 이거 경로 설정 어떻게 해야함? 일단 몰라서 두개 추가함
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search/{hotelId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search/{hotelId}/**"),
 
             // 끝나면 삭제할것
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test"),
