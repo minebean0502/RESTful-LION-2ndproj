@@ -476,15 +476,9 @@
                     const hotelTitle = document.createElement('h3');
                     const hotelAddress = document.createElement('p');
 
-                    // 대체사진 선정
                     var img;
-                    if (hotel.firstImage === "") {
-                        img = "/static/replace/replace_img.png";
-                    }
-                    else {
-                        img = `${hotel.firstImage}`;
-                    }
-
+                    if (hotel.firstImage === "") img = "/static/replace/replace_img.png"; // 대체사진 선정
+                    else img = `${hotel.firstImage}`;
                     hotelImage.src = img;
                     hotelImage.alt = 'Hotel Image';
                     hotelImage.style.maxWidth = '200px'; // 이미지 크기 조정
