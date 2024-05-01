@@ -18,7 +18,7 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Member extends BaseEntity {
+public class Member {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
