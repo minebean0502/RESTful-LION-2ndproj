@@ -237,6 +237,7 @@
     }
     
     async function fetchInquiries(page = 0, size = 10) {
+        await fetchLoginInfo();
         currentPage = page;
         const urlParams = new URLSearchParams(window.location.search);
         //const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
@@ -287,10 +288,14 @@
                 const detailCell = detailRow.insertCell(1);
                 const detailAuthorCell = detailRow.insertCell(2);
                 const detailDateCell = detailRow.insertCell(3);
-                detailCell.innerHTML = `<div class='action-icons'>${inquiries.content}&nbsp;&nbsp;&nbsp;&nbsp;|
-                                            <i class='fas fa-edit icon-button' onclick='openUpdateForm(${inquiries.id})'></i>
-                                            <i class='fas fa-trash icon-button' onclick='deleteInquiry(${inquiries.id})'></i>
-                                        </div>`;
+
+                detailCell.innerHTML += `${inquiries.content}`;
+                if (currentUser && currentUser.id === inquiries.writerId) {
+                    detailCell.innerHTML += `&nbsp;&nbsp;&nbsp;&nbsp;|
+                                                <i class='fas fa-edit icon-button' onclick='openUpdateForm(${inquiries.id})'></i>
+                                                <i class='fas fa-trash icon-button' onclick='deleteInquiry(${inquiries.id})'></i>
+                                             `;
+                }
 
 
                 const detailCommentRow = inquiriesTableBody.insertRow();
@@ -304,15 +309,17 @@
                 if (inquiries.comment) {
                     detailCommentAuthorCell.textContent = inquiries.comment.writer;
                     detailCommentDateCell.textContent = new Date(inquiries.comment.createdAt).toLocaleString();
-                    detailCommentCell.innerHTML += `<div class='action-icons'>└ ${inquiries.comment.comment}&nbsp;&nbsp;&nbsp;&nbsp;|
+                    detailCommentCell.innerHTML += `└${inquiries.comment.comment}`;
+                    if (currentUser && currentUser.id === inquiries.comment.writerId) {
+                        detailCommentCell.innerHTML += `&nbsp;&nbsp;&nbsp;&nbsp;|
                                                         <i class='fas fa-edit icon-button' onclick='showEditDiv(${inquiries.comment.id})'></i>
                                                         <i class='fas fa-trash icon-button' onclick='deleteComment(${inquiries.comment.id})'></i>
-                                                    </div>
-                                                    <div style='display: none;' id='edit-${inquiries.comment.id}'>
-                                                        <input type='text' id='comment-${inquiries.comment.id}' placeholder='Type your reply here...' class='reply-input' style='margin-top: 10px; width: 80%;'>
-                                                        <button onclick='updateReply(${inquiries.comment.id})' class='btn-dark btn-reply' style='margin-left: 10px;'>답변 수정</button>
-                                                    </div>
-                                                    `;
+                                                        <div style='display: none;' id='edit-${inquiries.comment.id}'>
+                                                            <input type='text' id='comment-${inquiries.comment.id}' placeholder='Type your reply here...' class='reply-input' style='margin-top: 10px; width: 80%;'>
+                                                            <button onclick='updateReply(${inquiries.comment.id})' class='btn-dark btn-reply' style='margin-left: 10px;'>답변 수정</button>
+                                                        </div>
+                        `;
+                    }
                     detailCell.innerHTML += `<div style='display: none;'>
                                                 <input type='text' id='reply-${inquiries.id}' placeholder='답변을 입력하세요.' class='reply-input'>
                                                 <button onclick='submitReply(${inquiries.id})' class='btn-dark btn-reply' style='margin-left: 10px;'>답변 등록</button>
