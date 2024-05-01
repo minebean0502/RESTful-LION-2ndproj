@@ -567,6 +567,17 @@
 </div>
 
 <script>
+    window.addEventListener('message', function (event) {
+        if (event.origin !== "http://localhost:8080") {
+            return;
+        }
+        if (event.data === 'paymentSuccess') {
+            window.location.href = "/my-page";
+        } else if (event.data === 'paymentFailure') {
+            window.location.reload();
+        }
+    }, false);
+
     const hotelId = [[${hotelId}]];
     const checkIn = `[[${checkIn}]]`;
     const checkOut = `[[${checkOut}]]`;
@@ -613,14 +624,35 @@
                 const roomName = document.createElement('h3');
                 const roomContent = document.createElement('p');
                 const roomPrice = document.createElement('p');
+                const paymentBtn = document.createElement('button');
 
                 roomName.innerText = room.name;
                 roomContent.innerText = room.content;
                 roomPrice.innerText = room.price;
 
+                paymentBtn.textContent = `예약 하기`;
+                paymentBtn.onclick = async function () {
+                    try {
+                        // 1. 예약 부분
+                        alert("예약 하겠습니다")
+                        await doReservation(room.id, checkIn, checkOut);
+                        alert("예약 완료했습니다")
+
+                        // 2. 결제 관련 function 시작
+                        alert("결제 진행을 위해 window를 열어줍니다")
+                        await doPaymentWindow(hotelId, room.name, room.price)
+                        alert("결제 처리가 끝났습니다?")
+
+                    } catch (error) {
+                        alert("처리 중 오류가 발생했습니다: " + error.message)
+                    }
+                }
+
+                // 대충 이부분 어딘가에 room의 id를 받는부분이 있겠죠?
                 roomLi.appendChild(roomName);
                 roomLi.appendChild(roomContent);
                 roomLi.appendChild(roomPrice);
+                roomLi.appendChild(paymentBtn);
 
                 roomUl.appendChild(roomLi);
             })
@@ -652,7 +684,7 @@
     // 주변 관광지 fetch
     let pageNum = 1;
 
-     function loadTourInfo() {
+    function loadTourInfo() {
         fetch(`/api/hotel/location/${mapX}/${mapY}/${pageNum}`)
             .then(response => response.json())
             .then(data => {
@@ -876,6 +908,45 @@
             } else {
                 alert('리뷰를 삭제하지 못하였습니다.');
             }
+        }
+    }
+
+
+    function doPaymentWindow(hotelId, roomName, roomPrice) {
+        // 호텔의 id, 체크인, 체크아웃으로 시작이기는 하는데
+        // 룸id, 룸price, 룸name 이정도만 전달해줘도 될듯? (orderName, price만 필요하니까)
+        var url = `/hotel/payment/start?hotelId=${hotelId}&roomName=${encodeURIComponent(roomName)}&roomPrice=${roomPrice}`
+        window.open(url, 'doPaymentWindow', 'width=600, height=800');
+    }
+
+    async function doReservation(roomId, checkIn, checkOut) {
+        try {
+            const response = await fetch(`/api/hotel/reservation`, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    roomId: roomId,
+                    checkIn: checkIn,
+                    checkOut: checkOut,
+                }),
+            });
+
+            if (!response.ok) {
+                alert('로그인을 하세요')
+                throw new Error('예약 요청 실패: ' + response.statusText);
+            }
+
+            // 서버로부터의 응답을 JSON 형태로 변환합니다.
+            const reservationData = await response.json();
+            console.log(reservationData); // 예약 데이터를 콘솔에 출력
+
+            // 추가적으로 예약 성공 메시지를 표시하거나 다른 처리를 수행할 수 있습니다.
+            alert('예약이 성공적으로 완료되었습니다.');
+
+        } catch (err) {
+            alert(`error메세지는 다음과 같습니다: ` + err);
         }
     }
 
@@ -1121,7 +1192,7 @@
         // 문의
         fetchInquiries();
     }
-  
+
 </script>
 </body>
 </html>
