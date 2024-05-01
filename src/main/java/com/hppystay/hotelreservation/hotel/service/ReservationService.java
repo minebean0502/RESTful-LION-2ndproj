@@ -29,7 +29,7 @@ public class ReservationService {
 
     public ReservationDto createReservation(ReservationDto reservationDto) {
         //TODO: 예약 가능 여부 체크하기
-
+        // 이거 로그인 안했을 때 로그인 하도록 errorcode 설정하기
         Member member = facade.getCurrentMember();
 
         Room room = roomRepo.findById(reservationDto.getRoomId())

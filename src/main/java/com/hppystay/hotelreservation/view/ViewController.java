@@ -103,11 +103,8 @@ public class ViewController {
 
     // 이건 호텔 상세 페이지에서 결제 이어지는 부분 // 윈도우임
     // TODO hotel-detail-test 이후에 저거 맞는지 확인 필요함
-    @GetMapping("/hotel/search/{hotelId}")
-    public String doPaymentWindow(
-            @PathVariable("hotelId")
-            String hotelId)
-    {
+    @GetMapping("/hotel/payment/start")
+    public String doPaymentWindow() {
         return "toss/do-payment";
     }
 
