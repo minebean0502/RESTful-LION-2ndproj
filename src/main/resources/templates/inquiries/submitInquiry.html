@@ -87,11 +87,18 @@
     let apiUrl;
     let isUpdate = false;
     let data = {};
+
+
     async function openWindow() {
         const url = new URL(window.location.href);
-        const urlParams = new URLSearchParams(window.location.search);
-        const urlId = urlParams.get('id');
-        //const urlId = 1; // 하드 코딩
+
+        // 경로에서 'submit/' 다음에 오는 숫자를 추출합니다.
+        const segments = url.pathname.split('/');
+        const index = segments.indexOf('submit');
+        const urlId = (index !== -1 && index + 1 < segments.length) ? segments[index + 1] : null;
+        console.log('Extracted ID:', urlId);  // 추출된 ID를 로그로 확인
+        document.getElementById('urlId').value = urlId;  // 추출된 ID를 input 필드에 설정
+
         document.getElementById('urlId').value = urlId;
 
         if (url.pathname.includes('/update')) {
