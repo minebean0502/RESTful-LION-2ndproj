@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manager Role Requests</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 30px;
+          padding: 0;
+          background-color: #f4f4f4;
+      }
+
+      h3{ text-align: center; }
+
+      table {
+          width: 70%;
+          border-collapse: collapse;
+          margin: 0 auto;
+      }
+
+      th, td {
+          border: 1px solid #ddd;
+          padding: 8px;
+          text-align: center;
+      }
+
+      th {
+          background-color: #ffffff;
+          color: #000300;
+      }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        button {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h3>관리자 페이지</h3>
+<br>
+<table id="requestsTable" class="table-default">
+  <thead>
+  <tr>
+    <th>번호</th>
+    <th>닉네임</th>
+    <th>이메일</th>
+    <th>사업자 번호</th>
+    <th>상태</th>
+    <th>승인</th>
+    <th>거절</th>
+  </tr>
+  </thead>
+    <tbody>
+
+    </tbody>
+</table>
+
+<div id="footer">
+  <th:block th:replace="~{updown/footer}"></th:block>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchManagerRequests();
+
+        async function fetchManagerRequests() {
+            const response = await fetch('/api/auth/manager-requests/list');
+            const requests = await response.json();
+            const tableBody = document.getElementById('requestsTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = '';
+
+            requests.forEach(request => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = request.id;
+                row.insertCell(1).textContent = request.nickname;
+                row.insertCell(2).textContent = request.email;
+                row.insertCell(3).textContent = request.businessNumber;
+                row.insertCell(4).textContent = request.status;
+                const approveButton = row.insertCell(5).appendChild(document.createElement('button'));
+                approveButton.textContent = 'Approve';
+                approveButton.className = 'btn btn-warning btn-sm';
+                approveButton.onclick = () => handleApproval(request.id);
+
+                const rejectButton = row.insertCell(6).appendChild(document.createElement('button'));
+                rejectButton.textContent = 'Reject';
+                rejectButton.className = 'btn btn-secondary btn-sm';
+                rejectButton.onclick = () => handleRejection(request.id);
+
+
+            });
+        }
+
+        async function handleApproval(requestId) {
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/approve`, {method: 'POST'});
+            if (response.ok) {
+                alert('Request Approved');
+                await fetchManagerRequests();
+            } else {
+                const data = await response.json();
+                alert(data.message);
+            }
+        }
+
+        async function handleRejection(requestId) {
+            const response = await fetch(`/api/auth/manager-requests/${requestId}/reject`, {method: 'POST'});
+            if (response.ok) {
+                alert('Request Rejected');
+                await fetchManagerRequests();
+            } else {
+                const data = await response.json();
+                alert(data.message);
+            }
+        }
+    });
+</script>
+</body>
+</html>

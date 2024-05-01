@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- toss-client-key를 타임리프로 암호화로 가져옴 -->
+    <!-- <meta name="toss-client-key" th:content="${clientKey}"/>-->
+    <!-- TODO 사실 이거 부트스트랩 부분인데 필요한지 모르겠음   -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- 토스 페이먼츠 부르기 위한 widget 경로  -->
+    <script src="https://js.tosspayments.com/v1/payment-widget"></script>
+    <title>결제 페이지</title>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 p-3">
+            <div id="payment-wrapper">
+                <div id="payment-method"></div>
+                <div id="agreement"></div>
+                <div class="p-3 w-100">
+                    <button id="payment-request-button" class="btn btn-primary w-100">결제하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- TODO 따온건데 이거 왜 필요하지? -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<script>
+    // <!-- 여기 타임리프 쓰는법 있었는데 까먹어서 일단 직접 넣음 -->
+    const clientKey = `test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm`;
+    // url 이렇게 날라옴
+    const urlParams = new URLSearchParams(window.location.search);
+    // 필요하지는 않을듯?
+    const hotelIdInfo = urlParams.get('hotelId');
+    const roomNameInfo = urlParams.get('roomName');
+    const roomPriceInfo = urlParams.get('roomPrice');
+
+    const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS)
+    const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
+        '#payment-method',
+        {
+            value: 0,
+            currency: 'KRW',
+            country: 'KR'
+        },
+        { variantKey: 'DEFAULT' }
+    )
+    // 규약 세팅
+    const paymentAgreement = paymentWidget.renderAgreement(
+        '#agreement',
+        { variantKey: 'DEFAULT' }
+    )
+    const paymentRequestButton = document.getElementById('payment-request-button');
+    paymentRequestButton.addEventListener('click', () => {
+        try {
+            paymentWidget.requestPayment({
+                // orderId는 상관없음
+                orderId: crypto.randomUUID().replaceAll('-', ''),
+                // 기존꺼
+                //orderName: `${hotelId}-${document.getElementById('item-name').innerText}`,
+                orderName: roomNameInfo,
+            }).then(async data => {
+                const response = await fetch('/api/toss/confirm-payment', {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        paymentKey: data.paymentKey,
+                        orderId: data.orderId,
+                        amount: data.amount
+                    }),
+                })
+                if (response.ok) {
+                    alert("결제가 성공적으로 완료되었습니다")
+                    // 결제 성공 메세지를 담아줌
+                    window.opener.postMessage('paymentSuccess', 'http://localhost:8080');
+                    window.close();
+                }
+            });
+        } catch (err) {
+            if (err.code === 'USER_CANCEL') {
+                alert('사용자 결제 취소')
+                // 결제 실패 메세지를 담아줌
+                window.opener.postMessage('paymentFailure', 'http://localhost:8080');
+                window.close();
+                // window.location.href = '/hotel/test/paymentFail'
+            }
+            else alert(err)
+        }
+    });
+    // 위젯에 가격 업데이트
+    paymentMethodsWidget.updateAmount(roomPriceInfo);
+</script>
+</body>
+</html>
