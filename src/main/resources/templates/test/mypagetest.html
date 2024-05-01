@@ -393,13 +393,14 @@
                 // TODO 예약 취소는, 결제대기 ~ 결제 완료일 때 둘다 표시가 가능하고
                 // TODO 결제 대기일때 -> 단순히 예약을 취소만
                 // TODO 결제 완료일 때 -> 예약을 취소하고 환불도 진행해야함
-                if ((reservation.status === 'RESERVATION_COMPLETED') && (reservation.status === 'PAYMENT_PENDING')) {
+                if ((reservation.status === 'RESERVATION_COMPLETED') || (reservation.status === 'PAYMENT_PENDING')) {
                     const cancelBtn = document.createElement('button');
                     cancelBtn.textContent = '예약 취소';
                     cancelBtn.classList.add('cancel-btn');
                     // 이후 관련 이벤트와 function
                     if (reservation.status === `PAYMENT_PENDING`) {
                         cancelBtn.onclick = function () {
+                            alert('PAYMENT_PENDING 예약 취소로 갑니다')
                             // 인자로 필요한건 취소할 reservation의 Id
                             cancelReservation()
                         }
@@ -408,9 +409,11 @@
                             // 결제 환불 부분인데, TOSS 백엔드 부분 확인해서
                             // 환불하고 -> 예약 취소를 해야하는지
                             // 환불과 예약취소가 동시에 이뤄지는지 확인해야함 (그에 따라 인자 바뀜)
+                            alert('RESERVATION_COMPLETED 예약 취소& 환불로 갑니다')
                             cancelPayment()
                         }
                     }
+                    reservationActionsDiv.appendChild(cancelBtn);
                 }
 
                 // [2] 예약 양도
@@ -423,6 +426,7 @@
                     openTransferWindow(reservation.reservationId);
                 }
                 transferBtn.classList.add('transfer-btn');
+                reservationActionsDiv.appendChild(transferBtn);
 
                 // [3] 미결제건의 결제 진행
                 // TODO 예약의 미결제건의 재개는 PAYMENT_PENDING일때만 진행할 수 있다.
@@ -433,14 +437,8 @@
                     transferBtn.onclick = function () {
                         continuePayment(reservation.reservationId, reservation.roomId, reservation.roomName)
                     }
+                    reservationActionsDiv.appendChild(continuePaymentBtn)
                 }
-
-                // TODO 여기에 appendChilde 부분 안하긴 했음
-                // 적당히 추가하기
-
-
-                reservationActionsDiv.appendChild(cancelBtn);
-                reservationActionsDiv.appendChild(transferBtn);
 
                 reservationDiv.appendChild(hotelInfoDiv);
                 reservationDiv.appendChild(reservationActionsDiv);
