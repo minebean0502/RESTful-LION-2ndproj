@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script type="text/javascript"
             th:src="@{https://oapi.map.naver.com/openapi/v3/maps.js(ncpClientId=${clientId})}"></script>
+    <link rel="stylesheet" href="/static/css/search-container.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -272,6 +273,18 @@
 </head>
 <body>
 
+<header>
+    <th:block th:replace="~{updown/temp-header}"></th:block>
+</header>
+
+<aside class="search-container">
+    <div class="search-bar">
+        <input type="date" id="checkInDate">
+        <input type="date" id="checkOutDate">
+        <button onclick="searchButtonClick()">Search</button>
+    </div>
+</aside>
+
 <!-- 호텔 -->
 <div class="container">
     <div class="hotel-info">
@@ -402,6 +415,8 @@
 <!--    </div>-->
 <!--</div>-->
 
+<th:block th:replace="~{updown/footer}"></th:block>
+
 <script>
     const hotelId = [[${hotelId}]];
     const checkIn = `[[${checkIn}]]`;
@@ -513,13 +528,6 @@
     function updateScrollWidth(container) {
         const totalWidth = Array.from(container.children).reduce((total, child) => total + child.offsetWidth + 15 /* 마진 포함 */, 0);
         container.style.width = `${totalWidth}px`;
-    }
-
-    // 윈도우 로드 후 실행할 함수들
-    window.onload = async function () {
-        await fetchHotelInfo();
-        fetchReviews();
-        loadTourInfo();
     }
 
     // 더 보기 버튼 이벤트 핸들러
@@ -709,7 +717,25 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', fetchReviews);
+    function fillSearchParams() {
+        document.getElementById('checkInDate').value = checkIn;
+        document.getElementById('checkOutDate').value = checkOut;
+    }
+
+    function searchButtonClick() {
+        const newCheckIn = document.getElementById('checkInDate').value;
+        const newCheckOut = document.getElementById('checkOutDate').value;
+        location.href = encodeURI(`/hotel/${hotelId}?checkIn=${newCheckIn}&checkOut=${newCheckOut}`);
+    }
+
+    // 윈도우 로드 후 실행할 함수들
+    window.onload = async function () {
+        await fetchHotelInfo();
+        fetchReviews();
+        loadTourInfo();
+        fillSearchParams();
+    }
+  
 </script>
 </body>
 </html>
