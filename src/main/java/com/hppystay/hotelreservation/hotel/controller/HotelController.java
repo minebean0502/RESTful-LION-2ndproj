@@ -2,12 +2,15 @@ package com.hppystay.hotelreservation.hotel.controller;
 
 import com.hppystay.hotelreservation.api.KNTO.dto.tourinfo.TourInfoApiDto;
 import com.hppystay.hotelreservation.api.service.ApiService;
+import com.hppystay.hotelreservation.common.exception.GlobalException;
 import com.hppystay.hotelreservation.hotel.dto.*;
 import com.hppystay.hotelreservation.hotel.service.HotelService;
 import com.hppystay.hotelreservation.hotel.service.ReservationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -113,6 +116,45 @@ public class HotelController {
             ReservationDto dto
     ) {
         return reservationService.createReservation(dto);
+    }
+
+    // TODO 예약 취소 기능 Post로 할지 PATCH쓸지 고민중
+    // 예약을 취소한다면 reservation을 삭제할지 말지
+    // reservation을 남긴다면, 다른 요소들을 어떻게 할지
+
+    // 이건 1번의 경우
+    @PatchMapping("/cancel/reservation") // 이거하면 결제 취소 목록에서 보여줄 수도있음
+    public ResponseEntity<?> cancelAndLeftReservation(
+            @RequestParam ("reservationId")
+            Long reservationId
+    ) {
+        // 1. [PATCH] reservation을 취소하고 남기는 경우
+        try {
+            reservationService.cancelReservationAndLeft(reservationId);
+            return ResponseEntity.ok().build();
+        } catch (GlobalException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        }
+    }
+
+    // 이건 2번의 경우
+    // @DeleteMapping("/cancel/reservaion")
+    @DeleteMapping("/cancel/reservation")
+    public ResponseEntity<?> cancelReservation(
+            @RequestParam("reservationId")
+            Long reservationId
+    ) {
+        // 2. [DELETE] reservation을 취소하고 삭제하는 경우
+        try {
+            reservationService.cancelReservation(reservationId);
+            return ResponseEntity.ok().build();
+        } catch (GlobalException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+        }
     }
 
     // 예약에 대해 조회

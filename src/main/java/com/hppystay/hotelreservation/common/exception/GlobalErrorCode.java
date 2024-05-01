@@ -48,7 +48,8 @@ public enum GlobalErrorCode {
     HOTEL_ROOM_MISMATCH(HttpStatus.BAD_REQUEST,"4006", "요청하신 호텔과 방이 일치하지 않습니다."),
     CHECKIN_AFTER_CHECKOUT(HttpStatus.BAD_REQUEST, "4007", "체크인 시간이 체크아웃 시간보다 빨라야 합니다."),
 
-
+    // 예약 관련 에러
+    NOT_HAVE_RESERVATION(HttpStatus.NOT_FOUND, "4100", "사용자가 소유한 예약이 아닙니다"),
 
     // 좋아요 관련 에러
     ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "5001", "이미 좋아요를 생성했습니다.");
