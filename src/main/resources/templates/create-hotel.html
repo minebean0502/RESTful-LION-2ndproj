@@ -192,7 +192,7 @@
         <div id="searchInputContainer">
             <input type="text" id="searchInput" name="searchInput">
         </div>
-        <button type="button" onclick="searchHotels()">검색하기</button>
+        <button type="submit">검색하기</button>
     </form>
 
     <h2>검색 결과</h2>
@@ -368,6 +368,8 @@
             .then(response => response.json())
             .then(data => {
                 console.log('New hotel created:', data);
+                alert('호텔이 생성되었습니다.');
+                location.href = '/hotel/management';
                 // Handle success, such as displaying a success message to the user
             })
             .catch(error => {
@@ -382,10 +384,10 @@
 
         if (searchType === 'region') {
             const regionInput = document.getElementById('searchInput').value;
-            apiUrl = `/api/hotel/areaCode/${regionInput}`;
+            apiUrl = `/api/hotel/areaCode?area=${regionInput}`;
         } else {
             const keywordInput = document.getElementById('searchInput').value;
-            apiUrl = `/api/hotel/keyword/${keywordInput}`;
+            apiUrl = `/api/hotel/keyword?keyword=${keywordInput}`;
         }
 
         fetch(apiUrl)
@@ -404,7 +406,10 @@
                     const hotelTitle = document.createElement('h3');
                     const hotelAddress = document.createElement('p');
 
-                    hotelImage.src = hotel.firstImage;
+                    var img;
+                    if (hotel.firstImage === "") img = "/static/replace/replace_img.png"; // 대체사진 선정
+                    else img = `${hotel.firstImage}`;
+                    hotelImage.src = img;
                     hotelImage.alt = 'Hotel Image';
                     hotelImage.style.maxWidth = '200px'; // 이미지 크기 조정
 
@@ -427,6 +432,11 @@
                 console.error('Error fetching hotels:', error);
             });
     }
+
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // 폼의 기본 제출 동작 방지
+        searchHotels();
+    });
 
     function fillHotelInfo(hotel) {
         document.getElementById('hotelTitle').value = hotel.title;

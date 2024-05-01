@@ -438,6 +438,8 @@
             .then(response => response.json())
             .then(data => {
                 console.log('hotel updated:', data);
+                alert('호텔이 수정되었습니다.');
+                location.href = '/hotel/management';
                 // Handle success, such as displaying a success message to the user
             })
             .catch(error => {
@@ -452,10 +454,10 @@
 
         if (searchType === 'region') {
             const regionInput = document.getElementById('searchInput').value;
-            apiUrl = `/api/hotel/areaCode/${regionInput}`;
+            apiUrl = `/api/hotel/areaCode?area=${regionInput}`;
         } else {
             const keywordInput = document.getElementById('searchInput').value;
-            apiUrl = `/api/hotel/keyword/${keywordInput}`;
+            apiUrl = `/api/hotel/keyword?keyword=${keywordInput}`;
         }
 
         fetch(apiUrl)
@@ -474,7 +476,10 @@
                     const hotelTitle = document.createElement('h3');
                     const hotelAddress = document.createElement('p');
 
-                    hotelImage.src = hotel.firstImage;
+                    var img;
+                    if (hotel.firstImage === "") img = "/static/replace/replace_img.png"; // 대체사진 선정
+                    else img = `${hotel.firstImage}`;
+                    hotelImage.src = img;
                     hotelImage.alt = 'Hotel Image';
                     hotelImage.style.maxWidth = '200px'; // 이미지 크기 조정
 

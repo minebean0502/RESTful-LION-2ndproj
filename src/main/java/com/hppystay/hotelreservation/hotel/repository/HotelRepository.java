@@ -1,5 +1,6 @@
 package com.hppystay.hotelreservation.hotel.repository;
 
+import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
     @Query("SELECT h FROM Hotel h WHERE h.title LIKE CONCAT('%', :keyword, '%') OR h.area LIKE CONCAT('%', :keyword, '%')")
@@ -34,4 +36,6 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
             @Param("checkOut") LocalDate checkOut,
             @Param("sort") String sort
     );
+
+    Optional<Hotel> findHotelByManager(Member manager);
 }

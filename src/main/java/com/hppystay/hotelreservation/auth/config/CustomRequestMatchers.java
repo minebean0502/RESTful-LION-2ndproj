@@ -2,9 +2,11 @@ package com.hppystay.hotelreservation.auth.config;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RegexRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
 public class CustomRequestMatchers {
-    public static AntPathRequestMatcher[] permitAllMatchers = {
+    public static RequestMatcher[] permitAllMatchers = {
             // Auth
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/sign-up"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/sign-in"),
@@ -15,24 +17,22 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/login-info"),
 
             // Hotel
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/areaCode/{area}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/keyword/{keyword}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/location/{mapX}/{mapY}/{pageNum}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/areaCode"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/keyword"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/location"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/{id}"),
+            RegexRequestMatcher.regexMatcher(HttpMethod.GET, "/api/hotel/\\d+"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/search"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/search/{id}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/update-view/{id}"),
+            RegexRequestMatcher.regexMatcher(HttpMethod.GET, "/api/hotel/search/\\d+\\?.*"),
 
             // 호텔 문의
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/inquiries/list"), //hotel 상세 페이지가 생기고 나면 없앨 것.
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/inquiries/{hotelId}"),
+            RegexRequestMatcher.regexMatcher(HttpMethod.GET, "/api/hotel/inquiries/\\d+"),
 
 
             // View
             AntPathRequestMatcher.antMatcher( "/login"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/create-view"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/{hotelId}"),
+            RegexRequestMatcher.regexMatcher(HttpMethod.GET, "/hotel/\\d+\\?.*"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/is-login"),
             AntPathRequestMatcher.antMatcher( "/denied"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/main"),
@@ -86,9 +86,7 @@ public class CustomRequestMatchers {
 
     // 일반 USER 를 위한 Matcher
     public static AntPathRequestMatcher[] userMatchers = {
-            // Auth
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/**"),
-
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests"),
             // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
@@ -130,9 +128,14 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/{id}"),
-
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/my"),
             // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
+
+            // View
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/management"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/create-view"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/update-view/{id}"),
     };
 
     // ADMIN 을 위한 Matcher
