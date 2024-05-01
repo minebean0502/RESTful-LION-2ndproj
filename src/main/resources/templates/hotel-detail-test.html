@@ -117,13 +117,14 @@
             padding-right: 30px;
             white-space: nowrap;
             width: 700px;
+            align-items: center;
         }
 
         .tour-item {
             flex: 0 0 auto;
             display: inline-block;
             width: 200px; /* 너비 조정 가능 */
-            height: auto;
+            height: 170px;
             margin-right: 15px;
             vertical-align: top;
             background: #f4f4f4; /* 배경 색상 */
@@ -132,14 +133,20 @@
             white-space: normal;
         }
 
+        .tour-item.selected {
+            background-color: #e0e0e0; /* 선택 시 배경색 변경 */
+        }
+
         .tour-item img {
             width: 100%; /* 이미지 너비 */
             height: 100px; /* 이미지 높이 조정 */
             object-fit: cover; /* 이미지 비율 유지 */
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 6px;
         }
 
         .tour-item h3, .tour-item p {
-            padding: 8px 12px; /* 내부 여백 */
+            padding: 6px 8px; /* 내부 여백 */
             margin: 0; /* 외부 여백 제거 */
         }
 
@@ -154,14 +161,20 @@
             word-break: keep-all;
         }
 
+        .load-more-container {
+            display: inline-block;
+            padding: 8px 12px;
+            height: auto; /* 버튼의 높이 자동 조절 */
+        }
+
         .load-more {
-            padding: 10px 20px;
-            background: #007bff;
+            /*padding: 10px 20px;*/
+            background: #333;
             color: white;
             border: none;
             cursor: pointer;
-            margin-top: 10px; /* 버튼 상단 여백 */
-            align-self: center;  /* 버튼을 자신의 영역 중앙에 위치 */
+            height: 170px;
+            border-radius: 8px; /* 모서리 둥글게 */
         }
 
         .form-group {
@@ -387,7 +400,6 @@
             margin-left: 10px;
         }
 
->>>>>>> main
     </style>
 </head>
 <body>
@@ -464,8 +476,10 @@
             <h2>주변 여행지</h2>
             <ul id="tourList" class="horizontal-scroll">
                 <!-- 관광지 정보가 들어갈 곳 -->
+                <li class="load-more-container">
+                    <button id="loadMore" class="load-more">&raquo;</button>
+                </li>
             </ul>
-            <button id="loadMore" class="load-more">더 보기 &raquo;</button>
         </div>
     </div>
 </div>
@@ -585,21 +599,34 @@
     let mapX;
     let mapY;
 
+    const pin_icon = {
+        url: '/static/map/pin_icon.png',
+        size: new naver.maps.Size(30, 30),
+        scaledSize: new naver.maps.Size(30, 30)
+    }
+
+    const pin_icon_selected = {
+        url: '/static/map/pin_icon_selected.png',
+        size: new naver.maps.Size(30, 30),
+        scaledSize: new naver.maps.Size(30, 30)
+    }
+
     async function fetchHotelInfo() {
         const url = encodeURI(`/api/hotel/search/${hotelId}?checkIn=${checkIn}&checkOut=${checkOut}`)
         const response = await fetch(url);
         const data = await response.json();
         if (response.ok) {
+            var img;
+            if (data.firstImage === "") img = "/static/replace/replace_img.png"; // 대체사진 선정
+            else img = `${data.firstImage}`;
+
             document.getElementById('hotelName').innerText = data.title;
-            document.getElementById('hotelImage').src = data.firstImage;
+            document.getElementById('hotelImage').src = img;
             document.getElementById('hotelAddress').innerText = data.address;
             document.getElementById('hotelTel').innerText = data.tel;
 
             mapX = data.mapX;
             mapY = data.mapY;
-
-            console.log(mapX);
-            console.log(mapY);
 
             const hotelRating = data.avg_score;
             const ratingStars = document.getElementById('ratingStars');
@@ -665,51 +692,113 @@
         }
     }
 
+    var map;
+    var mainPosition; // 호텔 좌표
+
     function displayMap(mapX, mapY) {
         var mapOptions = {
             center: new naver.maps.LatLng(mapY, mapX),
             zoom: 17
         };
 
-        var map = new naver.maps.Map('map', mapOptions);
+        map = new naver.maps.Map('map', mapOptions);
 
         // 마커 생성
-        var position = new naver.maps.LatLng(mapY, mapX);
+        mainPosition = new naver.maps.LatLng(mapY, mapX);
         var marker = new naver.maps.Marker({
-            position: position,
+            position: mainPosition,
             map: map
         });
     }
 
     // 주변 관광지 fetch
-    let pageNum = 1;
+    let pageNum = 0; // 초기 페이지 0, 메소드 실행시마다 +1
+    var markers = []; // 주변 관광지들 마커 담을 배열
 
     function loadTourInfo() {
+        pageNum++;  // 다음 페이지 번호 증가
+
         fetch(`/api/hotel/location/${mapX}/${mapY}/${pageNum}`)
             .then(response => response.json())
             .then(data => {
+                const tourList = document.querySelector('.horizontal-scroll');
+
+                // 더보기 버튼 임시 삭제
+                const loadMoreContainer = document.querySelector('.load-more-container');
+                tourList.removeChild(loadMoreContainer);
+
                 data.forEach(tour => {
-                    // const tourList = document.getElementById('tourList');
-                    const tourList = document.querySelector('.horizontal-scroll');
                     const li = document.createElement('li');
                     li.className = 'tour-item';
+
+                    // 대체사진 선정
+                    var img;
+                    if (tour.firstImage === "") {
+                        img = "/static/replace/replace_img.png";
+                    }
+                    else {
+                        img = `${tour.firstImage}`;
+                    }
+
                     li.innerHTML = `
-                            <img src="${tour.firstImage}" alt="Image of ${tour.title}">
+                            <img src="${img}" alt="Image of ${tour.title}">
                             <h3>${tour.title}</h3>
                             <p>${tour.address}</p>
                         `;
+
+                    // 지도에 마커 생성
+                    var position = new naver.maps.LatLng(tour.mapY, tour.mapX);
+                    var markerOptions = {
+                        position: position,
+                        map: map,
+                        icon: pin_icon
+                    };
+                    var marker = new naver.maps.Marker(markerOptions);
+                    markers.push(marker);
+
+                    // 클릭 시 지도 이동 EventListener 추가
+                    li.addEventListener('click', () => {
+                        // 우선 모든 마커를 기본 마커로 변경
+                        markers.forEach(marker => {
+                            marker.setIcon(pin_icon);
+                        });
+                        marker.setIcon(pin_icon_selected); // 해당 관광지 마커를 선택 마커로 변경
+                        map.setCenter(position); // 해당 관광지를 맵의 중심으로
+                    });
+
                     tourList.appendChild(li);
                 });
-                pageNum++;  // 다음 페이지 번호 증가
-
+                // 맨 끝에 더보기 버튼 추가
+                tourList.appendChild(loadMoreContainer);
             })
             .catch(error => console.error('주변 관광지를 불러올 수 없습니다.:', error));
     }
 
-    function updateScrollWidth(container) {
-        const totalWidth = Array.from(container.children).reduce((total, child) => total + child.offsetWidth + 15 /* 마진 포함 */, 0);
-        container.style.width = `${totalWidth}px`;
-    }
+    // tour-item 선택 이벤트 처리
+    document.addEventListener('DOMContentLoaded', () => {
+        const tourList = document.querySelector('.horizontal-scroll');
+
+        tourList.addEventListener('click', (event) => {
+            let targetElement = event.target.closest('.tour-item');
+            if (!targetElement) return; // 클릭된 요소가 .tour-item이 아니라면 무시
+
+            // 선택된 요소가 이미 selected 클래스를 가지고 있다면, 클래스를 제거
+            if (targetElement.classList.contains('selected')) {
+                targetElement.classList.remove('selected');
+                markers.forEach(marker => {
+                    marker.setIcon(pin_icon); // 호텔을 제외한 모든 마커를 기본 마커로
+                });
+                map.setCenter(mainPosition); // 다 선택 풀리면 다시 호텔을 가운데로
+            } else {
+                // 모든 아이템에서 selected 클래스 제거
+                document.querySelectorAll('.tour-item.selected').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                // 현재 클릭된 아이템에 selected 클래스 추가
+                targetElement.classList.add('selected');
+            }
+        });
+    });
 
     // 더 보기 버튼 이벤트 핸들러
     document.getElementById('loadMore').addEventListener('click', loadTourInfo);
