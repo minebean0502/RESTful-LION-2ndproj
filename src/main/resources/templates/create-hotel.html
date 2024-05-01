@@ -384,10 +384,10 @@
 
         if (searchType === 'region') {
             const regionInput = document.getElementById('searchInput').value;
-            apiUrl = `/api/hotel/areaCode/${regionInput}`;
+            apiUrl = `/api/hotel/areaCode?area=${regionInput}`;
         } else {
             const keywordInput = document.getElementById('searchInput').value;
-            apiUrl = `/api/hotel/keyword/${keywordInput}`;
+            apiUrl = `/api/hotel/keyword?keyword=${keywordInput}`;
         }
 
         fetch(apiUrl)
