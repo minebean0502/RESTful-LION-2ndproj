@@ -130,9 +130,12 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/{id}"),
-
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/my"),
             // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
+
+            // View
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/management"),
     };
 
     // ADMIN 을 위한 Matcher
