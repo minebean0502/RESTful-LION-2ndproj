@@ -12,6 +12,7 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/email/verify"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/password/send-code"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/password/reset"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/auth/login-info"),
 
             // Hotel
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/areaCode/{area}"),

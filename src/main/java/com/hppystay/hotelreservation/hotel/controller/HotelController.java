@@ -55,11 +55,11 @@ public class HotelController {
 
     @GetMapping("/search")
     public List<HotelDto> searchAllHotel(
-            @RequestParam(value = "keyword", required = true)
+            @RequestParam(value = "keyword")
             String keyword,
-            @RequestParam(value = "checkIn", required = true)
+            @RequestParam(value = "checkIn")
             LocalDate checkIn,
-            @RequestParam(value = "checkOut", required = true)
+            @RequestParam(value = "checkOut")
             LocalDate checkOut,
             @RequestParam(value = "sort", required = false, defaultValue = "name")
             String sort
