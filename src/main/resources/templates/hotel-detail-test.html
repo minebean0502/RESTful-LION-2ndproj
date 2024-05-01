@@ -269,6 +269,102 @@
             color: #f90;
         }
 
+        /* 문의 */
+        .inquiry-info{
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+            max-width: 700px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .inquiry-info button {
+            width: auto;
+            padding: 5px 10px;
+            align-self: flex-start;
+        }
+
+        .inquiry-info table, .inquiry-info th, .inquiry-info td {
+            border: none;
+        }
+
+        .inquiry-info .btn-dark {
+            background: #555;
+            color: #fff;
+        }
+
+        .inquiry-info .btn-reply {
+            display: inline-block;
+            padding: 0 10px;
+            font-size: 10px;
+            font-weight: 300;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .inquiry-info .btn-dark:hover, .btn-dark:focus {
+            background: #373737;
+            border-color: #373737;
+            color: #fff;
+        }
+
+        .inquiry-info .reply-input, .btn-reply {
+            height: 40px; /* 높이 설정 */
+            line-height: 40px; /* 세로 중앙 정렬을 위해 line-height도 맞춤 */
+            vertical-align: middle;
+            margin-top: 10px;
+        }
+
+        .inquiry-info .reply-input {
+            width: 80%;
+        }
+
+        .inquiry-info .pagination-btn {
+            padding: 5px 5px;
+            font-size: 16px;
+            color: #333;
+            background-color: transparent;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .inquiry-info .pagination-btn:hover {
+            color: #fff;
+            background-color: #555;
+            border-color: #555;
+        }
+
+        .inquiry-info .pagination-btn:disabled {
+            color: #ccc;
+            background-color: #f8f8f8;
+            cursor: not-allowed;
+            border-color: #eee;
+        }
+
+        .inquiry-info .hidden-content {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        .inquiry-info .icon-button {
+            color: #555;
+            cursor: pointer;
+            padding: 5px;
+            font-size:10px;
+        }
+
+        .inquiry-info .action-icons {
+            margin-left: 10px;
+        }
+
     </style>
 </head>
 <body>
@@ -409,11 +505,30 @@
 <!--&lt;!&ndash; 간격 추가 &ndash;&gt;-->
 <!--<div class="space"></div>-->
 
-<!--&lt;!&ndash; 문의 &ndash;&gt;-->
-<!--<div class="container">-->
-<!--    <div class="contact-info">-->
-<!--    </div>-->
-<!--</div>-->
+<!-- 문의 -->
+<div class="container">
+    <div class="inquiry-info" id="inquiries">
+        <h2>문의 사항</h2>
+        <button type="submit" class="btn btn-primary btn-sm" onclick="openSubmitForm()">질문등록</button>
+        <table class="board-table">
+            <thead>
+            <tr>
+                <th class="th-num">답변상태</th>
+                <th class="th-title">제목</th>
+                <th class="th-author">작성자</th>
+                <th class="th-date">등록일</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+
+        <!-- pagination area-->
+        <div id="pagination">
+        </div>
+    </div>
+</div>
 
 <th:block th:replace="~{updown/footer}"></th:block>
 
@@ -728,12 +843,236 @@
         location.href = encodeURI(`/hotel/${hotelId}?checkIn=${newCheckIn}&checkOut=${newCheckOut}`);
     }
 
+    // 문의
+    let currentPage = 0;
+    let currentUser = null;
+
+    async function fetchLoginInfo() {
+        const response = await fetch('/api/auth/login-info');
+        if (response.ok) {
+            currentUser = await response.json();
+            console.log("Logged in user info:", currentUser);
+        } else {
+            console.error("Failed to fetch login info");
+        }
+    }
+
+    async function fetchInquiries(page = 0, size = 10) {
+        await fetchLoginInfo();
+        currentPage = page;
+        const response = await fetch(`/api/hotel/inquiries/${hotelId}?page=${page}&size=${size}`);
+
+        if (response.ok) {
+            const inquiries = await response.json();
+            updatePaginationControls(inquiries);
+            updateTable(inquiries);
+
+            const inquiriesTableBody = document.querySelector('#inquiries tbody');
+            inquiriesTableBody.innerHTML = ''; // 이전 데이터 삭제
+
+            inquiries.content.forEach(inquiries => {
+                const row = inquiriesTableBody.insertRow();
+                const statusCell = row.insertCell(0);
+                const titleCell = row.insertCell(1);
+                const authorCell = row.insertCell(2)
+                const createdAtCell = row.insertCell(3);
+
+                statusCell.textContent = inquiries.comment ? '답변완료' : '미답변';
+                titleCell.textContent = inquiries.title;
+                titleCell.style.cursor = 'pointer'; // Make it look clickable
+                authorCell.textContent = inquiries.writer;
+                createdAtCell.textContent = new Date(inquiries.createdAt).toLocaleDateString();
+
+                titleCell.addEventListener('click', function() {
+                    const input = document.getElementById('reply-' + inquiries.id);
+                    const button = input.nextElementSibling;
+                    if (detailRow.style.display === 'none') {
+                        detailRow.style.display = 'table-row';
+                        detailCommentRow.style.display = 'table-row';
+                        input.style.display = 'inline-block';
+                        button.style.display = 'inline-block';
+                    } else {
+                        detailRow.style.display = 'none';
+                        detailCommentRow.style.display = 'none';
+                        input.style.display = 'none';
+                        button.style.display = 'none';
+                    }
+                });
+
+                const detailRow = inquiriesTableBody.insertRow();
+                detailRow.className = 'hidden-content';
+                const detailStatusCell = detailRow.insertCell(0);
+                const detailCell = detailRow.insertCell(1);
+                const detailAuthorCell = detailRow.insertCell(2);
+                const detailDateCell = detailRow.insertCell(3);
+
+                detailCell.innerHTML += `${inquiries.content}`;
+                if (currentUser && currentUser.id === inquiries.writerId) {
+                    detailCell.innerHTML += `&nbsp;&nbsp;&nbsp;&nbsp;|
+                                                <i class='fas fa-edit icon-button' onclick='openUpdateForm(${inquiries.id})'></i>
+                                                <i class='fas fa-trash icon-button' onclick='deleteInquiry(${inquiries.id})'></i>
+                                             `;
+                }
+
+                const detailCommentRow = inquiriesTableBody.insertRow();
+                detailCommentRow.className = 'hidden-content';
+                const detailCommentStatusCell = detailCommentRow.insertCell(0);
+                const detailCommentCell = detailCommentRow.insertCell(1);
+                const detailCommentAuthorCell = detailCommentRow.insertCell(2);
+                const detailCommentDateCell = detailCommentRow.insertCell(3);
+
+                if (inquiries.comment) {
+                    detailCommentAuthorCell.textContent = inquiries.comment.writer;
+                    detailCommentDateCell.textContent = new Date(inquiries.comment.createdAt).toLocaleDateString();
+                    detailCommentCell.innerHTML += `└${inquiries.comment.comment}`;
+                    if (currentUser && currentUser.id === inquiries.comment.writerId) {
+                        detailCommentCell.innerHTML += `&nbsp;&nbsp;&nbsp;&nbsp;|
+                                                        <i class='fas fa-edit icon-button' onclick='showEditDiv(${inquiries.comment.id})'></i>
+                                                        <i class='fas fa-trash icon-button' onclick='deleteComment(${inquiries.comment.id})'></i>
+                                                        <div style='display: none;' id='edit-${inquiries.comment.id}'>
+                                                            <input type='text' id='comment-${inquiries.comment.id}' placeholder='Type your reply here...' class='reply-input' style='margin-top: 10px; width: 80%;'>
+                                                            <button onclick='updateReply(${inquiries.comment.id})' class='btn-dark btn-reply' style='margin-left: 10px;'>답변 수정</button>
+                                                        </div>
+                        `;
+                    }
+                    detailCell.innerHTML += `<div style='display: none;'>
+                                                <input type='text' id='reply-${inquiries.id}' placeholder='답변을 입력하세요.' class='reply-input'>
+                                                <button onclick='submitReply(${inquiries.id})' class='btn-dark btn-reply' style='margin-left: 10px;'>답변 등록</button>
+                                            </div>`;
+                } else {
+                    detailCell.innerHTML += `<div style='display: flex;'>
+                                                <input type='text' id='reply-${inquiries.id}' placeholder='답변을 입력하세요.' class='reply-input'>
+                                                <button onclick='submitReply(${inquiries.id})' class='btn-dark btn-reply' style='margin-left: 10px;'>답변 등록</button>
+                                            </div>`;
+                }
+            })
+        }
+    }
+
+    function openSubmitForm() {
+        window.open(`/hotel/inquiries/submit/${hotelId}`, 'SubmitForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
+    }
+
+    async function deleteInquiry(inquiryId) {
+        const confirmed = confirm("삭제하시겠습니까?");
+        if (confirmed) {
+            const response = await fetch(`/api/hotel/inquiries/inquiry/${inquiryId}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                alert("문의를 성공적으로 삭제하였습니다.");
+                await fetchInquiries(); // Reload inquiries to reflect the change
+            } else {
+                alert("문의 삭제에 실패하였습니다.");
+            }
+        }
+    }
+
+    async function submitReply(inquiryId) {
+        const replyText = document.getElementById('reply-' + inquiryId).value;
+        if (replyText.trim() === '') {
+            alert('Please type a reply.');
+            return;
+        }
+        // Assuming you have an endpoint to handle POST requests for replies
+        const response = await fetch(`/api/hotel/inquiries/comments/comment`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ inquiryId:inquiryId, comment: replyText }),
+        });
+
+        if (response.ok) {
+            alert('답변이 정상적으로 등록되었습니다.');
+            document.getElementById('reply-' + inquiryId).value = ''; // Clear input field
+            location.reload();
+        } else {
+            alert('답변 등록에 실패하였습니다.');
+        }
+    }
+
+    function showEditDiv(commentId) {
+        const editDiv = document.getElementById(`edit-${commentId}`);
+        editDiv.style.display = 'flex'; // 이 부분을 'flex'로 설정하여 보이게 합니다.
+    }
+
+    async function updateReply(commentId) {
+        const replyInput = document.getElementById(`comment-${commentId}`);
+        const commentContent = replyInput.value.trim();
+
+        if (commentContent === '') {
+            alert('답변 내용을 입력해주세요.');
+            return;
+        }
+
+        const response = await fetch('/api/hotel/inquiries/comments/comment', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: commentId, comment: commentContent })
+        });
+
+        if (response.ok) {
+            alert('답변이 성공적으로 수정되었습니다.');
+            location.reload(); // 페이지를 새로고침하여 수정 사항 반영
+        } else {
+            throw new Error('답변 수정에 실패했습니다.');
+        }
+
+    }
+
+    async function deleteComment(commentId) {
+        const confirmed = confirm("답변을 삭제하시겠습니까?");
+        if (confirmed) {
+            const response = await fetch(`/api/hotel/inquiries/comments/comment/${commentId}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                alert("답변이 성공적으로 삭제되었습니다..");
+                await fetchInquiries(); // Reload inquiries to reflect the change
+            } else {
+                alert("답변 삭제에 실패하였습니다.");
+            }
+        }
+    }
+
+
+    function updatePaginationControls(inquiries) {
+        const paginationArea = document.querySelector("#pagination");
+        if (inquiries) {
+            const { totalPages } = inquiries;
+            const pageNumber = inquiries.pageable.pageNumber;  // 'pageNumber' 사용
+
+            // 페이지네이션 버튼 동적 생성 및 이벤트 핸들러 할당
+            paginationArea.innerHTML = `
+            <button class="pagination-btn" onclick="fetchInquiries(${pageNumber - 1}, 10)" ${pageNumber === 0 ? 'disabled' : ''}><</button>
+            <span id="totalPages">${pageNumber + 1} / ${totalPages}</span>
+            <button class="pagination-btn" onclick="fetchInquiries(${pageNumber + 1}, 10)" ${pageNumber >= totalPages - 1 ? 'disabled' : ''}>></button>
+        `;
+        } else {
+            paginationArea.innerHTML = "<span>페이지 정보를 사용할 수 없습니다.</span>";  // 잘못되거나 누락된 페이지네이션 데이터 처리
+            console.error("Pagination data is missing or incorrect");
+        }
+    }
+
+    function updateTable(inquiries) {
+        const inquiriesTableBody = document.querySelector('#inquiries tbody');
+        inquiriesTableBody.innerHTML = ''; // Clear existing entries
+        inquiries.content.forEach(inquiry => {
+            // Append new rows to the table as done previously
+        });
+    }
+
     // 윈도우 로드 후 실행할 함수들
     window.onload = async function () {
         await fetchHotelInfo();
         fetchReviews();
         loadTourInfo();
         fillSearchParams();
+        // 문의
+        fetchInquiries();
     }
   
 </script>
