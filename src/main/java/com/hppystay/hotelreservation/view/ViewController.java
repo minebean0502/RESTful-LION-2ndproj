@@ -166,6 +166,6 @@ public class ViewController {
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
         model.addAttribute("clientId", ncpClientKey);
-        return "hotel-detail-test";
+        return "hotel-detail-test-somin";
     }
 }

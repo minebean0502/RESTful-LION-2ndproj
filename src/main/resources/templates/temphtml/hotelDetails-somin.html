@@ -11,6 +11,10 @@
         }
         section.inquiries {
             padding: 80px 0;
+            list-style: none;
+            text-decoration: none;
+            margin: 0;
+            box-sizing: border-box;
         }
         #inquiries .page-title {
             margin-bottom: 60px;
@@ -141,14 +145,6 @@
             font-size: 12px;
         }
 
-        /* reset */
-         * {
-            list-style: none;
-            text-decoration: none;
-            padding: 0;
-            margin: 0;
-            box-sizing: border-box;
-        }
         #inquiries .container {
             width: 1100px;
             margin: 0 auto;
@@ -227,11 +223,24 @@
 </body>
 <script>
     let currentPage = 0; // Initialize current page state
+    let currentUser = null;
+
+    // 로그인 정보 불러오는 함수
+    async function fetchLoginInfo() {
+        const response = await fetch('/api/auth/login-info');
+        if (response.ok) {
+            currentUser = await response.json();
+            console.log("Logged in user info:", currentUser);
+        } else {
+            console.error("Failed to fetch login info");
+        }
+    }
+    
     async function fetchInquiries(page = 0, size = 10) {
         currentPage = page;
         const urlParams = new URLSearchParams(window.location.search);
-        const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
-        //const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
+        //const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
+        const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
         const response = await fetch(`/api/hotel/inquiries/${hotelId}?page=${page}&size=${size}`);
 
         if (response.ok) {
@@ -321,8 +330,8 @@
 
     function openSubmitForm() {
         const urlParams = new URLSearchParams(window.location.search);
-        const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
-        //const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
+        //const hotelId = urlParams.get('id'); // Assuming the URL parameter is named 'hotelId'
+        const hotelId = 1; //하드코딩된 hotelId, 나중에 동적으로 처리할 것
         window.open(`/hotel/inquiries/submit/${hotelId}`, 'SubmitForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
     }
 
@@ -333,7 +342,7 @@
     async function deleteInquiry(inquiryId) {
         const confirmed = confirm("삭제하시겠습니까?");
         if (confirmed) {
-            const response = await fetch(`/api/hotel/inquiries/inquiryFF/${inquiryId}`, {
+            const response = await fetch(`/api/hotel/inquiries/inquiry/${inquiryId}`, {
                 method: 'DELETE'
             });
             if (response.ok) {
@@ -375,11 +384,9 @@
     }
 
     async function updateReply(commentId) {
-        console.log(commentId);
         const replyInput = document.getElementById(`comment-${commentId}`);
         const commentContent = replyInput.value.trim();
 
-        // 입력 필드가 비어있지 않은지 확인
         if (commentContent === '') {
             alert('답변 내용을 입력해주세요.');
             return;
