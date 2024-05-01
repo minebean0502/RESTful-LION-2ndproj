@@ -23,7 +23,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
             "LEFT JOIN h.rooms r " +
             "LEFT JOIN r.reservationList res " +
             "WHERE (h.title LIKE CONCAT('%', :keyword, '%') OR h.area LIKE CONCAT('%', :keyword, '%')) " +
-            "AND (res.checkOut < :checkIn OR res.checkIn > :checkOut OR res.id IS NULL) " +
+            "AND (res.checkOut <= :checkIn OR res.checkIn >= :checkOut OR res.id IS NULL) " +
             "ORDER BY " +
             "CASE WHEN :sort = 'title' THEN h.title END ASC, " +
             "CASE WHEN :sort = 'rating' THEN h.avg_score END DESC, " +
