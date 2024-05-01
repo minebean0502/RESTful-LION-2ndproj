@@ -10,7 +10,7 @@ body {
 }
 
 /* 네비게이션 바 스타일링 */
-.navbar {
+.nav-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
