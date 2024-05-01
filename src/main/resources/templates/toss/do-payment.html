@@ -36,7 +36,7 @@
     // url 이렇게 날라옴
     const urlParams = new URLSearchParams(window.location.search);
     // 필요하지는 않을듯?
-    const hotelIdInfo = urlParams.get('hotelId');
+    const roomIdInfo = urlParams.get('roomId');
     const roomNameInfo = urlParams.get('roomName');
     const roomPriceInfo = urlParams.get('roomPrice');
 
@@ -65,7 +65,7 @@
                 //orderName: `${hotelId}-${document.getElementById('item-name').innerText}`,
                 orderName: roomNameInfo,
             }).then(async data => {
-                const response = await fetch('/api/toss/confirm-payment', {
+                const response = await fetch(`/api/toss/confirm-payment?roomId=${roomIdInfo}`, { // roomId 값을 쿼리 파라미터로 추가
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json'

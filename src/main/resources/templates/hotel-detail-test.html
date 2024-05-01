@@ -661,17 +661,14 @@
                 paymentBtn.onclick = async function () {
                     try {
                         // 1. 예약 부분
-                        alert("예약 하겠습니다")
                         await doReservation(room.id, checkIn, checkOut);
-                        alert("예약 완료했습니다")
 
                         // 2. 결제 관련 function 시작
-                        alert("결제 진행을 위해 window를 열어줍니다")
-                        await doPaymentWindow(hotelId, room.name, room.price)
-                        alert("결제 처리가 끝났습니다?")
+                        await doPaymentWindow(room.id, room.name, room.price)
+                        alert("결제 처리가 끝났습니다")
 
                     } catch (error) {
-                        alert("처리 중 오류가 발생했습니다: " + error.message)
+                        alert("결제 처리 중 오류가 발생했습니다: " + error.message)
                     }
                 }
 
@@ -1001,10 +998,10 @@
     }
 
 
-    function doPaymentWindow(hotelId, roomName, roomPrice) {
+    function doPaymentWindow(roomId, roomName, roomPrice) {
         // 호텔의 id, 체크인, 체크아웃으로 시작이기는 하는데
         // 룸id, 룸price, 룸name 이정도만 전달해줘도 될듯? (orderName, price만 필요하니까)
-        var url = `/hotel/payment/start?hotelId=${hotelId}&roomName=${encodeURIComponent(roomName)}&roomPrice=${roomPrice}`
+        var url = `/hotel/payment/start?roomId=${roomId}&roomName=${encodeURIComponent(roomName)}&roomPrice=${roomPrice}`
         window.open(url, 'doPaymentWindow', 'width=600, height=800');
     }
 
