@@ -49,7 +49,9 @@ public class TossService {
         String approvedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("approvedAt").toString();
         String lastTransactionKey = ((LinkedHashMap<String, Object>) tossPaymentObj).get("lastTransactionKey").toString();
 
-
+        // TODO reservation을 찾을 때, 멤버가 여러개의 예약을 할 수 있으니까 더 정확히 찾기위한 포인트는
+        // memberId와, roomId가 일치하는 애여야함
+        // TODO repository 나중에 한번 갈아줘야함
         Reservation reservation = reservationRepository.findByMember(member);
         log.info("현재 진행하는 reservation의 id는: " + reservation.getId());
 

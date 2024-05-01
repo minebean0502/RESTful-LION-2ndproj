@@ -4,27 +4,103 @@
 <link rel="stylesheet" href="/static/css/header.css">
 <header>
     <!-- 부트 스트랩 세팅도 on -->
-    <nav class="navbar">
-        <a href="/main" class="logo">로고</a>
+    <div class="nav-bar">
+        <a href="/main" class="logo">메인</a>
         <!-- 나중에 로고에 아이콘 링크시키기 -->
-        <ul class="nav-menu">
-            <li><a href="/hotel">호텔</a></li>
-            <li><a href="/foods">맛집</a></li>
-            <!-- 추가 메뉴 항목 -->
-        </ul>
+<!--        <ul class="nav-menu">-->
+<!--            <li><a href="/hotel">호텔</a></li>-->
+<!--            <li><a href="/foods">맛집</a></li>-->
+<!--            &lt;!&ndash; 추가 메뉴 항목 &ndash;&gt;-->
+<!--        </ul>-->
 
-        <div class="nav-user-info">
-            <!-- 사용자 이름, 로그인 상태, 장바구니 등의 아이콘 -->
-            <!-- 사용자 이름 -->
-            <span class="username">NOH CHAEWOON</span>
-            <!-- 사용자 상태 -->
-            <!-- 회원 // 호텔 매니저 // 관리자에따라 다르게 보여주기 -->
-            <span class="user-status">회원</span>
-            <!-- 아이콘 예시 -->
-            <a href="/cart"><i class="cart-icon">🛒</i></a>
-            <a href="/my-page"><i class="profile-icon">👤</i></a>
+        <div class="nav-user-info" id="navUserInfo">
+            <!--            &lt;!&ndash; 사용자 이름, 로그인 상태, 장바구니 등의 아이콘 &ndash;&gt;-->
+            <!--            &lt;!&ndash; 사용자 이름 &ndash;&gt;-->
+            <!--            <span class="nickname">사용자명</span>-->
+            <!--            &lt;!&ndash; 사용자 상태 &ndash;&gt;-->
+            <!--            &lt;!&ndash; 회원 // 호텔 매니저 // 관리자에따라 다르게 보여주기 &ndash;&gt;-->
+            <!--            <span class="user-role">회원</span>-->
+            <!--            &lt;!&ndash; 아이콘 예시 &ndash;&gt;-->
+            <!--            <a href="/cart"><i class="cart-icon">🛒</i></a>-->
+            <!--            <a href="/my-page"><i class="profile-icon">👤</i></a>-->
             <!-- ... -->
         </div>
-    </nav>
+    </div>
 </header>
+<script>
+    async function fetchLoginInfo() {
+        const response = await fetch('/api/auth/login-info');
+        const navUserInfoDiv = document.getElementById('navUserInfo');
+
+        if (response.ok) {
+            const data = await response.json();
+
+            const nicknameHref = document.createElement('a');
+            nicknameHref.href = '/my-page';
+            nicknameHref.style.textDecoration = 'none';
+            nicknameHref.style.color = 'black';
+            nicknameHref.innerHTML = `<span class="nickname">${data.nickname}</span>`;
+
+            const userRoleSpan = document.createElement('span');
+            userRoleSpan.classList.add('user-role');
+
+            let role = '';
+            let additionalHref = null;
+            if (data.role === 'ROLE_USER') {
+                role = '회원';
+            }
+            else if (data.role === 'ROLE_MANAGER') {
+                role = '매니저';
+                const managementHref = document.createElement('a');
+                managementHref.href = '/hotel/management';
+                managementHref.innerText = '호텔 관리';
+                managementHref.classList.add('text-menu');
+                additionalHref = managementHref;
+            }
+            else if (data.role === 'ROLE_ADMIN') {
+                role = '관리자';
+                const dashboardHref = document.createElement('a');
+                dashboardHref.href = '/admin';
+                dashboardHref.innerText = '대시보드';
+                dashboardHref.classList.add('text-menu');
+                additionalHref = dashboardHref;
+            }
+            userRoleSpan.innerText = role;
+
+            const logoutHref = document.createElement('a');
+            logoutHref.href = '/logout';
+            logoutHref.innerText = '로그아웃';
+            logoutHref.classList.add('text-menu');
+
+            navUserInfoDiv.appendChild(nicknameHref);
+            navUserInfoDiv.appendChild(userRoleSpan);
+            if (additionalHref != null) navUserInfoDiv.appendChild(additionalHref);
+            navUserInfoDiv.appendChild(logoutHref);
+        } else {
+            const loginHref = document.createElement('a');
+            loginHref.href = '/login';
+            loginHref.innerText = '로그인';
+            loginHref.classList.add('text-menu');
+            navUserInfoDiv.appendChild(loginHref);
+        }
+
+        // // 가로 마진 값을 설정할 변수
+        // const horizontalMarginValue = '3px';
+        //
+        // // 동적으로 생성된 요소들을 선택합니다.
+        // const dynamicElements = document.querySelectorAll('.nav-user-info > *');
+        //
+        // // 각 요소에 가로 마진을 설정합니다.
+        // dynamicElements.forEach(element => {
+        //     element.style.marginLeft = horizontalMarginValue;
+        //     element.style.marginRight = horizontalMarginValue;
+        // });
+    }
+
+    function initialize() {
+        fetchLoginInfo();
+    }
+
+    initialize();
+</script>
 </html>

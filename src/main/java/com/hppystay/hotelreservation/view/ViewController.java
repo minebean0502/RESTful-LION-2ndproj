@@ -67,6 +67,7 @@ public class ViewController {
             String sort,
             Model model
     ) {
+        if (checkIn.isAfter(checkOut)) checkOut = checkIn.plusDays(1);
         model.addAttribute("keyword", keyword);
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
@@ -103,11 +104,8 @@ public class ViewController {
 
     // 이건 호텔 상세 페이지에서 결제 이어지는 부분 // 윈도우임
     // TODO hotel-detail-test 이후에 저거 맞는지 확인 필요함
-    @GetMapping("/hotel/search/{hotelId}")
-    public String doPaymentWindow(
-            @PathVariable("hotelId")
-            String hotelId)
-    {
+    @GetMapping("/hotel/payment/start")
+    public String doPaymentWindow() {
         return "toss/do-payment";
     }
 
@@ -158,11 +156,11 @@ public class ViewController {
     }
 
 
-    //임시
-    @GetMapping("/hotel/37/details/m")
-    public String hotelDetailsm() {
-        return "temphtml/hotelDetails-m1";
-    }
+//    //임시
+//    @GetMapping("/hotel/37/details/m")
+//    public String hotelDetailsm() {
+//        return "temphtml/hotelDetails-m1";
+//    }
 
     @GetMapping("/admin")
     public String admin() {
@@ -179,10 +177,16 @@ public class ViewController {
             LocalDate checkOut,
             Model model
     ) {
+        if (checkIn.isAfter(checkOut)) checkOut = checkIn.plusDays(1);
         model.addAttribute("hotelId", hotelId);
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
         model.addAttribute("clientId", ncpClientKey);
         return "hotel-detail-test";
+    }
+
+    @GetMapping("/hotel/management")
+    public String hotelManagementView() {
+        return "hotel-management";
     }
 }

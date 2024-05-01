@@ -39,17 +39,6 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search"),
 
 
-            //임의 추가
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/37/details/m"),
-
-//            // Review
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/list"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
-
-
     };
 
     // 인증된 사용자를 위한 Matcher
@@ -84,13 +73,13 @@ public class CustomRequestMatchers {
             // view
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/my-page/**"),
 
-
-//            // Admin (테스트 위해 잠시-> 테스트 끝나면 ADMIN쪽으로 옮기기)
-//            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/admin"),
-
-           // Review
-//            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
-//            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/list"),
+            // Review
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/list"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/{hotelId}/review/{reviewId}"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
 
     };
@@ -127,8 +116,7 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentComplete"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test/paymentFail"),
             // TODO 어... my-page 윈도우는 /**로 처리했는데 이거 경로 설정 어떻게 해야함? 일단 몰라서 두개 추가함
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search/{hotelId}"),
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search/{hotelId}/**"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/payment/start/**"),
 
             // 끝나면 삭제할것
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/test"),
@@ -142,9 +130,12 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/hotel/{id}"),
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/{id}"),
-
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/my"),
             // Review
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
+
+            // View
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/management"),
     };
 
     // ADMIN 을 위한 Matcher
@@ -156,11 +147,6 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/manager-requests/{requestId}/reject"),
 
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/admin"),
-
-            // Review
-//            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/{hotelId}/review/{reviewId}"),
-//            AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/{hotelId}/review/{reviewId}/update"),
-//            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
 
     };

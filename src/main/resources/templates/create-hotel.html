@@ -368,6 +368,8 @@
             .then(response => response.json())
             .then(data => {
                 console.log('New hotel created:', data);
+                alert('호텔이 생성되었습니다.');
+                location.href = '/hotel/management';
                 // Handle success, such as displaying a success message to the user
             })
             .catch(error => {

@@ -438,6 +438,8 @@
             .then(response => response.json())
             .then(data => {
                 console.log('hotel updated:', data);
+                alert('호텔이 수정되었습니다.');
+                location.href = '/hotel/management';
                 // Handle success, such as displaying a success message to the user
             })
             .catch(error => {

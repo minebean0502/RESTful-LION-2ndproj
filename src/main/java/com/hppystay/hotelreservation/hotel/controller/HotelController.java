@@ -98,11 +98,12 @@ public class HotelController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteHotel(
+    public ResponseEntity<String> deleteHotel(
             @PathVariable("id")
             Long id
     ) {
         hotelService.deleteHotel(id);
+        return ResponseEntity.ok("{}");
     }
 
     // 예약 기능
@@ -134,5 +135,10 @@ public class HotelController {
     ) {
         hotelService.toggleLike(hotelId);
         return ResponseEntity.ok("{}");
+    }
+
+    @GetMapping("/my")
+    public HotelDto getMyHotel() {
+        return hotelService.getMyHotel();
     }
 }
