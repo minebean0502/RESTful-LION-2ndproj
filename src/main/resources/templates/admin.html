@@ -33,24 +33,23 @@
           color: #000300;
       }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+      tr:nth-child(even) {
+          background-color: #f2f2f2;
+      }
 
-        button {
-            cursor: pointer;
-        }
+      button {
+          cursor: pointer;
+      }
 
       .container {
           display: flex;
           align-items: center;
           justify-content: center;
-          /* 각 컨테이너의 높이를 자동으로 조정 */
           height: auto;
       }
 
       .table-height tr {
-          height: 50px;  /* 모든 행의 높이를 50픽셀로 설정 */
+          height: 50px;
       }
 
       .container {
@@ -81,26 +80,26 @@
 <br>
 <div class="container">
   <div class="admin-info">
-<table id="requestsTable" class="table">
-  <thead>
-  <tr>
-    <th>번호</th>
-    <th>닉네임</th>
-    <th>이메일</th>
-    <th>사업자 번호</th>
-    <th>상태</th>
-    <th>승인</th>
-    <th>거절</th>
-  </tr>
-  </thead>
-    <tbody>
+    <table id="requestsTable" class="table table-hover">
+      <thead>
+      <tr>
+        <th>번호</th>
+        <th>닉네임</th>
+        <th>이메일</th>
+        <th>사업자 번호</th>
+        <th>상태</th>
+        <th>승인</th>
+        <th>거절</th>
+      </tr>
+      </thead>
+      <tbody>
 
-    </tbody>
-</table>
+      </tbody>
+    </table>
   </div>
 </div>
 
-  <th:block th:replace="~{updown/footer}"></th:block>
+<th:block th:replace="~{updown/footer}"></th:block>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -122,6 +121,7 @@
                 const approveButton = row.insertCell(5).appendChild(document.createElement('button'));
                 approveButton.textContent = 'Approve';
                 approveButton.className = 'btn btn-warning btn-sm';
+                approveButton.style.color = 'white';
                 approveButton.onclick = () => handleApproval(request.id);
 
                 const rejectButton = row.insertCell(6).appendChild(document.createElement('button'));
