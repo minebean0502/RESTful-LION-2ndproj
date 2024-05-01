@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script type="text/javascript"
             th:src="@{https://oapi.map.naver.com/openapi/v3/maps.js(ncpClientId=${clientId})}"></script>
+    <link rel="stylesheet" href="/static/css/search-container.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -29,6 +30,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            text-align: center;
             justify-content: center;
             width: 100%;
             margin: auto;
@@ -109,13 +111,12 @@
         .horizontal-scroll {
             display: flex;
             flex-wrap: nowrap;
-            overflow: auto;
             overflow-x: auto;
             margin-left: -30px; /* 첫 번째 요소의 왼쪽 여백 조정 */
             padding-left: 30px; /* 스크롤 영역의 시작 부분에 패딩 추가 */
             padding-right: 30px;
             white-space: nowrap;
-            width: 40%;
+            width: 700px;
         }
 
         .tour-item {
@@ -128,6 +129,7 @@
             background: #f4f4f4; /* 배경 색상 */
             border-radius: 8px; /* 모서리 둥글게 */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+            white-space: normal;
         }
 
         .tour-item img {
@@ -142,13 +144,14 @@
         }
 
         .tour-item h3 {
-            font-size: 18px; /* 제목 글자 크기 */
+            font-size: 14px; /* 제목 글자 크기 */
             color: #333; /* 제목 글자 색상 */
         }
 
         .tour-item p {
-            font-size: 15px; /* 내용 글자 크기 */
+            font-size: 11px; /* 내용 글자 크기 */
             color: #666; /* 내용 글자 색상 */
+            word-break: keep-all;
         }
 
         .load-more {
@@ -269,6 +272,18 @@
     </style>
 </head>
 <body>
+
+<header>
+    <th:block th:replace="~{updown/temp-header}"></th:block>
+</header>
+
+<aside class="search-container">
+    <div class="search-bar">
+        <input type="date" id="checkInDate">
+        <input type="date" id="checkOutDate">
+        <button onclick="searchButtonClick()">Search</button>
+    </div>
+</aside>
 
 <!-- 호텔 -->
 <div class="container">
@@ -391,14 +406,16 @@
     </div>
 </section>
 
-<!-- 간격 추가 -->
-<div class="space"></div>
+<!--&lt;!&ndash; 간격 추가 &ndash;&gt;-->
+<!--<div class="space"></div>-->
 
-<!-- 문의 -->
-<div class="container">
-    <div class="contact-info">
-    </div>
-</div>
+<!--&lt;!&ndash; 문의 &ndash;&gt;-->
+<!--<div class="container">-->
+<!--    <div class="contact-info">-->
+<!--    </div>-->
+<!--</div>-->
+
+<th:block th:replace="~{updown/footer}"></th:block>
 
 <script>
     const hotelId = [[${hotelId}]];
@@ -508,12 +525,10 @@
     // 주변 관광지 fetch
     let pageNum = 1;
 
-     function loadTourInfo() {
+    function loadTourInfo() {
         fetch(`/api/hotel/location/${mapX}/${mapY}/${pageNum}`)
             .then(response => response.json())
             .then(data => {
-                // TODO 이부분 추가
-                // const tourList = document.querySelector('.horizontal-scroll');
                 data.forEach(tour => {
                     // const tourList = document.getElementById('tourList');
                     const tourList = document.querySelector('.horizontal-scroll');
@@ -525,36 +540,16 @@
                             <p>${tour.address}</p>
                         `;
                     tourList.appendChild(li);
-                    // TODO 기존 위치
-                    updateScrollWidth(tourList);
                 });
-                // TODO 여기로 바뀐 위치였음
-                // updateScrollWidth(tourList);
                 pageNum++;  // 다음 페이지 번호 증가
+
             })
             .catch(error => console.error('주변 관광지를 불러올 수 없습니다.:', error));
     }
 
-    // function updateScrollWidth(container) {
-    //     let totalWidth = 0;
-    //     const items = container.querySelectorAll('.tour-item')
-    //     items.forEach(item => {
-    //         totalWidth += item.offsetWidth + parseInt(window.getComputedStyle(item).marginRight, 10);
-    //     })
-    //     container.style.width = `${totalWidth}px`;
-    // }
-
-    // TODO 기존임
     function updateScrollWidth(container) {
         const totalWidth = Array.from(container.children).reduce((total, child) => total + child.offsetWidth + 15 /* 마진 포함 */, 0);
         container.style.width = `${totalWidth}px`;
-    }
-
-    // 윈도우 로드 후 실행할 함수들
-    window.onload = async function () {
-        await fetchHotelInfo();
-        fetchReviews();
-        loadTourInfo();
     }
 
     // 더 보기 버튼 이벤트 핸들러
@@ -622,22 +617,112 @@
         return starsHtml;
     }
 
+    // 별점 선택기 생성 함수
+    function createStarRating(currentScore) {
+        const container = document.createElement('div');
+        container.className = 'star-rating';
+        container.style.display = 'flex';
+        container.style.flexDirection = 'row'; // 별을 왼쪽에서 오른쪽으로 배열
+        container.style.justifyContent = 'flex-start';
+
+        for (let i = 1; i <= 5; i++) {
+            const input = document.createElement('input');
+            input.type = 'radio';
+            input.id = 'editStar' + i;
+            input.name = 'editRating';
+            input.value = i;
+
+            const label = document.createElement('label');
+            label.htmlFor = 'editStar' + i;
+            label.textContent = '★';
+            label.style.cursor = 'pointer';
+            label.style.color = (i <= currentScore) ? '#f90' : '#ccc'; // 왼쪽부터 currentScore까지 색상 채우기
+
+            input.addEventListener('change', function() {
+                updateStarDisplay(this.value);
+            });
+
+            container.appendChild(input);
+            container.appendChild(label);
+        }
+
+        return container;
+    }
+
+    // 별점 표시 업데이트 함수
+    function updateStarDisplay(selectedScore) {
+        const stars = document.querySelectorAll('.edit-form-container .star-rating label');
+        stars.forEach((star, index) => {
+            star.style.color = (index < selectedScore) ? '#f90' : '#ccc';
+        });
+    }
+
     async function editReview(reviewId) {
-        const newContent = prompt("수정할 내용을 작성해주세요:");
-        const newScore = prompt("리뷰 점수를 작성해주세요(1-5점):");
+        const response = await fetch(`/api/${hotelId}/review/${reviewId}`);
+        const review = await response.json();
+
+        if (response.ok) {
+            const reviewContent = document.createElement('textarea');
+            // reviewContent.value = review.content; // 기존 리뷰 내용
+            reviewContent.placeholder = '수정할 내용을 작성해주세요.';
+            reviewContent.className = 'form-control';
+
+            const starContainer = createStarRating(review.score); // 별점 선택기 생성
+
+            const submitButton = document.createElement('button');
+            submitButton.textContent = '수정 완료';
+            submitButton.className = 'btn btn-outline-primary btn-sm';
+            submitButton.onclick = async () => {
+                const selectedScore = document.querySelector('input[name="editRating"]:checked').value;
+                await updateReview(reviewId, reviewContent.value, selectedScore);
+            };
+
+            // 폼 컨테이너 생성 및 추가
+            const formContainer = document.createElement('div');
+
+            formContainer.style.width = '50%'; // 폼의 너비 설정
+            formContainer.style.padding = '20px'; // 내부 패딩 설정
+            formContainer.style.margin = 'auto'; // 중앙 정렬
+            formContainer.style.marginBottom = '50px';
+            formContainer.style.border = '1px solid #ccc'; // 테두리 설정
+            formContainer.style.borderRadius = '8px'; // 테두리 둥글게 설정
+            formContainer.style.backgroundColor = '#f8f8f8'; // 배경색 설정
+
+            formContainer.className = 'edit-form-container';
+            formContainer.appendChild(reviewContent);
+            formContainer.appendChild(starContainer);
+            formContainer.appendChild(submitButton);
+
+            // 이전에 생성된 수정 폼이 있다면 제거
+            const existingForm = document.getElementById('editForm');
+            if (existingForm) existingForm.remove();
+
+            // 새로운 폼 추가
+            document.body.appendChild(formContainer);
+            formContainer.id = 'editForm';
+        } else {
+            alert('리뷰 정보를 불러오는 데 실패했습니다.');
+        }
+    }
+    async function updateReview(reviewId, content, score) {
         const response = await fetch(`/api/${hotelId}/review/${reviewId}/update`, {
             method: 'PUT',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({content: newContent, score: newScore})
+            body: JSON.stringify({content, score})
         });
 
         if (response.ok) {
             alert('리뷰가 성공적으로 수정되었습니다.');
-            await fetchReviews();
+            await fetchReviews(); // 목록을 새로고침
+            const formContainer = document.getElementById('editForm');
+            if (formContainer) {
+                formContainer.parentNode.removeChild(formContainer); // 폼 제거
+            }
         } else {
-            alert('리뷰를 수정하는데 실패하였습니다.');
+            alert('리뷰 수정에 실패했습니다.');
         }
     }
+
 
     async function deleteReview(reviewId) {
         if (confirm('리뷰를 정말 지우시겠습니까?')) {
@@ -654,11 +739,11 @@
         }
     }
 
+
     function doPaymentWindow(hotelId, roomName, roomPrice) {
         // 호텔의 id, 체크인, 체크아웃으로 시작이기는 하는데
         // 룸id, 룸price, 룸name 이정도만 전달해줘도 될듯? (orderName, price만 필요하니까)
         var url = `/hotel/payment/start?hotelId=${hotelId}&roomName=${encodeURIComponent(roomName)}&roomPrice=${roomPrice}`
-        // var url = `/hotel/search/${hotelId}?roomName=${encodeURIComponent(roomName)}&roomPrice=${roomPrice}`;
         window.open(url, 'doPaymentWindow', 'width=600, height=800');
     }
 
@@ -692,6 +777,26 @@
             alert(`error메세지는 다음과 같습니다: ` + err);
         }
     }
+
+    function fillSearchParams() {
+        document.getElementById('checkInDate').value = checkIn;
+        document.getElementById('checkOutDate').value = checkOut;
+    }
+
+    function searchButtonClick() {
+        const newCheckIn = document.getElementById('checkInDate').value;
+        const newCheckOut = document.getElementById('checkOutDate').value;
+        location.href = encodeURI(`/hotel/${hotelId}?checkIn=${newCheckIn}&checkOut=${newCheckOut}`);
+    }
+
+    // 윈도우 로드 후 실행할 함수들
+    window.onload = async function () {
+        await fetchHotelInfo();
+        fetchReviews();
+        loadTourInfo();
+        fillSearchParams();
+    }
+
 </script>
 </body>
 </html>

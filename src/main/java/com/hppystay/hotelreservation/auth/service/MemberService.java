@@ -347,6 +347,11 @@ public class MemberService implements UserDetailsService {
         managerRequestRepository.save(request);
     }
 
+    public ResponseEntity<UserInfoDto> getLoginInfo() {
+        UserInfoDto userInfoDto = UserInfoDto.fromEntity(facade.getCurrentMember());
+        return ResponseEntity.ok(userInfoDto);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<Member> optionalMember = memberRepository.findMemberByEmail(username);

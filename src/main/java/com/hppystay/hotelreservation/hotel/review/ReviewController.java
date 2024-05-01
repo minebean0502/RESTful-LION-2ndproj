@@ -47,6 +47,16 @@ public class ReviewController {
         return reviewService.readAllReviews(hotelId);
     }
 
+    @GetMapping("{reviewId}")
+    public ReviewDto getReview(
+            @PathVariable("hotelId")
+            Long hotelId,
+           @PathVariable("reviewId")
+            Long reviewId
+            ) {
+        return reviewService.getReview(reviewId);
+
+    }
 
     // 리뷰 수정
     @PutMapping("{reviewId}/update")
