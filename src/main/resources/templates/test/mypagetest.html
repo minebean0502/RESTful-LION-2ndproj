@@ -384,16 +384,60 @@
                 const reservationActionsDiv = document.createElement('div');
                 reservationActionsDiv.classList.add('reservation-actions');
 
-                const cancelBtn = document.createElement('button');
-                cancelBtn.textContent = '예약 취소';
-                cancelBtn.classList.add('cancel-btn');
+                // TODO 기존에 있던것들
+                // const cancelBtn = document.createElement('button');
+                // cancelBtn.textContent = '예약 취소';
+                // cancelBtn.classList.add('cancel-btn');
 
+                // [1] 예약 취소
+                // TODO 예약 취소는, 결제대기 ~ 결제 완료일 때 둘다 표시가 가능하고
+                // TODO 결제 대기일때 -> 단순히 예약을 취소만
+                // TODO 결제 완료일 때 -> 예약을 취소하고 환불도 진행해야함
+                if ((reservation.status === 'RESERVATION_COMPLETED') && (reservation.status === 'PAYMENT_PENDING')) {
+                    const cancelBtn = document.createElement('button');
+                    cancelBtn.textContent = '예약 취소';
+                    cancelBtn.classList.add('cancel-btn');
+                    // 이후 관련 이벤트와 function
+                    if (reservation.status === `PAYMENT_PENDING`) {
+                        cancelBtn.onclick = function () {
+                            // 인자로 필요한건 취소할 reservation의 Id
+                            cancelReservation()
+                        }
+                    } else if (reservation.status === `RESERVATION_COMPLETED`) {
+                        cancelBtn.onclick = function () {
+                            // 결제 환불 부분인데, TOSS 백엔드 부분 확인해서
+                            // 환불하고 -> 예약 취소를 해야하는지
+                            // 환불과 예약취소가 동시에 이뤄지는지 확인해야함 (그에 따라 인자 바뀜)
+                            cancelPayment()
+                        }
+                    }
+                }
+
+                // [2] 예약 양도
+                // TODO 예약 양도 버튼은, 결제 완료일때 표시되며 작동해야하고
+                // TODO 한번 예약 양도 버튼을 누르면, 또다시 양도를 할 수는 없다
+                // TODO 예약 양도 취소를 누른 뒤, 다시 예약 양도를 할 수는 있다.
                 const transferBtn = document.createElement('button');
                 transferBtn.textContent = '예약 양도';
                 transferBtn.onclick = function () {
                     openTransferWindow(reservation.reservationId);
                 }
                 transferBtn.classList.add('transfer-btn');
+
+                // [3] 미결제건의 결제 진행
+                // TODO 예약의 미결제건의 재개는 PAYMENT_PENDING일때만 진행할 수 있다.
+                if (reservation.status === 'PAYMENT_PENDING') {
+                    const continuePaymentBtn = document.createElement('button');
+                    continuePaymentBtn.textContent = '결제 진행';
+                    continuePaymentBtn.classList.add('continue-payment-btn');
+                    transferBtn.onclick = function () {
+                        continuePayment(reservation.reservationId, reservation.roomId, reservation.roomName)
+                    }
+                }
+
+                // TODO 여기에 appendChilde 부분 안하긴 했음
+                // 적당히 추가하기
+
 
                 reservationActionsDiv.appendChild(cancelBtn);
                 reservationActionsDiv.appendChild(transferBtn);
@@ -586,6 +630,23 @@
     function submitBusinessNum() {
         var url = '/my-page/submit-businessNum'
         window.open(url, 'SubmitWindow', 'width=600, height=800');
+    }
+
+    // 미결제건의 다시 결제를 하는 부분 (my-page-예약현황-결제 진행)
+    function continuePayment(roomId, roomName, reservationId) {
+        // 일단 졸려서 인자 다 넘깁니다.
+        var url = `/my-page/payment/start?reservationId=${reservationId}&roomId=${roomId}&roomName=${encodeURIComponent(roomName)}`;
+        window.open(url, 'PaymentWindow', 'width=600,height=800');
+    }
+
+    // 예약 취소 (곧 환불 버튼임) 일때의 function
+    function cancelReservation() {
+
+    }
+
+    // 결제 환불
+    function cancelPayment() {
+
     }
 
     // 사실 reservationId만 받아와줘도 되기는 함
