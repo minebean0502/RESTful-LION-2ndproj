@@ -442,8 +442,17 @@
         const response = await fetch(url);
         const data = await response.json();
         if (response.ok) {
+            // 대체사진 선정
+            var img;
+            if (data.firstImage === "") {
+                img = "/static/replace/replace_img.png";
+            }
+            else {
+                img = `${data.firstImage}`;
+            }
+
             document.getElementById('hotelName').innerText = data.title;
-            document.getElementById('hotelImage').src = data.firstImage;
+            document.getElementById('hotelImage').src = img;
             document.getElementById('hotelAddress').innerText = data.address;
             document.getElementById('hotelTel').innerText = data.tel;
 
@@ -531,8 +540,18 @@
                 data.forEach(tour => {
                     const li = document.createElement('li');
                     li.className = 'tour-item';
+
+                    // 대체사진 선정
+                    var img;
+                    if (tour.firstImage === "") {
+                        img = "/static/replace/replace_img.png";
+                    }
+                    else {
+                        img = `${tour.firstImage}`;
+                    }
+
                     li.innerHTML = `
-                            <img src="${tour.firstImage}" alt="Image of ${tour.title}">
+                            <img src="${img}" alt="Image of ${tour.title}">
                             <h3>${tour.title}</h3>
                             <p>${tour.address}</p>
                         `;
