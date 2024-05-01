@@ -37,7 +37,7 @@
             overflow: hidden; /* 컨테이너에서 벗어나는 내용을 숨김 */
         }
 
-        .hotel-info, .room-info, .location-info, .review-info, .contact-info {
+        .hotel-info, .room-info, .location-info, .review-info, .contact-info, review-info {
             background-color: #fff;
             padding: 30px;
             border-radius: 15px;
@@ -269,6 +269,28 @@
             color: #f90;
         }
 
+
+        hr{
+            width : 49%;
+        }
+        .center-hr {
+            margin-left : auto;
+            margin-right : auto;
+        }
+
+        .review-info {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            max-width: 700px;
+            width: 100%;
+            /* 간격을 좁힘 */
+            margin-bottom: 20px;
+        }
+
+
         /* 문의 */
         .inquiry-info{
             background-color: #fff;
@@ -365,6 +387,7 @@
             margin-left: 10px;
         }
 
+>>>>>>> main
     </style>
 </head>
 <body>
@@ -451,6 +474,7 @@
 <div class="space"></div>
 
 <section class="reviews" id="reviews">
+    <hr class='center-hr'/>
     <div class="container">
         <h3>리뷰 작성하기</h3>
     </div>
@@ -475,37 +499,44 @@
     </div>
     <div class="container">
         <div class="left-align-container">
-            <button onclick="submitReview()" class="btn btn-primary btn-sm">등록</button>
+            <button onclick="submitReview()" class="btn btn-primary btn-sm">등록하기</button>
         </div>
     </div>
     <br>
+    <hr class='center-hr'/>
     <!-- 간격 추가 -->
     <div class="space"></div>
     <h3>리뷰 리스트</h3>
+    <br>
     <div class="container">
-
-        <table id="reviewsTable" class="table table-borderless" style="width: 60%; margin: 20px auto;">
+            <div class="review-info">
+        <table id="reviewsTable" class="table table-borderless" style="width: 130%; margin: 5px auto;">
             <thead>
             <tr>
                 <th>작성자</th>
                 <th>내용</th>
                 <th>별점</th>
-                <th></th>
-                <!--<th>작성일</th>-->
+                <th>수정/삭제</th>
             </tr>
             </thead>
             <tbody>
 
             </tbody>
         </table>
-
     </div>
+    </div>
+    <br>
+    <br>
 </section>
 
-<!--&lt;!&ndash; 간격 추가 &ndash;&gt;-->
-<!--<div class="space"></div>-->
+<!--<th:block th:replace="~{updown/footer}"></th:block>-->
+<!--<div id="footer">-->
+<!--    <th:block th:replace="~{updown/footer}"></th:block>-->
+<!--</div>-->
+
 
 <!-- 문의 -->
+
 <div class="container">
     <div class="inquiry-info" id="inquiries">
         <h2>문의 사항</h2>
@@ -530,7 +561,10 @@
     </div>
 </div>
 
-<th:block th:replace="~{updown/footer}"></th:block>
+<!--<th:block th:replace="~{updown/footer}"></th:block>-->
+<div id="footer">
+    <th:block th:replace="~{updown/footer}"></th:block>
+</div>
 
 <script>
     const hotelId = [[${hotelId}]];
@@ -693,9 +727,6 @@
                 deleteButton.addEventListener('click', () => deleteReview(review.id));
                 actionCell.appendChild(deleteButton);
 
-                // const dateCell = row.insertCell(4);
-                // const reviewDate = new Date(review.createdAt); // 서버에서 받은 timestamp를 Date 객체로 변환
-                // dateCell.textContent = reviewDate.toLocaleString();
             });
         } else {
             console.error('리뷰 불러오기에 실패하였습니다.');
@@ -769,6 +800,11 @@
                 const selectedScore = document.querySelector('input[name="editRating"]:checked').value;
                 await updateReview(reviewId, reviewContent.value, selectedScore);
             };
+            // // 이벤트 리스너 추가
+            // submitButton.addEventListener('click', async () => {
+            //     const selectedScore = document.querySelector('input[name="editRating"]:checked').value;
+            //     await updateReview(reviewId, reviewContent.value, selectedScore);
+            // });
 
             // 폼 컨테이너 생성 및 추가
             const formContainer = document.createElement('div');
@@ -793,6 +829,17 @@
             // 새로운 폼 추가
             document.body.appendChild(formContainer);
             formContainer.id = 'editForm';
+
+            const footer = document.getElementById('footer');
+            if (footer) {
+                // footer 요소의 바로 앞에 폼 삽입
+                footer.parentNode.insertBefore(formContainer, footer);
+            }
+
+             // 버튼 클릭 시 폼 생성 및 삽입
+            const addButton = document.getElementById('addFormButton');
+            addButton.addEventListener('click', editReview);
+
         } else {
             alert('리뷰 정보를 불러오는 데 실패했습니다.');
         }
