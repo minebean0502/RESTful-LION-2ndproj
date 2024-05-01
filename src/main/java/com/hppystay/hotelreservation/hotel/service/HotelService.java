@@ -86,6 +86,9 @@ public class HotelService {
     }
 
     public HotelDto readOneHotelReservationPossible(Long id, LocalDate checkIn, LocalDate checkOut) {
+        if (checkIn.isAfter(checkOut))
+            throw new GlobalException(GlobalErrorCode.CHECKIN_AFTER_CHECKOUT);
+
         Hotel hotel = hotelRepo.findById(id)
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND));
         List<Long> unavailableRoomIds = reservationRepo.findUnavailableRoomIds(checkIn, checkOut);
@@ -117,6 +120,9 @@ public class HotelService {
     }
 
     public List<HotelDto> searchHotelsAvailable(String keyword, LocalDate checkIn, LocalDate checkOut, String sort) {
+        if (checkIn.isAfter(checkOut))
+            throw new GlobalException(GlobalErrorCode.CHECKIN_AFTER_CHECKOUT);
+
         return hotelRepo.searchByKeywordAndDateRangeAndSort(keyword, checkIn, checkOut, sort)
                 .stream().map(HotelDto::fromEntity).toList();
     }

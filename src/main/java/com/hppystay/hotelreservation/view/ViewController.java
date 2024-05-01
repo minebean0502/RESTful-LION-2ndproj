@@ -67,6 +67,7 @@ public class ViewController {
             String sort,
             Model model
     ) {
+        if (checkIn.isAfter(checkOut)) checkOut = checkIn.plusDays(1);
         model.addAttribute("keyword", keyword);
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
@@ -179,6 +180,7 @@ public class ViewController {
             LocalDate checkOut,
             Model model
     ) {
+        if (checkIn.isAfter(checkOut)) checkOut = checkIn.plusDays(1);
         model.addAttribute("hotelId", hotelId);
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
