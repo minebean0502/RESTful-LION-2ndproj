@@ -129,19 +129,12 @@ public class HotelController {
 
     // 이건 1번의 경우
     @PatchMapping("/cancel/reservation") // 이거하면 결제 취소 목록에서 보여줄 수도있음
-    public ResponseEntity<?> cancelAndLeftReservation(
+    public ReservationInfoDto cancelAndLeftReservation(
             @RequestParam ("reservationId")
             Long reservationId
     ) {
         // 1. [PATCH] reservation을 취소하고 남기는 경우
-        try {
-            reservationService.cancelReservationAndLeft(reservationId);
-            return ResponseEntity.ok().build();
-        } catch (GlobalException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
-        }
+        return reservationService.cancelReservationAndLeft(reservationId);
     }
 
     // 이건 2번의 경우
@@ -187,5 +180,14 @@ public class HotelController {
     @GetMapping("/my")
     public HotelDto getMyHotel() {
         return hotelService.getMyHotel();
+    }
+
+    // mypage 결제를 위해, 단일 방의 price를 조회하는 부분 필요
+    @GetMapping("/rooms")
+    public RoomDto readRoomsPrice(
+            @RequestParam("roomId")
+            Long roomId
+    ) {
+        return hotelService.readRoomsPrice(roomId);
     }
 }

@@ -16,6 +16,12 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             "AND r.status <> 'RESERVATION_CANCELED'")
     List<Long> findUnavailableRoomIds(LocalDate checkIn, LocalDate checkOut);
 
+    @Query("SELECT CASE WHEN (COUNT(r) > 0) THEN true ELSE false END " +
+            "FROM Reservation r " +
+            "WHERE r.checkIn < :checkOut AND r.checkOut > :checkIn " +
+            "AND r.status <> 'RESERVATION_CANCELED'")
+    boolean existsConflictingReservation(LocalDate checkIn, LocalDate checkOut);
+
     List<Reservation> findAllByMember(Member member);
 
     // 멤버의 id와, status로 찾는 메서드
