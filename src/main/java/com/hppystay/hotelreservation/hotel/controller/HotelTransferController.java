@@ -1,7 +1,6 @@
 package com.hppystay.hotelreservation.hotel.controller;
 
 import com.hppystay.hotelreservation.auth.dto.MemberDto;
-import com.hppystay.hotelreservation.auth.entity.CustomUserDetails;
 import com.hppystay.hotelreservation.hotel.dto.AssignmentDto;
 import com.hppystay.hotelreservation.hotel.dto.ReservationDto;
 import com.hppystay.hotelreservation.hotel.dto.ReservationInfoDto;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,15 +31,6 @@ public class HotelTransferController {
         return new ResponseEntity<>(newTransferReservation, HttpStatus.CREATED);
     }
 
-    // 4. 양수자가 받은 Reservation을 찾고, 양도에 관련된 로직을 진행하는 부분 (가져오는거?)
-    // 이거 아직 작성 안함 ㅇㅇ;
-    // TODO 이거 필요없어 보이는데 어떻게 진행될지 모르겠음
-    // 해당 기능은 (4)/pending -> (3)/assignment 으로 이전했습니다.
-    @GetMapping("/pending")
-    public List<ReservationInfoDto> getPendingReservationsByMember() {
-        return hotelTransferService.getPendingReservationsByMember();
-    }
-
     // 1. 양도할 사람을 검색하는 API
     @GetMapping("/member/search")
     public ResponseEntity<List<MemberDto>> searchMembers(@RequestParam String keyword) {
@@ -54,5 +43,22 @@ public class HotelTransferController {
     public ResponseEntity<AssignmentDto> getAssignment(@RequestParam Long reservationId) {
         AssignmentDto assignmentDto = hotelTransferService.readAssignment(reservationId);
         return ResponseEntity.ok(assignmentDto);
+    }
+
+    // 4. 양도 취소 - A로부터
+    @PostMapping("/assignment/deny/A")
+    public ResponseEntity<ReservationInfoDto> denyAssignment(
+            @RequestParam Long reservationId) {
+        ReservationInfoDto reservationInfoDto = hotelTransferService.ADenyAssignment(reservationId);
+        return ResponseEntity.ok(reservationInfoDto);
+    }
+
+    // 5. 양도 거절 - B로부터
+    @DeleteMapping("/assignment/deny/B")
+    public ResponseEntity<ReservationInfoDto> deleteAssignment(
+            @RequestParam Long reservationId
+    ) {
+        ReservationInfoDto reservationInfoDto = hotelTransferService.BDenyAssignment(reservationId);
+        return ResponseEntity.ok(reservationInfoDto);
     }
 }

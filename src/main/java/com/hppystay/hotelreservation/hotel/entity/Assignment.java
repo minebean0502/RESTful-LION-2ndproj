@@ -29,8 +29,13 @@ public class Assignment {
 
     @Setter
     @OneToOne
-    @JoinColumn(name = "reservation_id")
-    private Reservation reservation;
+    @JoinColumn(name = "from_reservation_id")
+    private Reservation fromReservation;
+
+    @Setter
+    @OneToOne
+    @JoinColumn(name = "to_reservation_id")
+    private Reservation toReservation;
 
     // 양도할 데이터 필드
     @Setter
@@ -40,8 +45,8 @@ public class Assignment {
     @Setter
     private String itemName; // 예약된 상품명 (Room의 이름)
 
-    // 추가적으로 양도 시점의 정보 기록이 필요하다면
-    private LocalDateTime assignedAt; // 양도 요청 시점
+//    // 추가적으로 양도 시점의 정보 기록이 필요하다면
+//    private LocalDateTime assignedAt; // 양도 요청 시점
 }
 
 
