@@ -144,7 +144,6 @@ public class HotelService {
         hotel.setArea(hotelDto.getArea());
         hotel.setDescription(hotelDto.getDescription());
         hotel.setFirstImage(hotelDto.getFirstImage());
-        hotel.setAvg_score(hotelDto.getAvg_score()); //TODO: 사용자가 업데이트할때 Entity의 avg_score 업데이트 여부
         hotel.setMapX(hotelDto.getMapX());
         hotel.setMapY(hotelDto.getMapY());
         hotel.setTel(hotelDto.getTel());
