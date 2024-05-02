@@ -1,6 +1,5 @@
 package com.hppystay.hotelreservation.payment.toss.dto;
 
-import com.hppystay.hotelreservation.payment.toss.entity.Payment;
 import com.hppystay.hotelreservation.payment.toss.entity.TossPayment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

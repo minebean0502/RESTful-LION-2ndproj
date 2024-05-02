@@ -242,6 +242,17 @@
 </div>
 
 <script>
+    window.addEventListener('message', function (event) {
+        if (event.origin !== "http://localhost:8080") {
+            return;
+        }
+        if (event.data === 'paymentContinueSuccess') {
+            window.location.href = "/my-page";
+        } else if (event.data === 'paymentContinueFailure') {
+            window.location.reload();
+        }
+    }, false);
+
     function openTab(tabName) {
         let i, tabContent
         tabContent = document.getElementsByClassName("tab-content");
@@ -390,17 +401,16 @@
                     // [1-A] 예약 취소 - reservation 삭제
                     if (reservation.status === `PAYMENT_PENDING`) {
                         cancelBtn.onclick = function () {
-                            alert('PAYMENT_PENDING 예약 취소로 갑니다')
-                            // 인자로 필요한건 취소할 reservation의 Id
+                            alert('저장된 예약만 삭제합니다')
                             cancelReservation(reservation.reservationId)
-                            alert('예약 취소 - reservation 삭제 성공')
                         }
                     // [1-B] 예약 취소 - reservation 삭제 & payment 삭제
                     } else if (reservation.status === `RESERVATION_COMPLETED`) {
                         cancelBtn.onclick = function () {
-                            alert('결제 정보를 환불합니다')
+                            alert('결제를 환불합니다')
                             cancelPayment(reservation.reservationId)
-                            alert('예약을 환불합니다')
+
+                            alert('저장된 예약을 삭제합니다')
                             cancelReservation(reservation.reservationId)
                         }
                     }
@@ -566,15 +576,17 @@
         })
         if (!response.ok) {
             alert("예약이 정상적으로 취소되지 않았습니다")
-        } else if (!response.ok) {
+            window.location.reload();
+        } else if (response.ok) {
             alert("예약이 정상적으로 취소되었습니다")
+            window.location.reload();
         }
     }
 
     // [1-B] 예약 취소 - 결제 환불
     // 필요로 하는건 reservationId, dto 사유 정도?
     async function cancelPayment(reservationId) {
-        const response = await fetch(`/api/toss/reservation//${reservationId}/cancel`, {
+        const response = await fetch(`/api/toss/reservation/${reservationId}/cancel`, {
             method : 'POST',
             headers: {
                 'Content-Type' : 'application/json'
@@ -605,7 +617,7 @@
 
     // [4] 미결제건의 결제 진행
     // 예약을 하고 결제를 이어서 진행하기 위해서는, roomName, reservationId, roomId를 일단 넘겨준다
-    function continuePayment(roomId, roomName, reservationId) {
+    function continuePayment(reservationId, roomId, roomName) {
         // 일단 졸려서 인자 다 넘깁니다.
         var url = `/my-page/payment/start?reservationId=${reservationId}&roomId=${roomId}&roomName=${encodeURIComponent(roomName)}`;
         window.open(url, 'PaymentWindow', 'width=600,height=800');

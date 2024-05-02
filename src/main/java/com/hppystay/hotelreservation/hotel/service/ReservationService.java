@@ -67,15 +67,20 @@ public class ReservationService {
     }
 
     // 이건 PATCH용
-    public void cancelReservationAndLeft(Long reservationId) {
+    public ReservationInfoDto cancelReservationAndLeft(Long reservationId) {
+        log.info("시작");
         Member member = facade.getCurrentMember();
+        log.info(String.valueOf(member.getId()));
         Reservation reservation = reservationRepo.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 reservation을 찾을 수 없습니다"));
-        if (!reservation.getMember().equals(member)) {
+        log.info(String.valueOf(reservation.getId()));
+        log.info("1번 오류 부분");
+        if (!reservation.getMember().getId().equals(member.getId())) {
             throw new GlobalException(GlobalErrorCode.NOT_HAVE_RESERVATION);
         }
+        log.info("2번 오류 부분");
         reservation.setStatus(ReservationStatus.RESERVATION_CANCELED);
-        reservationRepo.save(reservation);
+        return ReservationInfoDto.fromEntity(reservationRepo.save(reservation));
     }
 
     // 이건 DELETE용

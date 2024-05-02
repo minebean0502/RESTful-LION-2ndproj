@@ -631,9 +631,9 @@
         if (event.origin !== "http://localhost:8080") {
             return;
         }
-        if (event.data === 'paymentSuccess') {
+        if (event.data === 'paymentContinueSuccess') {
             window.location.href = "/my-page";
-        } else if (event.data === 'paymentFailure') {
+        } else if (event.data === 'paymentContinueFailure') {
             window.location.reload();
         }
     }, false);
