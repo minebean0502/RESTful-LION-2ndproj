@@ -31,12 +31,9 @@
 <script>
     // url에서 params 정보들 받아와야함 [1] B의 reservationId, [2]orderName(방이름)
     const urlParams = new URLSearchParams(window.location.search);
-    // [1] reservationId는 >> /transfered? + reservationId << 에서 추출해야함
     const reservationId = urlParams.get('reservationId');
-    console.log('reservationId는 ' + reservationId);
-    // [2] orderName (방 이름)도 추출해줌
     const roomName = urlParams.get('orderName');
-    console.log('orderName은 ' + roomName);
+    const roomId = urlParams.get('roomId');
 
     // const clientKey = "test_ck_Gv6LjeKD8aX1eR5boGBBrwYxAdXy"; // 이것도 보안 설정하고싶은데, 작은 윈도우라 모르겠음
     // clientKey 변경 되었음... docs 키로 변경 (기존키 사용 불가능)
@@ -67,7 +64,7 @@
                 orderId: crypto.randomUUID().replaceAll('-', ''),
                 orderName: roomName,
             }).then(async data => {
-                const response = await fetch('/api/toss/confirm-payment', {
+                const response = await fetch(`/api/toss/confirm-payment?roomId=${roomId}`, {
                     method: 'post',
                     headers: {
                         'Content-Type' : 'application/json',
