@@ -60,6 +60,8 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/pending"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/assignment"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/member/search/**"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer/assignment/deny/A"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/hotel/reservation/transfer/assignment/deny/B"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/rooms"),
 
             // Toss

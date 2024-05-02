@@ -148,9 +148,9 @@ public class TossService {
                 .orElseThrow(() -> new RuntimeException("assignment가 없습니다"));
 
         // 그리고 여기서부터 취소할 A의 주문을 찾고 갱신하고 취소를 진행해야함
-        TossPayment fromMemberTossPayment = tossPaymentRepository.findById(assignment.getReservation().getId())
+        TossPayment fromMemberTossPayment = tossPaymentRepository.findById(assignment.getToReservation().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "이전 사용자의 정보를 찾을 수 없어요"));
-        Reservation reservation = reservationRepository.findById(assignment.getReservation().getId())
+        Reservation reservation = reservationRepository.findById(assignment.getToReservation().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "<1>reservation 못찾았음"));
         // A의 주문 정보를 갱신함
         log.info("현재 A의 tossPayment의 status는 어떤가요");

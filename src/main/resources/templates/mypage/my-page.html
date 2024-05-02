@@ -435,8 +435,9 @@
                     assignmentCancel.textContent = '양도 취소';
                     assignmentCancel.classList.add('assignment-cancel-btn');
                     assignmentCancel.onclick = function () {
-                        // TODO 이거 작성해야함
-                        assignmentCancelWindow();
+                        // 해당 reservation의 Id값 전달해 줄 수 있음
+                        alert(`전해주는 전달값은 : ${reservation.reservationId}`)
+                        assignmentCancelWindow(reservation.reservationId);
                     }
                     reservationActionsDiv.appendChild(assignmentCancel);
                 }
@@ -530,8 +531,8 @@
                 denyBtn.textContent = '양도 거절';
                 denyBtn.onclick = function () {
                     // [6] 양도 - 거절
-                    // 뭐 넣어줄지는 내일 할래용
-                    denyAssignment();
+                    alert(`전해주는 전달값은 : ${reservation_pending.reservationId}`)
+                    denyAssignment(reservation_pending.reservationId);
                 }
                 denyBtn.classList.add('deny-btn');
 
@@ -605,8 +606,23 @@
     // [3] 양도 취소
     // assignment를 조회하기 위해서는 fromMember의 id, toMember의id, reservation의id다 필요함
     // reservation은 현재 member의 id, room의 id
-    async function assignmentCancelWindow() {
-
+    async function assignmentCancelWindow(reservationId) {
+        await fetch(`/api/hotel/reservation/transfer/assignment/deny/A?reservationId=${reservationId}`, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) { // 성공적인 응답인 경우
+                    return response.json();
+                } else {
+                    throw new Error('서버 처리 실패'); // 서버가 2XX 응답을 보내지 않은 경우
+                }
+            })
+            .then(data => {
+                alert('양도 취소가 완료되었습니다');
+            })
+            .catch(error => {
+                alert('양도 취소가 성공적으로 이루어지지 않았습니다: ' + error.message);
+            });
     }
 
     // [4] 미결제건의 결제 진행
@@ -626,11 +642,25 @@
         window.open(url, "payAssignmentWindow", 'width=600,height=800')
     }
 
-    // [6] 양도 - 거절
-    function denyAssignment() {
-
+    // [6] 양도 거절
+    function denyAssignment(reservationId) {
+        fetch(`/api/hotel/reservation/transfer/assignment/deny/B?reservationId=${reservationId}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (response.ok) { // 성공적인 응답인 경우
+                    return response.json();
+                } else {
+                    throw new Error('서버 처리 실패'); // 서버가 2XX 응답을 보내지 않은 경우
+                }
+            })
+            .then(data => {
+                alert('양도 거절이 완료되었습니다');
+            })
+            .catch(error => {
+                alert('양도 거절이 성공적으로 이루어지지 않았습니다: ' + error.message);
+            });
     }
-
     initialize();
 
 </script>
