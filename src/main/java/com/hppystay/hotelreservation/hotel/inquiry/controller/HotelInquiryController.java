@@ -31,7 +31,7 @@ public class HotelInquiryController {
     @GetMapping("/submit/{id}")
     public String submitInquiry(@PathVariable("id") Integer hotelId, Model model) {
         model.addAttribute("hotelId", hotelId);
-        return "inquiries/submitInquiry";
+        return "hotel/hotel-submit-Inquiry";
     }
 
     @PostMapping("/submit")
