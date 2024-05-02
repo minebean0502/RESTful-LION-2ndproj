@@ -518,17 +518,10 @@
                 const acceptBtn = document.createElement('button');
                 acceptBtn.textContent = '양도 수락';
                 acceptBtn.onclick = function () {
-                    // 양도 수락시 실행할 function
-                    // 새 창을 열고, TOSS 위젯이 나오면 거기에서 결제 진행
-
-                    // 여기에 어떤 정보들을 전달해줘야할까?
-                    // 예약 Id 정보와, 해당 방의 이름 정보가 필요함
-                    // 새 창에 B의 reservationId와, room의 이름을 담아 열음
                     // [5] 양도 - 수락 & 결제 진행
-                    openTossPaymentWindow(reservation_pending.reservationId, reservation_pending.roomName);
-                    // 결제가 끝나고 나면, A의 환불을 진행하고, 결제 상태 또한 바꿔줘야함
-                    // 결제 끝난 뒤에, 해당 창에서 A의 환불도 진행되었고, A의 reservation도 바뀌어졌고
-                    // B의 결제상태 및 예약 상태도 업데이트 했음
+                    // 지금 주는건 reservationId, roomName만임
+                    openTossPaymentWindow(reservation_pending.reservationId, reservation_pending.roomId, reservation_pending.roomName);
+                    // 본래 결제가 되려면 roomId, roomName, roomPrice를 줘야함
                 }
                 acceptBtn.classList.add('accept-btn');
 
@@ -628,8 +621,8 @@
     // 사실 reservationId만 받아와줘도 되기는 함
     // TODO 논의할것 (reservationId, orderName)을 보내줘서 입력해야할지
     // TODO 아니면 어자피 api에서 reservationId만 받으면 orderName도 받아올 수 있으니 그걸로 할지
-    function openTossPaymentWindow(reservationId, orderName) {
-        var url = '/my-page/reservation/transfered?reservationId=' + reservationId + '&orderName=' + orderName;
+    function openTossPaymentWindow(reservationId, roomId, orderName) {
+        var url = `/my-page/reservation/transfered?reservationId=${reservationId}&&orderName=${orderName}&roomId=${roomId}`;
         window.open(url, "payAssignmentWindow", 'width=600,height=800')
     }
 
