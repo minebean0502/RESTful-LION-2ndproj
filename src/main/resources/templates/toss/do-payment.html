@@ -42,6 +42,7 @@
     const roomIdInfo = urlParams.get('roomId');
     const roomNameInfo = urlParams.get('roomName');
     const roomPriceInfo = urlParams.get('roomPrice');
+    const reservationInfo = urlParams.get('reservationId');
 
     const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS)
     const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
@@ -68,7 +69,7 @@
                 //orderName: `${hotelId}-${document.getElementById('item-name').innerText}`,
                 orderName: roomNameInfo,
             }).then(async data => {
-                const response = await fetch(`/api/toss/confirm-payment?roomId=${roomIdInfo}`, { // roomId 값을 쿼리 파라미터로 추가
+                const response = await fetch(`/api/toss/confirm-payment?roomId=${roomIdInfo}&reservationId=${reservationInfo}`, { // roomId 값을 쿼리 파라미터로 추가
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json'
