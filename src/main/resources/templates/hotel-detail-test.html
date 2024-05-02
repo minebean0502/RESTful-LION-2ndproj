@@ -550,7 +550,7 @@
 
 
 <!-- 문의 -->
-
+<div id="inquiry">
 <div class="container">
     <div class="inquiry-info" id="inquiries">
         <h2>문의 사항</h2>
@@ -573,6 +573,7 @@
         <div id="pagination">
         </div>
     </div>
+</div>
 </div>
 
 <!--<th:block th:replace="~{updown/footer}"></th:block>-->
@@ -949,9 +950,11 @@
             formContainer.id = 'editForm';
 
             const footer = document.getElementById('footer');
+            const inquiry = document.getElementById('inquiry');
             if (footer) {
                 // footer 요소의 바로 앞에 폼 삽입
                 footer.parentNode.insertBefore(formContainer, footer);
+                inquiry.parentNode.insertBefore(formContainer,inquiry)
             }
 
              // 버튼 클릭 시 폼 생성 및 삽입

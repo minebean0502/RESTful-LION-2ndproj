@@ -155,14 +155,7 @@ public class ViewController {
         return "inquiries/submitInquiry";
     }
 
-
-//    //임시
-//    @GetMapping("/hotel/37/details/m")
-//    public String hotelDetailsm() {
-//        return "temphtml/hotelDetails-m1";
-//    }
-
-    @GetMapping("/admin")
+    @GetMapping("/hotel/admin")
     public String admin() {
         return "admin";
     }

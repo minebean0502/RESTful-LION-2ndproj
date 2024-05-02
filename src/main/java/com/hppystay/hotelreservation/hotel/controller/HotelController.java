@@ -25,24 +25,29 @@ public class HotelController {
     private final ReservationService reservationService;
 
     // API 기능
-    @GetMapping("/areaCode/{area}")
-    public List<TourInfoApiDto> findHotelByRegion(@PathVariable("area") String area){
+    @GetMapping("/areaCode")
+    public List<TourInfoApiDto> findHotelByRegion(
+            @RequestParam("area")
+            String area
+    ) {
         return apiService.callHotelByRegionApi(area);
     }
 
-    @GetMapping("/keyword/{keyword}")
-    public List<TourInfoApiDto> findHotelByKeyWord(@PathVariable("keyword") String keyword) {
+    @GetMapping("/keyword")
+    public List<TourInfoApiDto> findHotelByKeyWord(
+            @RequestParam("keyword") String keyword
+    ) {
         return apiService.callHotelByKeywordApi(keyword);
     }
 
-    @GetMapping("/location/{mapX}/{mapY}/{pageNum}")
+    @GetMapping("/location")
     public List<TourInfoApiDto> findSpotByLocation(
-            @PathVariable("mapX")
+            @RequestParam("mapX")
             String mapX,
-            @PathVariable("mapY")
+            @RequestParam("mapY")
             String mapY,
-            @PathVariable("pageNum")
-            int pageNum
+            @RequestParam("pageNum")
+            Integer pageNum
     ) {
         return apiService.callSpotByLocationApi(mapX, mapY, pageNum);
     }
