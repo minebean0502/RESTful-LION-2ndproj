@@ -101,8 +101,6 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/toss/reservations"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/toss/reservations/{id}/payment"),
 
-            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/"),
-
             // 양도 관련 (Hotel, Transfer, Toss 다 여깄음)
             // 혹시라도 transfered-by-member 부분에서 문제 생기면 assignment 이후에 /** 붙여두기
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/assignment"),
