@@ -16,16 +16,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TossController {
     private final TossService service;
-    // 커밋커밋커밋입니다
 
     @PostMapping("/confirm-payment")
     public Object confirmPayment(
+            @RequestParam("roomId")
+            Long roomId,
             @RequestBody
             TossPaymentConfirmDto dto
     ) {
+        log.info("컨트롤러 시작지역");
         log.info("시작했습니다");
         log.info("received: {}", dto.toString());
-        return service.confirmPayment(dto);
+        return service.confirmPayment(roomId, dto);
     }
 
     // 양도받고, 양수자가 결제를 진행한 뒤, 양도자(A)의 환불을 진행하는 API
@@ -64,11 +66,11 @@ public class TossController {
     // 해당 Reservation의 결제 취소
     @PostMapping("/reservation/{id}/cancel")
     public Object cancelPayment(
-            @PathVariable("id")
-            Long id,
+            @PathVariable("reservationId")
+            Long reservationId,
             @RequestBody
             TossPaymentCancelDto dto
     ) {
-        return service.cancelPayment(id, dto);
+        return service.cancelPayment(reservationId, dto);
     }
 }

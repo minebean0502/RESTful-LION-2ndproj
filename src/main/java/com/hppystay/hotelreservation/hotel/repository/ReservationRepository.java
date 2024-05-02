@@ -3,6 +3,7 @@ package com.hppystay.hotelreservation.hotel.repository;
 import com.hppystay.hotelreservation.auth.entity.Member;
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
 import com.hppystay.hotelreservation.hotel.entity.ReservationStatus;
+import com.hppystay.hotelreservation.hotel.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -21,4 +22,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByMemberIdAndStatus(Long memberId, ReservationStatus status);
 
     Reservation findByMember(Member member);
+
+    Reservation findByMemberAndRoom(Member member, Room room);
 }

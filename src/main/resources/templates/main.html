@@ -154,17 +154,8 @@
 <!-- 네비게이션 바, -->
 <header>
     <th:block th:replace="~{updown/temp-header}"></th:block>
-</header>
+</header><br>
 
-<header>
-    <div class="header-bar">
-        <!-- Navigation Bar -->
-        <a href="#home">홈</a>
-        <a href='/hotel/test?id=1}'>예약내역</a>
-        <a href="#contact">고객센터</a>
-        <a href=""></a>
-    </div>
-</header>
 <!-- 사자 배경화면-->
 <div class="main-background">
     <div class="lion-background"></div>
@@ -174,7 +165,6 @@
     <!-- 검색 컨테이너 -->
     <div class="search-container">
         <h1>호텔 검색</h1>
-
         <div class="input-group search-keyword">
             <label for="search-keyword">키워드/이름</label>
             <input type="text" id="search-keyword" name="keyword" placeholder="검색어 입력">
@@ -218,6 +208,24 @@
 </body>
 <script>
     let slideIndex = 0;
+    window.onload = function() {
+        let today = new Date();
+
+        // 체크인 날짜 설정: 오늘로부터 3일 후
+        let checkInDate = new Date(today);
+        checkInDate.setDate(today.getDate() + 3);
+        let checkInString = checkInDate.toISOString().substring(0, 10);
+
+        // 체크아웃 날짜 설정: 체크인 날짜로부터 2일 후
+        let checkOutDate = new Date(checkInDate);
+        checkOutDate.setDate(checkInDate.getDate() + 5);
+        let checkOutString = checkOutDate.toISOString().substring(0, 10);
+
+        // 입력 필드에 날짜 설정
+        document.getElementById('checkin-date').value = checkInString;
+        document.getElementById('checkout-date').value = checkOutString;
+    };
+
 
     function showSlides() {
         let slides = document.getElementsByClassName("slide");
