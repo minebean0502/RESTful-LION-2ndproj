@@ -27,7 +27,7 @@ public class CustomRequestMatchers {
 
             // 호텔 문의
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/inquiries/list"), //hotel 상세 페이지가 생기고 나면 없앨 것.
-            RegexRequestMatcher.regexMatcher(HttpMethod.GET, "/api/hotel/inquiries/\\d+"),
+            RegexRequestMatcher.regexMatcher(HttpMethod.GET, "/api/hotel/inquiries/\\d+\\?.*"),
 
 
             // View
