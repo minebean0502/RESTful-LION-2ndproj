@@ -117,7 +117,7 @@ public class ViewController {
     // 호텔 - 문의사항 업데이트
     @GetMapping("/hotel/inquiries/update/{id}")
     public String updateInquiry() {
-        return "hotel/hotel-submit-Inquiry";
+        return "hotel/hotel-update-Inquiry";
     }
 
     // 호텔 생성

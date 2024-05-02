@@ -1234,6 +1234,11 @@
         window.open(`/hotel/inquiries/submit/${hotelId}`, 'SubmitForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
     }
 
+    function openUpdateForm(id) {
+        console.log(id);
+        window.open(`/hotel/inquiries/update/${id}`, 'UpdateForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
+    }
+
     async function deleteInquiry(inquiryId) {
         const confirmed = confirm("삭제하시겠습니까?");
         if (confirmed) {
