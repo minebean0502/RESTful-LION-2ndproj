@@ -43,7 +43,7 @@ public enum GlobalErrorCode {
     NOT_AUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "4001", "호텔 생성 권한이 없습니다."),
     NOT_AUTHORIZED_MANAGER(HttpStatus.UNAUTHORIZED, "4002", "호텔 수정 권한이 없습니다"),
     HOTEL_ALREADY_CREATED(HttpStatus.CONFLICT,"4003", "이미 호텔 1개를 생성했습니다."),
-    HOTEL_NOT_CREATED(HttpStatus.CONFLICT,"4004", "이미 호텔 1개를 생성했습니다."),
+    HOTEL_NOT_CREATED(HttpStatus.BAD_REQUEST,"4004", "이미 호텔 1개를 생성했습니다."),
     HOTEL_NOT_FOUND(HttpStatus.NOT_FOUND, "4005", "일치하는 호텔이 없습니다."),
     HOTEL_ROOM_MISMATCH(HttpStatus.BAD_REQUEST,"4006", "요청하신 호텔과 방이 일치하지 않습니다."),
     CHECKIN_AFTER_CHECKOUT(HttpStatus.BAD_REQUEST, "4007", "체크인 시간이 체크아웃 시간보다 빨라야 합니다."),
