@@ -6,8 +6,10 @@ import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
 import com.hppystay.hotelreservation.hotel.entity.Assignment;
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
 import com.hppystay.hotelreservation.hotel.entity.ReservationStatus;
+import com.hppystay.hotelreservation.hotel.entity.Room;
 import com.hppystay.hotelreservation.hotel.repository.AssignmentRepository;
 import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
+import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentCancelDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentConfirmDto;
 import com.hppystay.hotelreservation.payment.toss.dto.TossPaymentDto;
@@ -34,26 +36,30 @@ public class TossService {
     private final ReservationRepository reservationRepository;
     private final AuthenticationFacade facade;
     private final AssignmentRepository assignmentRepository;
+    private final RoomRepository roomRepository;
 
     @Transactional
-    public Object confirmPayment(TossPaymentConfirmDto dto) {
+    public Object confirmPayment(Long roomId, TossPaymentConfirmDto dto) {
         Member member = facade.getCurrentMember();
+        log.info("1번 문제지역");
+        log.info("받은 roomId는: " + roomId);
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 방이 없습니다"));
+        log.info("2번 문제지역");
+        log.info("그걸로 찾은 room의 roomId는: " + room.getId());
         // 1. Object 형태로 DTO를 받습니다.
         Object tossPaymentObj = tossService.confirmPayment(dto);
-        log.info("정보를 확인합시다");
+        log.info("3번 문제지역");
         log.info(tossPaymentObj.toString());
-        // orderName은 memberId - roomId 의 형태로 이뤄집니다
-        String orderNameInfo = ((LinkedHashMap<String, Object>) tossPaymentObj).get("orderName").toString();
-        // Long reservationId = Long.parseLong(orderNameInfo.split("-")[0]);
+
         String requestedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("requestedAt").toString();
         String approvedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("approvedAt").toString();
         String lastTransactionKey = ((LinkedHashMap<String, Object>) tossPaymentObj).get("lastTransactionKey").toString();
-
-        // TODO reservation을 찾을 때, 멤버가 여러개의 예약을 할 수 있으니까 더 정확히 찾기위한 포인트는
-        // memberId와, roomId가 일치하는 애여야함
-        // TODO repository 나중에 한번 갈아줘야함
-        Reservation reservation = reservationRepository.findByMember(member);
+        log.info("4번 문제지역");
+        Reservation reservation = reservationRepository.findByMemberAndRoom(member, room);
         log.info("현재 진행하는 reservation의 id는: " + reservation.getId());
+        log.info("현재 진행하는 room의 id는: " + room.getId());
+
 
         TossPayment tossPayment = tossPaymentRepository.save(TossPayment.builder()
                 .reservation(reservation)
@@ -67,12 +73,14 @@ public class TossService {
                 .category("Toss")
                 .status("DONE")
                 .build());
-
+        log.info("5번 문제지역");
         // 2. 그 뒤 reservation에 Payment id 추가하기
         reservation.setPayment(tossPayment);
+        log.info("6번 문제지역");
         reservation.setStatus(ReservationStatus.RESERVATION_COMPLETED);
+        log.info("7번 문제지역");
         TossPaymentDto tossPaymentDto = TossPaymentDto.fromEntity(tossPayment);
-
+        log.info("8번 문제지역");
         // 3. dto 반환
         return tossPaymentDto;
     }
@@ -104,15 +112,14 @@ public class TossService {
         return response;
     }
 
-    // cancelPayment
-    // 취소는 paymentKey를 바탕으로 취소 진행 // 취소에는 사유가 필수
+    // 실제 취소에는 paymentKey로 취소하는 부분이 있기는 한데 넘어감
     @Transactional
     public Object cancelPayment(
-            Long id,
+            Long reservationId,
             TossPaymentCancelDto dto
     ) {
-        // 1. 취소할 주문을 찾는다.
-        TossPayment tossPayment = tossPaymentRepository.findById(id)
+        // 1. reservationId 취소할 주문을 찾는다.
+        TossPayment tossPayment = tossPaymentRepository.findById(reservationId)
                 .orElseThrow(()
                         -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         // 2. 주문정보를 갱신한다.
