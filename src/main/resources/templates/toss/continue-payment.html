@@ -92,9 +92,8 @@
     fetch(`/api/hotel/rooms?roomId=${roomIdInfo}`)
         .then(async response => {
             if (!response.ok) {
-                alert('일단 1번 오류 부분있음')
+                alert('룸 정보를 받아오지 못했습니다')
             } else {
-                alert('뭐 일단 잘 불러왔음')
                 response.json().then(body => {
                     // 가격 업데이트 시켜주셈
                     console.log(body.price);
@@ -103,7 +102,7 @@
             }
         })
         .catch(error => {
-            alert('뭐가 문제 메세지일까요', error);
+            alert('에러가 발생했습니다: ', error);
         })
 </script>
 </html>

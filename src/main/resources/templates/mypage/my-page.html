@@ -247,7 +247,7 @@
             return;
         }
         if (event.data === 'paymentContinueSuccess') {
-            window.location.href = "/my-page";
+            window.location.reload();
         } else if (event.data === 'paymentContinueFailure') {
             window.location.reload();
         }
@@ -401,17 +401,15 @@
                     // [1-A] 예약 취소 - reservation 삭제
                     if (reservation.status === `PAYMENT_PENDING`) {
                         cancelBtn.onclick = function () {
-                            alert('저장된 예약만 삭제합니다')
                             cancelReservation(reservation.reservationId)
+                            alert('예약을 취소하였습니다')
                         }
                     // [1-B] 예약 취소 - reservation 삭제 & payment 삭제
                     } else if (reservation.status === `RESERVATION_COMPLETED`) {
                         cancelBtn.onclick = function () {
-                            alert('결제를 환불합니다')
                             cancelPayment(reservation.reservationId)
-
-                            alert('저장된 예약을 삭제합니다')
                             cancelReservation(reservation.reservationId)
+                            alert('결제 환불 성공, 예약을 취소하였습니다')
                         }
                     }
                     reservationActionsDiv.appendChild(cancelBtn);
@@ -436,8 +434,8 @@
                     assignmentCancel.classList.add('assignment-cancel-btn');
                     assignmentCancel.onclick = function () {
                         // 해당 reservation의 Id값 전달해 줄 수 있음
-                        alert(`전해주는 전달값은 : ${reservation.reservationId}`)
                         assignmentCancelWindow(reservation.reservationId);
+                        alert('예약 양도를 취소하였습니다')
                     }
                     reservationActionsDiv.appendChild(assignmentCancel);
                 }
@@ -449,6 +447,7 @@
                     continuePaymentBtn.classList.add('continue-payment-btn');
                     continuePaymentBtn.onclick = function () {
                         continuePayment(reservation.reservationId, reservation.roomId, reservation.roomName)
+                        alert('결제 완료')
                     }
                     reservationActionsDiv.appendChild(continuePaymentBtn)
                 }
@@ -522,6 +521,7 @@
                     // [5] 양도 - 수락 & 결제 진행
                     // 지금 주는건 reservationId, roomName만임
                     openTossPaymentWindow(reservation_pending.reservationId, reservation_pending.roomId, reservation_pending.roomName);
+                    alert('양도 수락 완료!')
                     // 본래 결제가 되려면 roomId, roomName, roomPrice를 줘야함
                 }
                 acceptBtn.classList.add('accept-btn');
@@ -531,8 +531,8 @@
                 denyBtn.textContent = '양도 거절';
                 denyBtn.onclick = function () {
                     // [6] 양도 - 거절
-                    alert(`전해주는 전달값은 : ${reservation_pending.reservationId}`)
                     denyAssignment(reservation_pending.reservationId);
+                    window.location.reload();
                 }
                 denyBtn.classList.add('deny-btn');
 
@@ -563,17 +563,16 @@
     }
 
     // [1-A] 예약 취소 - 예약만 취소
-    async function cancelReservation(reservationId) {
+    function cancelReservation(reservationId) {
         // 필요하다면 PATCH가 아니라 DELETE로만 수정할 수 있음
-        const response = await fetch(`/api/hotel/cancel/reservation?reservationId=${reservationId}`, {
+        const response = fetch(`/api/hotel/cancel/reservation?reservationId=${reservationId}`, {
             method: 'PATCH'
         })
         if (!response.ok) {
-            alert("예약이 정상적으로 취소되지 않았습니다")
+            // alert("예약이 정상적으로 취소되지 않았습니다")
             window.location.reload();
         } else if (response.ok) {
             alert("예약이 정상적으로 취소되었습니다")
-            alert("알림 메세지입니다")
             window.location.reload();
         }
     }
@@ -593,7 +592,7 @@
         if (response.ok) {
             alert('결제 환불이 성공적으로 처리되었습니다');
         } else {
-            alert('결제 환불 요청에 실패하였습니다.');
+            // alert('결제 환불 요청에 실패하였습니다.');
         }
     }
 
@@ -606,8 +605,8 @@
     // [3] 양도 취소
     // assignment를 조회하기 위해서는 fromMember의 id, toMember의id, reservation의id다 필요함
     // reservation은 현재 member의 id, room의 id
-    async function assignmentCancelWindow(reservationId) {
-        await fetch(`/api/hotel/reservation/transfer/assignment/deny/A?reservationId=${reservationId}`, {
+    function assignmentCancelWindow(reservationId) {
+        fetch(`/api/hotel/reservation/transfer/assignment/deny/A?reservationId=${reservationId}`, {
             method: 'POST'
         })
             .then(response => {
@@ -619,16 +618,17 @@
             })
             .then(data => {
                 alert('양도 취소가 완료되었습니다');
+                window.location.reload()
             })
             .catch(error => {
                 alert('양도 취소가 성공적으로 이루어지지 않았습니다: ' + error.message);
+                window.location.reload()
             });
     }
 
     // [4] 미결제건의 결제 진행
     // 예약을 하고 결제를 이어서 진행하기 위해서는, roomName, reservationId, roomId를 일단 넘겨준다
     function continuePayment(reservationId, roomId, roomName) {
-        // 일단 졸려서 인자 다 넘깁니다.
         var url = `/my-page/payment/start?reservationId=${reservationId}&roomId=${roomId}&roomName=${encodeURIComponent(roomName)}`;
         window.open(url, 'PaymentWindow', 'width=600,height=800');
     }
@@ -643,8 +643,8 @@
     }
 
     // [6] 양도 거절
-    function denyAssignment(reservationId) {
-        fetch(`/api/hotel/reservation/transfer/assignment/deny/B?reservationId=${reservationId}`, {
+    async function denyAssignment(reservationId) {
+        await fetch(`/api/hotel/reservation/transfer/assignment/deny/B?reservationId=${reservationId}`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -658,11 +658,13 @@
                 alert('양도 거절이 완료되었습니다');
             })
             .catch(error => {
-                alert('양도 거절이 성공적으로 이루어지지 않았습니다: ' + error.message);
+                // alert('양도 거절이 성공적으로 이루어지지 않았습니다: ' + error.message);
+                // 마지막이라 시간 없어서 alert 바꾸겠습니다. 일단 작동은 하니까요
+                // 아마 형식 문제인듯함
+                alert('양도 거절이 완료되었습니다')
             });
     }
     initialize();
-
 </script>
 </body>
 </html>

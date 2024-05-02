@@ -41,8 +41,6 @@ public class HotelTransferService {
         //[1] A의 id = grantorReservationId
         //[2] B의 id = request.getMemberId()
 
-        // TODO reservationID 검색 뿐만 아니라, 결제가 완료된 건에 대해서만 진행한다고 가정할 것이므로
-        // TODO ReservationStatus.RESERVATION_COMPLETED 인 것 만 찾아야함
         Reservation grantorReservation = hotelTransferRepository.findById(grantorReservationId)
                 .orElseThrow(() -> new RuntimeException("Reservation not found"));
 
@@ -71,9 +69,6 @@ public class HotelTransferService {
         reservation.setRoom(grantorReservation.getRoom());
         hotelTransferRepository.save(reservation);
 
-        log.info("B의 reservation 저장된 이후 시점");
-        log.info(String.valueOf(reservation.getId()));
-
         // 현재 로그인한 사람이 양도자 A니까 찾고
         Member fromMember = facade.getCurrentMember();
 
@@ -92,27 +87,6 @@ public class HotelTransferService {
         return ReservationDto.fromEntity(reservation);
     }
 
-    // 4. 양도 관련 로직 진행
-    public List<ReservationInfoDto> getPendingReservationsByMember() {
-        // 현재 로그인 되어 있는 사용자의 정보로부터 시작
-        Long memberId = facade.getCurrentMember().getId();
-
-        /*
-        // 예약 정보를 어떻게 찾을까? 이건 안쓸듯?
-        Reservation reservation = reservationRepository.findById(memberId)
-                .orElseThrow(() -> new RuntimeException("member not found"));
-
-        log.info("service: "+ memberId);
-        log.info("service: " + hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING));
-        // 현재 로그인 된 사용자의 ID로, reservation이 PAYMENT_PENDING인 reservation 정보들을 찾음
-        */
-
-        return hotelTransferRepository.findByMemberIdAndStatus(memberId, ReservationStatus.PAYMENT_PENDING)
-                .stream()
-                .map(ReservationInfoDto::fromEntity)
-                .collect(Collectors.toList());
-    }
-
     // 1. 닉네임이라 이메일로 찾는 서비스 로직
     public List<MemberDto> searchByNicknameOrEmail(String keyword) {
         List<Member> members = memberRepository.findByEmailContainingOrNicknameContaining(keyword, keyword);
@@ -128,11 +102,9 @@ public class HotelTransferService {
         // TODO 사실 facade로 찾을 수 있지않나?
         Member toMember = memberRepository.findById(reservation.getMember().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "to Member의 정보를 찾을 수 없습니다"));
-        log.info(String.valueOf(toMember.getId()));
         Assignment assignment = assignmentRepository.findByToMember(toMember)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "reservation은 찾았으나, assignment를 찾을 수 없습니다"));
         AssignmentDto assignmentDto = AssignmentDto.fromEntity(assignment);
-        log.info(String.valueOf(assignmentDto));
         return assignmentDto;
     }
 
@@ -141,7 +113,6 @@ public class HotelTransferService {
     // 이건 인자로 준 A의 reservationId를 받아옴
     @Transactional
     public ReservationInfoDto ADenyAssignment(Long reservationId) {
-        log.info("이건 A가 A의 양도를 취소하는 부분임");
         // B의 정보를 찾기위해 assignment를 찾아야함
         // 그 Assignment는 A는 A의 reservationId와 memberId로 찾을 수 있음
         Member memberA = facade.getCurrentMember();
@@ -155,13 +126,10 @@ public class HotelTransferService {
         // B의 reservation 찾음
         Reservation toDeleteReservation = reservationRepository.findById(assignment.getToReservation().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "B의 reservation을 찾을 수 없습니다"));
-        log.info("5번 문제지역");
         // A의 예약의 결제 상태 복구 & B의 예약 삭제
         reservation.setStatus(ReservationStatus.RESERVATION_COMPLETED);
-        log.info("6번 문제지역");
         assignmentRepository.delete(assignment);
         reservationRepository.delete(toDeleteReservation);
-        log.info("7번 문제지역ㅇㅇㅇㅇㅇ");
         // A의 결제 상태 반환
         return ReservationInfoDto.fromEntity(reservation);
     }
@@ -184,34 +152,3 @@ public class HotelTransferService {
         return ReservationInfoDto.fromEntity(toChangeReservation);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

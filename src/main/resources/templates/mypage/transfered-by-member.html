@@ -91,14 +91,12 @@
                             }),
                         })
                         if (!response.ok) {
-                            console.log(response)
-                            alert(`payment/cancel-from-user 부분에 취소가 진행되지 않았습니다`)
+                            window.opener.postMessage('paymentContinueFailure', 'http://localhost:8080');
+                            window.close();
                         } else {
-                            console.log("로그 잘 보이시나요? 결제 잘 진행되었음")
-                            alert("결제랑 환불 잘 진행되었어요")
                             // B의 결제도 되고, A의 환불도 진행되었다면, 딱히 건드릴게 없음 (B의 정보 바꾼다던가)
                             // TODO reload부분 있던데 이거 필요합니까?
-                            window.opener.location.reload();
+                            window.opener.postMessage('paymentContinueSuccess', 'http://localhost:8080');
                             window.close();
                         }
                     } catch (err) {
@@ -110,7 +108,7 @@
             })
         } catch (err) {
             if (err.code === 'USER_CANCEL') {
-                alert('사용자가 결제 취소했는데용')
+                alert('결제를 취소하였습니다')
                 // 결제 취소했을 때, 어떻게 할지 로직 진행
                 // 아마 갱신해야하나?
                 // TODO 이건 월요일날 진행합시다

@@ -41,16 +41,10 @@ public class TossService {
     @Transactional
     public Object confirmPayment(Long roomId, Long reservationId, TossPaymentConfirmDto dto) {
         Member member = facade.getCurrentMember();
-        log.info("1번 문제지역");
-        log.info("받은 roomId는: " + roomId);
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 방이 없습니다"));
-        log.info("2번 문제지역");
-        log.info("그걸로 찾은 room의 roomId는: " + room.getId());
         // 1. Object 형태로 DTO를 받습니다.
         Object tossPaymentObj = tossService.confirmPayment(dto);
-        log.info("3번 문제지역");
-        log.info(tossPaymentObj.toString());
 
         String requestedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("requestedAt").toString();
         String approvedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("approvedAt").toString();
@@ -58,10 +52,6 @@ public class TossService {
         // TODO 현재 접속중인 멤버 + reservationId = 찾는 reservation이여야함
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 reservation을 찾을 수 없습니다"));
-        log.info("현재 진행하는 reservation의 id는: " + reservation.getId());
-        log.info("현재 진행하는 room의 id는: " + room.getId());
-
-
         TossPayment tossPayment = tossPaymentRepository.save(TossPayment.builder()
                 .reservation(reservation)
                 .reservationId(reservation.getId())
@@ -74,14 +64,12 @@ public class TossService {
                 .category("Toss")
                 .status("DONE")
                 .build());
-        log.info("5번 문제지역");
+
+
         // 2. 그 뒤 reservation에 Payment id 추가하기
         reservation.setPayment(tossPayment);
-        log.info("6번 문제지역");
         reservation.setStatus(ReservationStatus.RESERVATION_COMPLETED);
-        log.info("7번 문제지역");
         TossPaymentDto tossPaymentDto = TossPaymentDto.fromEntity(tossPayment);
-        log.info("8번 문제지역");
         // 3. dto 반환
         return tossPaymentDto;
     }
@@ -108,8 +96,6 @@ public class TossService {
         TossPayment tossPayment = tossPaymentRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         Object response = tossService.getPayment(tossPayment.getTossPaymentKey());
-        // Object가 뭘 반환하고 있는지 체크
-        log.info(response.toString());
         return response;
     }
 
@@ -138,10 +124,6 @@ public class TossService {
     // 이건 B의 결제가 끝나고나면 자동으로 A의 결제를 취소하는 로직
     @Transactional
     public Object cancelPaymentBeforeUser(TossPaymentCancelDto dto) {
-        // 먼저 B의 reservationId로 정보들을 찾아야함
-        // 취소하기 위한 정보들은 A의 tosspayment 정보
-        // 따라서 assignment 에 접근해야함 (접근하려면, a의 memberId, b의 memberId, a의 reservationId인데)
-        // 가능한건 b의 memberId를 이용해서 접근 가능
         Member toMember = facade.getCurrentMember();
         // 현재 멤버를 조회했으니 이를 사용해서 assignment에 접근해야함
         Assignment assignment = assignmentRepository.findByToMember(toMember)
@@ -151,15 +133,12 @@ public class TossService {
         TossPayment fromMemberTossPayment = tossPaymentRepository.findById(assignment.getToReservation().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "이전 사용자의 정보를 찾을 수 없어요"));
         Reservation reservation = reservationRepository.findById(assignment.getToReservation().getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "<1>reservation 못찾았음"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "reservation 못 찾았음"));
+
         // A의 주문 정보를 갱신함
-        log.info("현재 A의 tossPayment의 status는 어떤가요");
-        log.info(fromMemberTossPayment.getStatus());
         if (!fromMemberTossPayment.getStatus().equals("CANCEL")) {
             fromMemberTossPayment.setStatus("CANCEL");
             reservation.setStatus(ReservationStatus.ASSIGNMENT_COMPLETED);
-            log.info("A의 상태가 어떻게 바뀌었나요");
-            log.info(fromMemberTossPayment.getStatus());
             return tossService.cancelPayment(fromMemberTossPayment.getTossPaymentKey(), dto);
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "주문 정보를 갱신/취소 할 수 없었음");
     }

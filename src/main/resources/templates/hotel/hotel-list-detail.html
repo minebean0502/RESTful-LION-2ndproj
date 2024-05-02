@@ -734,9 +734,9 @@
                 // 1. 예약 부분
                 const reservationId = await doReservation(room.id, checkIn, checkOut);
                 // 2. 결제 관련 function 시작
-                await doPaymentWindow(reservationId, room.id, room.name, room.price);
+                doPaymentWindow(reservationId, room.id, room.name, room.price);
                 alert("결제 처리가 끝났습니다.");
-
+                window.location.reload()
             } catch (error) {
                 alert("결제 처리 중 오류가 발생했습니다: " + error.message);
             }
