@@ -7,6 +7,7 @@ import com.hppystay.hotelreservation.common.util.AuthenticationFacade;
 import com.hppystay.hotelreservation.hotel.dto.HotelDto;
 import com.hppystay.hotelreservation.hotel.dto.RoomDto;
 import com.hppystay.hotelreservation.hotel.entity.Hotel;
+import com.hppystay.hotelreservation.hotel.entity.ReservationStatus;
 import com.hppystay.hotelreservation.hotel.entity.Room;
 import com.hppystay.hotelreservation.hotel.entity.HotelLike;
 import com.hppystay.hotelreservation.hotel.repository.HotelLikeRepository;
@@ -125,7 +126,7 @@ public class HotelService {
         if (checkIn.isAfter(checkOut))
             throw new GlobalException(GlobalErrorCode.CHECKIN_AFTER_CHECKOUT);
 
-        return hotelRepo.searchByKeywordAndDateRangeAndSort(keyword, checkIn, checkOut, sort)
+        return hotelRepo.searchByKeywordAndDateRangeAndSort(keyword, checkIn, checkOut, sort, ReservationStatus.RESERVATION_CANCELED)
                 .stream().map(HotelDto::fromEntity).toList();
     }
 
