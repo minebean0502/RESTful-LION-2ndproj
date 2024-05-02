@@ -61,7 +61,7 @@
                 orderId: crypto.randomUUID().replaceAll('-', ''),
                 orderName: roomName,
             }).then(async data => {
-                const response = await fetch(`/api/toss/confirm-payment?roomId=${roomIdInfo}`, {
+                const response = await fetch(`/api/toss/confirm-payment?roomId=${roomIdInfo}&reservationId=${reservationId}`, {
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json'

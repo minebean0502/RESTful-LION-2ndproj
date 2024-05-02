@@ -21,13 +21,13 @@ public class TossController {
     public Object confirmPayment(
             @RequestParam("roomId")
             Long roomId,
+            @RequestParam("reservationId")
+            Long reservationId,
             @RequestBody
             TossPaymentConfirmDto dto
     ) {
-        log.info("컨트롤러 시작지역");
         log.info("시작했습니다");
-        log.info("received: {}", dto.toString());
-        return service.confirmPayment(roomId, dto);
+        return service.confirmPayment(roomId, reservationId, dto);
     }
 
     // 양도받고, 양수자가 결제를 진행한 뒤, 양도자(A)의 환불을 진행하는 API

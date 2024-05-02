@@ -39,7 +39,7 @@ public class TossService {
     private final RoomRepository roomRepository;
 
     @Transactional
-    public Object confirmPayment(Long roomId, TossPaymentConfirmDto dto) {
+    public Object confirmPayment(Long roomId, Long reservationId, TossPaymentConfirmDto dto) {
         Member member = facade.getCurrentMember();
         log.info("1번 문제지역");
         log.info("받은 roomId는: " + roomId);
@@ -55,8 +55,9 @@ public class TossService {
         String requestedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("requestedAt").toString();
         String approvedAt = ((LinkedHashMap<String, Object>) tossPaymentObj).get("approvedAt").toString();
         String lastTransactionKey = ((LinkedHashMap<String, Object>) tossPaymentObj).get("lastTransactionKey").toString();
-        log.info("4번 문제지역");
-        Reservation reservation = reservationRepository.findByMemberAndRoom(member, room);
+        // TODO 현재 접속중인 멤버 + reservationId = 찾는 reservation이여야함
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 reservation을 찾을 수 없습니다"));
         log.info("현재 진행하는 reservation의 id는: " + reservation.getId());
         log.info("현재 진행하는 room의 id는: " + room.getId());
 
