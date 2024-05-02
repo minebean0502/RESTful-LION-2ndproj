@@ -51,4 +51,5 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member")
     private List<HotelLike> hotelLikeList = new ArrayList<>();
+    
 }
