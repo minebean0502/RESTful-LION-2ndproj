@@ -69,7 +69,7 @@
 </head>
 <body>
 <div class="container">
-    <h5 class="my-3 border-bottom pb-2">질문 등록</h5>
+    <h5 class="my-3 border-bottom pb-2">질문 수정</h5>
     <input type="hidden" id="urlId">
     <div class="mb-3">
         <label for="title" class="form-label">제목</label>
@@ -86,22 +86,30 @@
 <script>
     let data = {};
 
-    const url = new URL(window.location.href);
-    console.log(url);
-    const segments = url.pathname.split('/');
-    const index = segments.indexOf('submit');
-    const urlId = (index !== -1 && index + 1 < segments.length) ? segments[index + 1] : null;
-    console.log('Extracted ID:', urlId);  // 추출된 ID를 로그로 확인
-    document.getElementById('urlId').value = urlId;
+    async function fetchUpdate() {
+        const url = new URL(window.location.href);
+        console.log(url);
+        const segments = url.pathname.split('/');
+        const index = segments.indexOf('update');
+        const urlId = (index !== -1 && index + 1 < segments.length) ? segments[index + 1] : null;
+        console.log('Extracted ID:', urlId);  // 추출된 ID를 로그로 확인
 
+        const response = await fetch(`/api/hotel/inquiries/update/${urlId}`);
+        if (response.ok) {
+            const inquiry = await response.json();
+            document.getElementById('urlId').value = urlId;
+            document.getElementById('title').value = inquiry.title;
+            document.getElementById('content').innerText = inquiry.content;
+        }
+    }
 
 
     async function submitInquiry() {
-        data.hotelId = document.getElementById('urlId').value; // 'hotelId' 필드를 data에 추가
+        data.id = document.getElementById('urlId').value; // 'id' 필드를 data에 추가
         data.title = document.getElementById('title').value;
         data.content = document.getElementById('content').value;
 
-        const response = await fetch(`/api/hotel/inquiries/submit`, {
+        const response = await fetch(`/api/hotel/inquiries/update`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -116,9 +124,13 @@
         } else {
             alert('등록에 실패하였습니다.');
         }
-
     }
 
+    function initialize() {
+        fetchUpdate();
+    }
+
+    initialize();
 </script>
 </body>
 </html>
