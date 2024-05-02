@@ -34,14 +34,12 @@
 <script>
     // <!-- 여기 타임리프 쓰는법 있었는데 까먹어서 일단 직접 넣음 -->
     const clientKey = `test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm`;
-    // 대충 이거였음
-    // const clientKey = `[[${clientKey}}]]`;
 
     const urlParams = new URLSearchParams(window.location.search);
     // 인자로 일단 전달해주는게 reservationId랑 [1]roomId랑 [2]orderName인 [3]roomName이 오기는 해용
     const reservationId = urlParams.get('reservationId');
     const roomIdInfo = urlParams.get('roomId');
-    const roomName = urlParams.get(roomName);
+    const roomName = urlParams.get('roomName');
 
     const paymentWidget = PaymentWidget(clientKey, PaymentWidget.ANONYMOUS)
     const paymentMethodsWidget = paymentWidget.renderPaymentMethods(
@@ -62,14 +60,10 @@
     paymentRequestButton.addEventListener('click', () => {
         try {
             paymentWidget.requestPayment({
-                // orderId는 상관없음
                 orderId: crypto.randomUUID().replaceAll('-', ''),
-                // orderName은 저장되는 item의 name인데 여기서는
-                // room을 저장하기 때문에
-                // TODO orderName 부분 어디서 가져오긴 해야함 ㅇㅇ
-                orderName: `${hotelId}-${document.getElementById('item-name').innerText}`,
+                orderName: roomName,
             }).then(async data => {
-                const response = await fetch('/api/toss/confirm-payment', {
+                const response = await fetch(`/api/toss/confirm-payment?roomId=${roomIdInfo}`, {
                     method: 'post',
                     headers: {
                         'Content-Type': 'application/json'
@@ -81,21 +75,23 @@
                     }),
                 })
                 if (response.ok) {
-                    window.location.href = '/my-page'
+                    alert('결제가 완료되었습니다')
+                    window.opener.postMessage('paymentContinueSuccess', 'http://localhost:8080')
+                    window.close();
                 }
             });
         } catch (err) {
             if (err.code === 'USER_CANCEL') {
                 alert('사용자 결제 취소')
-                window.location.href = '/hotel/test/paymentFail'
+                window.opener.postMessage('paymentContinueFailure', 'http://localhost:8080')
+                window.close();
             }
             else alert(err)
         }
     });
-    // 어찌저찌 가격에 대한 정보가 없어서 한번 어디에서 불러와서 업데이트 시키긴 해야함
-    // TODO 최적화는 05-01 오전~오후중에 마무리 지읍시다.
-    // 뭐를 사용해서 어떤걸 불러와야할지는 졸려서 내일 함.
-    fetch('받은 정보들로 room의 price를 받을 수 있는 api 부분만 필요함')
+
+    //
+    fetch(`/api/hotel/rooms?roomId=${roomIdInfo}`)
         .then(async response => {
             if (!response.ok) {
                 alert('일단 1번 오류 부분있음')
@@ -103,7 +99,8 @@
                 alert('뭐 일단 잘 불러왔음')
                 response.json().then(body => {
                     // 가격 업데이트 시켜주셈
-                    paymentWidget.updateAmount(body.price);
+                    console.log(body.price);
+                    paymentMethodsWidget.updateAmount(body.price);
                 })
             }
         })

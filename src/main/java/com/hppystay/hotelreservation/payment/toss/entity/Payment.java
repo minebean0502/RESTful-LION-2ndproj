@@ -1,7 +1,6 @@
 package com.hppystay.hotelreservation.payment.toss.entity;
 
 import com.hppystay.hotelreservation.hotel.entity.Reservation;
-import com.hppystay.hotelreservation.payment.toss.temp.entity.TempReservationEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;

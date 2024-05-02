@@ -98,7 +98,14 @@ public class ViewController {
 
     // 이건 마이페이지에서 결제 이어지는 부분 // 윈도우임
     @GetMapping("/my-page/payment/start")
-    public String continuePaymentWindow() {
+    public String continuePaymentWindow(
+//            @RequestParam("reservationId")
+//            String reservationId,
+//            @RequestParam("roomId")
+//            Long roomId,
+//            @RequestParam("roomName")
+//            String roomName
+    ) {
         return "toss/continue-payment";
     }
 

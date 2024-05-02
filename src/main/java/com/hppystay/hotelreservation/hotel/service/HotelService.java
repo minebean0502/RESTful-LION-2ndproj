@@ -15,8 +15,10 @@ import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -214,5 +216,10 @@ public class HotelService {
         Member member = facade.getCurrentMember();
         return HotelDto.fromEntity(hotelRepo.findHotelByManager(member).orElseThrow(
                 () -> new GlobalException(GlobalErrorCode.HOTEL_NOT_FOUND)));
+    }
+
+    public RoomDto readRoomsPrice(Long roomId) {
+        return RoomDto.fromEntity(roomRepo.findById(roomId).orElseThrow(
+                () -> new GlobalException(GlobalErrorCode.ROOM_NOT_FOUND)));
     }
 }

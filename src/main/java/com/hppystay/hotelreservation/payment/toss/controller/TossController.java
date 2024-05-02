@@ -64,7 +64,7 @@ public class TossController {
     }
 
     // 해당 Reservation의 결제 취소
-    @PostMapping("/reservation/{id}/cancel")
+    @PostMapping("/reservation/{reservationId}/cancel")
     public Object cancelPayment(
             @PathVariable("reservationId")
             Long reservationId,

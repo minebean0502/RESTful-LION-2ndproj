@@ -12,7 +12,6 @@ import com.hppystay.hotelreservation.hotel.repository.AssignmentRepository;
 import com.hppystay.hotelreservation.hotel.repository.HotelTransferRepository;
 import com.hppystay.hotelreservation.hotel.repository.ReservationRepository;
 import com.hppystay.hotelreservation.hotel.repository.RoomRepository;
-import com.hppystay.hotelreservation.payment.toss.entity.Payment;
 import com.hppystay.hotelreservation.payment.toss.entity.TossPayment;
 import com.hppystay.hotelreservation.payment.toss.repository.TossPaymentRepository;
 import jakarta.transaction.Transactional;

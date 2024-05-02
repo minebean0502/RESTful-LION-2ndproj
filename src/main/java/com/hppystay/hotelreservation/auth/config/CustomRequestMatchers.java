@@ -93,11 +93,13 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/{hotelId}/review/{reviewId}/delete"),
 
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/reservation/transfer/member/search/**"),
-            // 고민 부분 (어디까지 허용할지)
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/hotel/reservation/transfer/create"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/hotel/rooms"),
 
             // Toss
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/toss/confirm-payment"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/toss/reservation/{id}/cancel"),
+            AntPathRequestMatcher.antMatcher(HttpMethod.PATCH, "/api/hotel/cancel/reservation"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/toss/reservations"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/toss/reservations/{id}/payment"),
 
