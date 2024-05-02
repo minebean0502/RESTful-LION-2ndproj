@@ -635,6 +635,7 @@
     }, false);
 
     const hotelId = [[${hotelId}]];
+    console.log(hotelId)
     const checkIn = `[[${checkIn}]]`;
     const checkOut = `[[${checkOut}]]`;
 
@@ -1229,7 +1230,7 @@
         }
     }
 
-    function openSubmitForm(hotelId) {
+    function openSubmitForm() {
         window.open(`/hotel/inquiries/submit/${hotelId}`, 'SubmitForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
     }
 
