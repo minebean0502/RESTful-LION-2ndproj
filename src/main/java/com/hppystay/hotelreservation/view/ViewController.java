@@ -34,7 +34,7 @@ public class ViewController {
     public String login() {
         return "login/login";
     }
-    @GetMapping("/password-reset")
+    @RequestMapping("/password-reset")
     public String passwordReset() {
         return "login/pwfind";
     }
