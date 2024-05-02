@@ -32,6 +32,7 @@ public class CustomRequestMatchers {
 
             // View
             AntPathRequestMatcher.antMatcher("/login"),
+            AntPathRequestMatcher.antMatcher("/password-reset"),
             RegexRequestMatcher.regexMatcher(HttpMethod.GET, "/hotel/\\d+\\?.*"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/is-login"),
             AntPathRequestMatcher.antMatcher("/denied"),
