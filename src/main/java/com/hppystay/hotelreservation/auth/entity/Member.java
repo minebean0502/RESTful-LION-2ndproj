@@ -37,6 +37,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberRole role;
 
+    @Setter
     private String businessNumber;
 
     @OneToMany(mappedBy = "member")

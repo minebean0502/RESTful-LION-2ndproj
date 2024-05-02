@@ -331,6 +331,7 @@ public class MemberService implements UserDetailsService {
             throw new GlobalException(GlobalErrorCode.MANAGER_REQUEST_ALREADY_PROCESSED);
 
         request.getMember().setRole(MemberRole.ROLE_MANAGER);
+        request.getMember().setBusinessNumber(request.getBusinessNumber());
         request.setStatus(ManagerRequestStatus.APPROVED);
         managerRequestRepository.save(request);
     }

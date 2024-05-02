@@ -162,7 +162,7 @@ public class ViewController {
         return "inquiries/submitInquiry";
     }
 
-    @GetMapping("/hotel/admin")
+    @GetMapping("/admin")
     public String admin() {
         return "admin";
     }

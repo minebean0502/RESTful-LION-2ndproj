@@ -36,7 +36,7 @@ public class ReservationService {
         Room room = roomRepo.findById(reservationDto.getRoomId())
                 .orElseThrow(() -> new GlobalException(GlobalErrorCode.ROOM_NOT_FOUND));
 
-        if (reservationRepo.existsConflictingReservation(reservationDto.getCheckIn(), reservationDto.getCheckOut()))
+        if (reservationRepo.existsConflictingReservation(room.getId(), reservationDto.getCheckIn(), reservationDto.getCheckOut()))
             throw new GlobalException(GlobalErrorCode.ALREADY_RESERVED);
 
         return ReservationDto.fromEntity(reservationRepo.save(
