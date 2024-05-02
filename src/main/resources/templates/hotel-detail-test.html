@@ -341,6 +341,7 @@
             cursor: pointer;
             border: 1px solid transparent;
             transition: all 0.3s;
+            width: 70px;
         }
 
         .inquiry-info .btn-dark:hover, .btn-dark:focus {
@@ -1233,7 +1234,7 @@
         }
     }
 
-    function openSubmitForm() {
+    function openSubmitForm(hotelId) {
         window.open(`/hotel/inquiries/submit/${hotelId}`, 'SubmitForm', 'width=500, height=700, resizable=yes, scrollbars=yes');
     }
 
