@@ -83,6 +83,12 @@ public class ViewController {
         return "hotel/hotel-list-search";
     }
 
+    // 호텔 매니저 페이지
+    @GetMapping("/hotel/management")
+    public String hotelManagementView() {
+        return "/hotel/hotel-management";
+    }
+
     // 호텔 - 상세 페이지
     @GetMapping("/hotel/{hotelId}")
     public String hotelDetailView(
