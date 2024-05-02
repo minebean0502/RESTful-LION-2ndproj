@@ -18,9 +18,10 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("SELECT CASE WHEN (COUNT(r) > 0) THEN true ELSE false END " +
             "FROM Reservation r " +
-            "WHERE r.checkIn < :checkOut AND r.checkOut > :checkIn " +
+            "WHERE r.room.id = :roomId " +
+            "AND r.checkIn < :checkOut AND r.checkOut > :checkIn " +
             "AND r.status <> 'RESERVATION_CANCELED'")
-    boolean existsConflictingReservation(LocalDate checkIn, LocalDate checkOut);
+    boolean existsConflictingReservation(Long roomId, LocalDate checkIn, LocalDate checkOut);
 
     List<Reservation> findAllByMember(Member member);
 
