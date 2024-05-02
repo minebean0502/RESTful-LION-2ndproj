@@ -27,8 +27,8 @@ public class TempRootViewController {
         return "toss/reservation";
     }
 
-    @GetMapping("/reservation/success")
-    public String successPay() {
-        return "toss/success";
-    }
+//    @GetMapping("/reservation/success")
+//    public String successPay() {
+//        return "toss/success";
+//    }
 }

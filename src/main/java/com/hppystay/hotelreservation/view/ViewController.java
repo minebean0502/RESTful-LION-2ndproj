@@ -15,46 +15,54 @@ import java.time.LocalDate;
 @Slf4j
 @Controller
 public class ViewController {
-    @Value("${TOSS_CLIENT_KEY}")
-    private String tossClientKey;
-
     @Value("${NCP_CLIENT_ID}")
     private String ncpClientKey;
+    @GetMapping("/admin")
+    public String admin() {
+        return "common/admin";
+    }
+    @RequestMapping("/denied")
+    public String denied() {
+        return "common/denied";
+    }
+    @GetMapping("/main")
+    public String mainPage() {
+        return "common/main";
+    }
 
     @RequestMapping("/login")
     public String login() {
         return "login/login";
     }
-
-    // 호텔 생성 view 테스트
-    @GetMapping("/hotel/create-view")
-    public String hotelCreate() {
-        return "create-hotel";
+    @GetMapping("/password-reset")
+    public String passwordReset() {
+        return "login/pwfind";
     }
 
-    @GetMapping("/hotel/update-view/{id}")
-    public String hotelUpdate(
-            @PathVariable("id")
-            Long id
-    ) {
-        return "update-hotel";
+
+    // 마이 페이지 관련
+    @GetMapping("/my-page")
+    public String myPage() {return "/mypage/my-page";}
+
+    // 마이 페이지 - 사업자 번호 제출
+    @GetMapping("/my-page/submit-businessNum")
+    public String submitPage() {
+        return "mypage/submit-business-num";
     }
 
-    @GetMapping("/is-login")
-    public String isLogin() {
-        return "is-login";
+    // 마이페이지 - 양도 송신 - A -> B
+    @GetMapping("/my-page/reservation/transfer")
+    public String transferToMember() {
+        return "mypage/transfer-to-member";
     }
 
-    @RequestMapping("/denied")
-    public String denied() {
-        return "denied";
+    // 마이페이지 - 양도 수신 - B <- A
+    @GetMapping("/my-page/reservation/transfered")
+    public String transferedAndDoPay() {
+        return "mypage/transfered-by-member";
     }
 
-    @GetMapping("/main")
-    public String mainPage() {
-        return "main";
-    }
-
+    // 호텔 - 검색
     @GetMapping("/hotel/search")
     public String hotelSearch(
             @RequestParam("keyword")
@@ -72,101 +80,10 @@ public class ViewController {
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
         model.addAttribute("sort", sort);
-        return "hotelSearch/hotel-list-search";
+        return "hotel/hotel-list-search";
     }
 
-    @GetMapping("/password-reset")
-    public String passwordReset() {
-        return "login/pwfind";
-    }
-
-    @GetMapping("/my-page")
-    public String myPage() {
-        return "test/mypagetest";
-    }
-
-    @GetMapping("/my-page/submit-businessNum")
-    public String submitPage() {
-        return "test/submit-business-num";
-    }
-
-    // 애도 윈도우인데 설정 안해도 되나봄?
-    @GetMapping("/my-page/reservation/transfer")
-    public String transferToMember() {
-        return "reservation/transfer/transfer-to-member";
-    }
-
-    // 이건 마이페이지에서 결제 이어지는 부분 // 윈도우임
-    @GetMapping("/my-page/payment/start")
-    public String continuePaymentWindow(
-//            @RequestParam("reservationId")
-//            String reservationId,
-//            @RequestParam("roomId")
-//            Long roomId,
-//            @RequestParam("roomName")
-//            String roomName
-    ) {
-        return "toss/continue-payment";
-    }
-
-    // 이건 호텔 상세 페이지에서 결제 이어지는 부분 // 윈도우임
-    // TODO hotel-detail-test 이후에 저거 맞는지 확인 필요함
-    @GetMapping("/hotel/payment/start")
-    public String doPaymentWindow() {
-        return "toss/do-payment";
-    }
-
-    @GetMapping("/my-page/reservation/transfered")
-    public String transferedAndDoPay() {
-        return "reservation/transfer/transfered-by-member";
-    }
-
-    @GetMapping("/hotel/1/details")
-    public String oneHotelDetails() {
-        return "temphtml/hotelDetails";
-    }
-
-    // 호텔 예약 완료(가정) 후 toss 결제용 view
-    @GetMapping("/hotel/test")
-    public String tossTestHotel1Room1to3(Model model) {
-        model.addAttribute("clientKey", tossClientKey);
-        return "toss/reservation";
-    }
-
-    // 결제 성공 후 toss redirect view
-    @GetMapping("/hotel/test/paymentComplete")
-    public String tossTestHotelPaySuccess() {
-        return "toss/success";
-    }
-
-    // 결제 실패 후 toss redirect view
-    @GetMapping("/hotel/test/paymentFail")
-    public String tossTestHotelPayFail() {
-        return "toss/Fail";
-    }
-
-
-    //임시로 만듦
-    @GetMapping("/hotel/inquiries/list")
-    public String hotelDetailsSomin() {
-        return "temphtml/hotelDetails-somin";
-    }
-
-    @GetMapping("/hotel/inquiries/submit/{hotelId}")
-    public String submitInquiry() {
-        return "inquiries/submitInquiry";
-    }
-
-    @GetMapping("/hotel/inquiries/update/{id}")
-    public String updateInquiry() {
-        return "inquiries/submitInquiry";
-    }
-
-    @GetMapping("/admin")
-    public String admin() {
-        return "admin";
-    }
-
+    // 호텔 - 상세 페이지
     @GetMapping("/hotel/{hotelId}")
     public String hotelDetailView(
             @PathVariable("hotelId")
@@ -182,11 +99,44 @@ public class ViewController {
         model.addAttribute("checkIn", checkIn);
         model.addAttribute("checkOut", checkOut);
         model.addAttribute("clientId", ncpClientKey);
-        return "hotel-detail-test";
+        return "hotel/hotel-list-detail";
     }
 
-    @GetMapping("/hotel/management")
-    public String hotelManagementView() {
-        return "hotel-management";
+    // 호텔 - 문의사항
+    @GetMapping("/hotel/inquiries/submit/{hotelId}")
+    public String submitInquiry() {
+        return "hotel/hotel-submit-Inquiry";
     }
+
+    // 호텔 - 문의사항 업데이트
+    @GetMapping("/hotel/inquiries/update/{id}")
+    public String updateInquiry() {
+        return "hotel/hotel-submit-Inquiry";
+    }
+
+    // 호텔 생성
+    @GetMapping("/hotel/create-view")
+    public String hotelCreate() {
+        return "hotel/create-hotel";
+    }
+
+    // 호텔 수정 [매니저]
+    @GetMapping("/hotel/update-view/{id}")
+    public String hotelUpdate(
+            @PathVariable("id")
+            Long id
+    ) {
+        return "hotel/update-hotel";
+    }
+
+    // TOSS - 호텔 결제
+    @GetMapping("/hotel/payment/start")
+    public String doPaymentWindow() {
+        return "toss/do-payment";
+    }
+
+    // TOSS - 미결제의 결제 (미결제의 결제)
+    @GetMapping("/my-page/payment/start")
+    public String continuePaymentWindow() {return "toss/continue-payment";}
+
 }
