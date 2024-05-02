@@ -151,39 +151,38 @@ public class HotelService {
         hotel.setMapY(hotelDto.getMapY());
         hotel.setTel(hotelDto.getTel());
 
-        // 방 업데이트
-        Map<Long, RoomDto> roomDtoMap = hotelDto.getRooms().stream()
-                .collect(Collectors.toMap(RoomDto::getId, dto -> dto));
-        List<Room> updatedRooms = new ArrayList<>();
+        // version 2
+        List<Room> roomList = new ArrayList<>();
 
         for (Room room : hotel.getRooms()) {
-            RoomDto roomDto = roomDtoMap.get(room.getId());
-            if (roomDto != null) {
-                if (!room.getHotel().getId().equals(id)) {
-                    throw new GlobalException(GlobalErrorCode.HOTEL_ROOM_MISMATCH);
+            boolean isUpdated = false;
+            for (RoomDto roomDto : hotelDto.getRooms()) {
+                if (room.getId().equals(roomDto.getId())) {
+                    room.setName(roomDto.getName());
+                    room.setPrice(roomDto.getPrice());
+                    room.setContent(roomDto.getContent());
+                    roomList.add(roomRepo.save(room));
+                    isUpdated = true;
                 }
-                room.setName(roomDto.getName());
-                room.setPrice(roomDto.getPrice());
-                room.setContent(roomDto.getContent());
-                updatedRooms.add(room);
-                roomDtoMap.remove(room.getId());
-            } else {
-                roomRepo.delete(room); // 변경된 객실이 없는 경우 삭제
+            }
+            if (!isUpdated) {
+                roomRepo.delete(room);
             }
         }
 
-        // 변경된 객실이 추가된 경우 처리
-        for (RoomDto roomDto : roomDtoMap.values()) {
-            Room newRoom = Room.builder()
-                    .name(roomDto.getName())
-                    .price(roomDto.getPrice())
-                    .content(roomDto.getContent())
-                    .hotel(hotel)
-                    .build();
-            updatedRooms.add(roomRepo.save(newRoom));
+        for (RoomDto roomDto : hotelDto.getRooms()) {
+            if (roomDto.getId() == null) {
+                Room newRoom = Room.builder()
+                        .name(roomDto.getName())
+                        .price(roomDto.getPrice())
+                        .content(roomDto.getContent())
+                        .hotel(hotel)
+                        .build();
+                roomList.add(roomRepo.save(newRoom));
+            }
         }
 
-        hotel.setRooms(updatedRooms);
+        hotel.setRooms(roomList);
 
         return HotelDto.fromEntity(hotelRepo.save(hotel));
     }
