@@ -57,6 +57,8 @@ public enum GlobalErrorCode {
 
     // toss 관련 에러
 
+    // API 관련 에러
+
 
     // errorCode는 영역별로 나누기 (EX: 회원 관련 에러는 1000번대)
 
