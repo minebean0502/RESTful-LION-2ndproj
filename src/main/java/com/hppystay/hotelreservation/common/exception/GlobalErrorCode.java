@@ -43,13 +43,14 @@ public enum GlobalErrorCode {
     NOT_AUTHORIZED_MEMBER(HttpStatus.UNAUTHORIZED, "4001", "호텔 생성 권한이 없습니다."),
     NOT_AUTHORIZED_MANAGER(HttpStatus.UNAUTHORIZED, "4002", "호텔 수정 권한이 없습니다"),
     HOTEL_ALREADY_CREATED(HttpStatus.CONFLICT,"4003", "이미 호텔 1개를 생성했습니다."),
-    HOTEL_NOT_CREATED(HttpStatus.CONFLICT,"4004", "이미 호텔 1개를 생성했습니다."),
-    HOTEL_NOT_FOUND(HttpStatus.NOT_FOUND, "4005", "일치하는 호텔이 없습니다."),
-    HOTEL_ROOM_MISMATCH(HttpStatus.BAD_REQUEST,"4006", "요청하신 호텔과 방이 일치하지 않습니다."),
-    CHECKIN_AFTER_CHECKOUT(HttpStatus.BAD_REQUEST, "4007", "체크인 시간이 체크아웃 시간보다 빨라야 합니다."),
+    HOTEL_NOT_FOUND(HttpStatus.NOT_FOUND, "4004", "일치하는 호텔이 없습니다."),
+    HOTEL_ROOM_MISMATCH(HttpStatus.BAD_REQUEST,"4005", "요청하신 호텔과 방이 일치하지 않습니다."),
+    CHECKIN_AFTER_CHECKOUT(HttpStatus.BAD_REQUEST, "4006", "체크인 시간이 체크아웃 시간보다 빨라야 합니다."),
+    ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "4007", "일치하는 방이 없습니다"),
 
     // 예약 관련 에러
     NOT_HAVE_RESERVATION(HttpStatus.NOT_FOUND, "4100", "사용자가 소유한 예약이 아닙니다"),
+    ALREADY_RESERVED(HttpStatus.CONFLICT, "4101", "이미 에약된 방입니다"),
 
     // 좋아요 관련 에러
     ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "5001", "이미 좋아요를 생성했습니다.");

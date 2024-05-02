@@ -28,14 +28,16 @@ public class ReservationService {
     private final RoomRepository roomRepo;
     private final AuthenticationFacade facade;
 
-
     public ReservationDto createReservation(ReservationDto reservationDto) {
         //TODO: 예약 가능 여부 체크하기
         // 이거 로그인 안했을 때 로그인 하도록 errorcode 설정하기
         Member member = facade.getCurrentMember();
 
         Room room = roomRepo.findById(reservationDto.getRoomId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new GlobalException(GlobalErrorCode.ROOM_NOT_FOUND));
+
+        if (reservationRepo.existsConflictingReservation(reservationDto.getCheckIn(), reservationDto.getCheckOut()))
+            throw new GlobalException(GlobalErrorCode.ALREADY_RESERVED);
 
         return ReservationDto.fromEntity(reservationRepo.save(
                 Reservation.builder()
