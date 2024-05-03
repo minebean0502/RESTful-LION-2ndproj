@@ -26,7 +26,6 @@ public class TossController {
             @RequestBody
             TossPaymentConfirmDto dto
     ) {
-        log.info("시작했습니다");
         return service.confirmPayment(roomId, reservationId, dto);
     }
 
