@@ -13,6 +13,8 @@ spring:
 
   mvc:
     static-path-pattern: /static/**
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
   web:
     resources:
@@ -95,7 +97,21 @@ spring:
       username: ${REDIS_USERNAME}
       password: ${REDIS_PASSWORD}
 
-
+springdoc:
+  version: '1.0.0'
+  api-docs:
+    path: /api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+    doc-expansion: none
+  paths-to-match:
+    - /api/**
 
 toss:
   secret: ${TOSS_SECRET}

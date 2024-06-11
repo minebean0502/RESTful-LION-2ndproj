@@ -5,7 +5,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RegexRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import java.util.List;
+
 public class CustomRequestMatchers {
+
     public static RequestMatcher[] permitAllMatchers = {
             // Auth
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/sign-up"),
@@ -39,7 +42,10 @@ public class CustomRequestMatchers {
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/main"),
             AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/hotel/search"),
 
-
+            // Swagger
+//            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/v3/api-docs/**"),
+//            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/swagger-ui.html"),
+//            AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/swagger-ui/**")
     };
 
     // 인증된 사용자를 위한 Matcher
