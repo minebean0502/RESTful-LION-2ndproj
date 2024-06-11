@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
                 version = "v1"))
 @RequiredArgsConstructor
 @Configuration
+// localhost:8080/swagger-ui.html
 public class SwaggerConfig {
     @Bean
     public GroupedOpenApi chatOpenApi() {
