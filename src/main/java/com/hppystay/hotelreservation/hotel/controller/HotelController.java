@@ -6,6 +6,7 @@ import com.hppystay.hotelreservation.common.exception.GlobalException;
 import com.hppystay.hotelreservation.hotel.dto.*;
 import com.hppystay.hotelreservation.hotel.service.HotelService;
 import com.hppystay.hotelreservation.hotel.service.ReservationService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.List;
 
+@Tag(name = "Hotel Controller", description = "호텔 CRUD / 예약 CRUD API.")
 @RestController
 @RequestMapping("/api/hotel")
 @RequiredArgsConstructor

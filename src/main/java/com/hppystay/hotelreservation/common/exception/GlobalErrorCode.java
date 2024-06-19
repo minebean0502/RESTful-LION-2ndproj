@@ -53,9 +53,19 @@ public enum GlobalErrorCode {
     ALREADY_RESERVED(HttpStatus.CONFLICT, "4101", "이미 에약된 방입니다"),
 
     // 좋아요 관련 에러
-    ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "5001", "이미 좋아요를 생성했습니다.");
+    ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "5001", "이미 좋아요를 생성했습니다."),
 
     // toss 관련 에러
+    RESERVATION_ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "6000", "예약하려는 방이 없습니다"),
+    PAYMENT_CANNOT_FOUND(HttpStatus.NOT_FOUND, "6001", "결제 수단을 조회할 수 없습니다"),
+    PAYMENT_KEY_CANNOT_FOUND(HttpStatus.NOT_FOUND, "6002", "PaymentKey로 결제 수단을 조회할 수 없습니다"),
+    RESERVATION_CANNOT_FOUND(HttpStatus.NOT_FOUND, "6003", "예약 ID로 예약을 찾을 수 없습니다"),
+    RESERVATION_DECLINED_ALREADY(HttpStatus.CONFLICT, "6004", "해당 예약은 이미 취소되었습니다"),
+        // 양도 관련
+    ASSIGNMENT_CANNOT_FOUND(HttpStatus.NOT_FOUND, "6005", "양수자의 양도받을 데이터를 찾을 수 없습니다"),
+    TRANSMITTER_CANNOT_FOUND(HttpStatus.NOT_FOUND, "6006", "양도자의 정보를 찾을 수 없습니다"),
+    TRANSMITTER_RESERVATION_CANNOT_FOUND(HttpStatus.NOT_FOUND, "6006", "양도자의 예약 정보를 찾을 수 없습니다"),
+    ASSIGNMENT_CANNOT_UPDATED(HttpStatus.INTERNAL_SERVER_ERROR, "6007", "양도 과정에서 정상적으로 처리할 수 없었습니다");
 
     // API 관련 에러
 

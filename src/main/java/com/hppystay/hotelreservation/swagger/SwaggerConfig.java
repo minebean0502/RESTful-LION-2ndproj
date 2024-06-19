@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
-        info = @Info(title = "투개더 API 명세서",
-                description = "COMP322-team12 투개더 API 명세서",
+        info = @Info(title = "RESTful Lion API 명세서",
+                description = "호텔 웹 프로젝트 API 명세서 입니다",
                 version = "v1"))
 @RequiredArgsConstructor
 @Configuration
-// localhost:8080/swagger-ui.html
+// localhost:8080/swagger-ui/index.html
 public class SwaggerConfig {
     @Bean
     public GroupedOpenApi chatOpenApi() {
@@ -21,8 +21,8 @@ public class SwaggerConfig {
         String[] paths = {"/v1/**"};
 
         return GroupedOpenApi.builder()
-                .group("투개더 API v1")  // 그룹 이름을 설정한다.
-                .pathsToMatch(paths)     // 그룹에 속하는 경로 패턴을 지정한다.
+                .group("RESTful Lion API v1")   // 그룹 이름을 설정한다.
+                .pathsToMatch(paths)            // 그룹에 속하는 경로 패턴을 지정한다.
                 .build();
     }
 }

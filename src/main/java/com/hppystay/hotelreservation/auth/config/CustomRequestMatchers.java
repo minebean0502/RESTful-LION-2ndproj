@@ -8,7 +8,6 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import java.util.List;
 
 public class CustomRequestMatchers {
-
     public static RequestMatcher[] permitAllMatchers = {
             // Auth
             AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/auth/sign-up"),
