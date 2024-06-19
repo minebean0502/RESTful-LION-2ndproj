@@ -11,7 +11,7 @@ public class PermitAllPath {
             "/api/auth/password/reset",
             "/api/auth/password/change",
 
-            // toss 인증 관련 api (채운 작성)
+            // toss 인증 관련 api
             "/toss/**",
             "/payments/**",
             "/reservations/**",

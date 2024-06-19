@@ -53,6 +53,8 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
+                                .requestMatchers(SwaggerPath.paths)
+                                .permitAll()
                                 .requestMatchers(CustomRequestMatchers.permitAllMatchers)
                                 .permitAll()
                                 .requestMatchers(CustomRequestMatchers.authenticatedMatchers)
@@ -88,3 +90,12 @@ public class WebSecurityConfig {
         return http.build();
     }
 }
+
+
+
+
+
+
+
+
+

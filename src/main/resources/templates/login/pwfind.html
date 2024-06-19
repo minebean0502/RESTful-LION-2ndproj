@@ -324,7 +324,6 @@
 
     // 1. 인증 코드 보내기 버튼 이벤트 리스너
     sendCodeButton.addEventListener('click', () => {
-        // 여기에 이메일로 인증 코드를 보내는 API 호출 코드를 추가하세요.
         sendEmailCode();
     });
 
@@ -378,7 +377,6 @@
         }
     }
 
-    // const resetPasswordButton = document.getElementById('resetPasswordButton');
     // 5. 비밀번호 재설정 버튼 이벤트 리스너
     resetPasswordButton.addEventListener('click', () => {
         resetPassword();
@@ -412,14 +410,6 @@
             alert(data.message);
         }
     }
-
-    // // 초기 상태 설정
-    // function initialize() {
-    //     // 폼을 초기 상태로 설정합니다.
-    //     passwordResetForm.style.display = 'none';
-    // }
-    //
-    // initialize();
 </script>
 
 </body>

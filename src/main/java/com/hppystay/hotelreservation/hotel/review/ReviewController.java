@@ -1,12 +1,13 @@
 package com.hppystay.hotelreservation.hotel.review;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Tag(name = "Review Controller", description = "호텔 리뷰 CRUD API")
 @RestController
 @RequestMapping("/api/{hotelId}/review")
 @RequiredArgsConstructor

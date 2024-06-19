@@ -2,12 +2,13 @@ package com.hppystay.hotelreservation.hotel.inquiry.controller;
 
 import com.hppystay.hotelreservation.hotel.inquiry.dto.CommentDto;
 import com.hppystay.hotelreservation.hotel.inquiry.service.CommentService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-
+@Tag(name = "Comment Controller", description = "댓글 CRUD API")
 @RestController
 @RequestMapping("/api/hotel/inquiries/comments")
 @RequiredArgsConstructor
